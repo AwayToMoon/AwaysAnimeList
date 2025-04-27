@@ -33,7 +33,7 @@ const characters = [
     { name: "Millie Bobby Brown", image: "https://image.gala.de/24310008/t/3g/v2/w1440/r1/-/millie-bobbie-brown-teaser.jpg" },
     { name: "Olivia Rodrigo", image: "https://image.gala.de/22494124/t/K2/v5/w960/r1/-/olivia-rodrigo.jpg" },
     { name: "Camila Mendes", image: "https://media.themoviedb.org/t/p/w500/pZAWRHdJtJlDcWuQHlgIwX12s02.jpg" },
-    { name: "Lili Reinhart", image: "https://static.wikia.nocookie.net/simpsons/images/b/b8/Lili_Reinhart.png/revision/latest?cb=20200604230916" },
+    { name: "Lili Reinhart", image: "https://static01.nyt.com/images/2020/10/01/fashion/01REINHART2/merlin_176246820_976c92de-ed01-4ae6-8369-d4596d4ee683-superJumbo.jpg" },
     { name: "Dove Cameron", image: "https://fr.web.img6.acsta.net/pictures/18/01/08/13/57/3752878.jpg" },
     { name: "Taylor Swift", image: "https://i0.gmx.at/image/468/38837468,pd=1,f=size-l/taylor-swift.jpg" },
     { name: "Rihanna", image: "https://www.rollingstone.de/wp-content/uploads/2021/02/17/15/rihanna-gettyimages-821622848-scaled.jpg" },
