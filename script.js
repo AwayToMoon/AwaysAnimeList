@@ -33,7 +33,7 @@ const characters = [
     { name: "Millie Bobby Brown", image: "https://image.gala.de/24310008/t/3g/v2/w1440/r1/-/millie-bobbie-brown-teaser.jpg" },
     { name: "Olivia Rodrigo", image: "https://image.gala.de/22494124/t/K2/v5/w960/r1/-/olivia-rodrigo.jpg" },
     { name: "Camila Mendes", image: "https://media.themoviedb.org/t/p/w500/pZAWRHdJtJlDcWuQHlgIwX12s02.jpg" },
-    { name: "Lili Reinhart", image: "https://static.wikia.nocookie.net/riverdale/images/8/87/Lili-reinhart.jpg/revision/latest?cb=20210424141727&path-prefix=de" },
+    { name: "Lili Reinhart", image: "https://ucarecdn.com/8dc3d884-eb74-46b8-af17-a2aa3071cc76/-/crop/1235x1236/0,167/-/preview/-/progressive/yes/-/format/auto/" },
     { name: "Dove Cameron", image: "https://static.wikia.nocookie.net/fanfic/images/0/0c/DoveCameron.jpg/revision/latest?cb=20151125034823" },
     { name: "Taylor Swift", image: "https://i0.gmx.at/image/468/38837468,pd=1,f=size-l/taylor-swift.jpg" },
     { name: "Rihanna", image: "https://www.rollingstone.de/wp-content/uploads/2021/02/17/15/rihanna-gettyimages-821622848-scaled.jpg" },
