@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #2b1b3b, #4a2b6b);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.container {
+    text-align: center;
+    padding: 2rem;
+    max-width: 800px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(186, 104, 255, 0.3);
+}
+
+.game-container {
+    background: rgba(74, 43, 107, 0.4);
+    border-radius: 15px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(186, 104, 255, 0.2);
+}
+
+.image-container {
+    margin-bottom: 2rem;
+}
+
+#current-image {
+    max-width: 400px;
+    height: 400px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(186, 104, 255, 0.2);
+    border: 3px solid rgba(186, 104, 255, 0.3);
+}
+
+#character-name {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    color: #e2c4ff;
+}
+
+.button-container {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.btn {
+    width: 80px;
+    height: 80px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.smash {
+    background: #ff4444;
+    color: white;
+}
+
+.smash:hover {
+    background: #ff2424;
+}
+
+.pass {
+    background: #2c2c2c;
+    color: white;
+}
+
+.pass:hover {
+    background: #1a1a1a;
+}
+
+.reload {
+    background: #4a90e2;
+    color: white;
+    margin: 2rem auto 0 auto;
+}
+
+.reload:hover {
+    background: #357abd;
+}
+
+.reload i {
+    animation: spin 1s linear infinite;
+    animation-play-state: paused;
+}
+
+.reload:hover i {
+    animation-play-state: running;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.btn i {
+    transition: transform 0.3s ease;
+}
+
+.btn:hover i {
+    transform: scale(1.2);
+}
