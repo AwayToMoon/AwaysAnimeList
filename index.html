@@ -3,21 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smash or Pass</title>
+    <title>Smash💦, Marry👰🏽‍♀️, Kill☠️</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>Smash or Pass</h1>
+        <h1><span>Smash</span>💦, <span>Marry</span>👰🏽‍♀️, <span>Kill</span>☠️</h1>
         <div class="game-container">
             <div class="image-container">
                 <img id="current-image" src="" alt="Aktuelles Bild">
-                <h2 id="character-name">Name</h2>
+                <div class="character-info">
+                    <h2 id="character-name">Name</h2>
+                    <div id="counter" class="counter">1/51</div>
+                </div>
             </div>
             <div class="button-container">
-                <button id="smash-btn" class="btn smash"><i class="fas fa-heart"></i></button>
-                <button id="pass-btn" class="btn pass"><i class="fas fa-skull"></i></button>
+                <button id="smash-btn" class="btn smash">
+                    <div class="btn-content">
+                        <span class="emoji">💦</span>
+                        <span class="btn-text">Smash</span>
+                    </div>
+                </button>
+                <button id="marry-btn" class="btn marry">
+                    <div class="btn-content">
+                        <span class="emoji">👰🏽‍♀️</span>
+                        <span class="btn-text">Marry</span>
+                    </div>
+                </button>
+                <button id="pass-btn" class="btn pass">
+                    <div class="btn-content">
+                        <span class="emoji">☠️</span>
+                        <span class="btn-text">Kill</span>
+                    </div>
+                </button>
             </div>
         </div>
     </div>
