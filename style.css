@@ -28,6 +28,19 @@ h1 {
     letter-spacing: 3px;
     color: #fff;
     text-shadow: 0 0 10px rgba(186, 104, 255, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+h1::after {
+    content: "";
+    display: block;
+    margin-top: 1rem;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(186, 104, 255, 0.5), transparent);
 }
 
 .game-container {
@@ -41,6 +54,7 @@ h1 {
 
 .image-container {
     margin-bottom: 2rem;
+    position: relative;
 }
 
 #current-image {
@@ -53,64 +67,114 @@ h1 {
     border: 3px solid rgba(186, 104, 255, 0.3);
 }
 
+.character-info {
+    text-align: center;
+    margin: 1rem 0;
+}
+
 #character-name {
     font-size: 1.5rem;
-    margin: 1rem 0;
     color: #e2c4ff;
+    margin-bottom: 0.5rem;
+}
+
+.counter {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    display: inline-block;
+    margin-top: 0.5rem;
 }
 
 .button-container {
     display: flex;
-    gap: 3rem;
+    gap: 2.5rem;
     justify-content: center;
     margin-bottom: 2rem;
+    padding: 1rem;
 }
 
 .btn {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn:hover::before {
+    opacity: 1;
 }
 
 .btn:hover {
-    transform: translateY(-5px) scale(1.1);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-8px) scale(1.1);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+}
+
+.btn:active {
+    transform: translateY(-2px) scale(1.05);
 }
 
 .smash {
-    background: #ff4444;
-    color: white;
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.4);
 }
 
 .smash:hover {
-    background: #ff2424;
+    background: linear-gradient(135deg, #cc0000, #990000);
+    box-shadow: 0 15px 35px rgba(255, 0, 0, 0.6);
+}
+
+.marry {
+    background: linear-gradient(135deg, #FF69B4, #FF1493);
+    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+}
+
+.marry:hover {
+    background: linear-gradient(135deg, #FF1493, #C71585);
+    box-shadow: 0 15px 35px rgba(255, 105, 180, 0.6);
 }
 
 .pass {
-    background: #2c2c2c;
-    color: white;
+    background: linear-gradient(135deg, #000000, #1a1a1a);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 .pass:hover {
-    background: #1a1a1a;
+    background: linear-gradient(135deg, #1a1a1a, #000000);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
 }
 
 .reload {
-    background: #4a90e2;
-    color: white;
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
     margin: 2rem auto 0 auto;
 }
 
 .reload:hover {
-    background: #357abd;
+    background: linear-gradient(135deg, #357abd, #2868a9);
+    box-shadow: 0 15px 35px rgba(74, 144, 226, 0.6);
 }
 
 .reload i {
@@ -137,4 +201,194 @@ h1 {
 
 .btn:hover i {
     transform: scale(1.2);
+}
+
+.marry i {
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, #fff, #ffd700, #fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+}
+
+.marry:hover i {
+    animation: sparkle 1s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+    }
+}
+
+.btn-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.emoji {
+    font-size: 2.5rem;
+}
+
+.btn-text {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: -5px;
+}
+
+.animation-emoji {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 150px;
+    z-index: 10;
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes emojiPopup {
+    0% { 
+        transform: translate(-50%, -50%) scale(0); 
+        opacity: 0; 
+    }
+    20% { 
+        transform: translate(-50%, -50%) scale(1.5); 
+        opacity: 1; 
+    }
+    80% { 
+        transform: translate(-50%, -50%) scale(1.5); 
+        opacity: 1; 
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(3); 
+        opacity: 0; 
+    }
+}
+
+.emoji-animation {
+    animation: emojiPopup 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Smash Animation - Herzschlag und Wasserspritzer Effekt */
+@keyframes smashAnimation {
+    0% { 
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    25% { 
+        transform: scale(1.1);
+        filter: brightness(1.2) hue-rotate(330deg) saturate(1.5);
+    }
+    50% { 
+        transform: scale(1);
+        filter: brightness(1.4) hue-rotate(345deg) saturate(2);
+    }
+    75% { 
+        transform: scale(1.15) rotate(-2deg);
+        filter: brightness(1.6) hue-rotate(355deg) saturate(2.5);
+    }
+    100% { 
+        transform: scale(0) rotate(5deg);
+        filter: brightness(2) hue-rotate(360deg) saturate(3);
+    }
+}
+
+/* Marry Animation - Romantischer Übergang mit Glitzer */
+@keyframes marryAnimation {
+    0% { 
+        transform: scale(1);
+        filter: brightness(1) sepia(0);
+    }
+    25% { 
+        transform: scale(1.05) rotate(2deg);
+        filter: brightness(1.2) sepia(0.3) contrast(1.1);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+    50% { 
+        transform: scale(1.1) rotate(-2deg);
+        filter: brightness(1.4) sepia(0.6) contrast(1.2);
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.7);
+    }
+    75% { 
+        transform: scale(1.05) rotate(2deg);
+        filter: brightness(1.6) sepia(0.8) contrast(1.3);
+        box-shadow: 0 0 60px rgba(255, 215, 0, 0.9);
+    }
+    100% { 
+        transform: scale(0) rotate(360deg);
+        filter: brightness(2) sepia(1) contrast(1.4);
+        box-shadow: 0 0 80px rgba(255, 215, 0, 1);
+    }
+}
+
+/* Kill Animation - Dramatischer Zerfall Effekt */
+@keyframes killAnimation {
+    0% { 
+        transform: scale(1);
+        filter: grayscale(0) brightness(1);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    25% { 
+        transform: scale(1.05) rotate(-2deg);
+        filter: grayscale(0.3) brightness(0.9);
+        clip-path: polygon(2% 2%, 98% 1%, 99% 98%, 1% 99%);
+    }
+    50% { 
+        transform: scale(1.1) rotate(2deg);
+        filter: grayscale(0.6) brightness(0.7);
+        clip-path: polygon(5% 5%, 95% 2%, 98% 95%, 2% 98%);
+    }
+    75% { 
+        transform: scale(0.95) rotate(-2deg);
+        filter: grayscale(0.8) brightness(0.5);
+        clip-path: polygon(10% 8%, 90% 5%, 95% 90%, 5% 95%);
+    }
+    100% { 
+        transform: scale(0) rotate(0deg);
+        filter: grayscale(1) brightness(0);
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+}
+
+/* Button Hover Effekte verstärken */
+.btn.smash:hover {
+    background: linear-gradient(135deg, #ff0000, #ff69b4);
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+    transform: translateY(-10px) scale(1.1);
+}
+
+.btn.marry:hover {
+    background: linear-gradient(135deg, #ff69b4, #ffd700);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    transform: translateY(-10px) scale(1.1);
+}
+
+.btn.pass:hover {
+    background: linear-gradient(135deg, #000000, #4a0000);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    transform: translateY(-10px) scale(1.1);
+}
+
+/* Bestehende Animation-Klassen */
+.smash-animation {
+    animation: smashAnimation 0.7s ease-in-out forwards;
+}
+
+.marry-animation {
+    animation: marryAnimation 0.7s ease-in-out forwards;
+}
+
+.kill-animation {
+    animation: killAnimation 0.7s ease-in-out forwards;
 }
