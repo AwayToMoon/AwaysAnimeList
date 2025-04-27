@@ -10,7 +10,7 @@ const characters = [
     { name: "Sydney Sweeney", image: "https://imgix.ranker.com/user_node_img/1210/24194612/original/sydney-sweeney-u1895809208?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&crop=faces&bg=fff&h=300&w=300" },
     { name: "Zendaya", image: "https://www.hollywoodreporter.com/wp-content/uploads/2023/08/GettyImages-1497018169-H-2023.jpg?w=1296&h=730&crop=1" },
     { name: "Elizabeth Olsen", image: "https://imgix.ranker.com/user_node_img/1590/31793173/original/elizabeth-olsen-people-in-tv-photo-u16?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Emilia Clarke", image: "https://static.wikia.nocookie.net/gameofthrones/images/8/8d/Emilia_Clarke_Profil.jpg/revision/latest?cb=20170514211325&path-prefix=de" },
+    { name: "Emilia Clarke", image: "https://media.vogue.de/photos/5beeefec5c5243377bf1cb8a/2:3/w_2560%2Cc_limit/Emilia-Clarke-Aufmacher.jpg" },
     { name: "Megan Fox", image: "https://imgix.ranker.com/user_node_img/78/1558135/original/1558135-photo-u-30226905?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
     { name: "Anne Hathaway", image: "https://imgix.ranker.com/user_node_img/24/468745/original/anne-hathaway-photo-u352?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
     { name: "Jennifer Lawrence", image: "https://imgix.ranker.com/user_node_img/65/1281504/original/1281504-photo-u-1423690460?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
