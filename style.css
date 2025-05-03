@@ -1,3 +1,4 @@
+/* Allgemeine Styles */
 * {
     margin: 0;
     padding: 0;
@@ -5,390 +6,190 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #2b1b3b, #4a2b6b);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
+    font-family: Arial, sans-serif;
+    background-color: #4B2067; /* Dunkles, kräftiges Lila */
+    color: #fff;
 }
 
 .container {
-    text-align: center;
-    padding: 2rem;
-    max-width: 800px;
-    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 h1 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 30px;
     color: #fff;
-    text-shadow: 0 0 10px rgba(186, 104, 255, 0.3);
+}
+
+/* Drag & Drop Container */
+.drag-drop-container {
+    background-color: #6D28A5; /* Dunkleres Lila */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.draggable-images {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
+    justify-content: space-around;
+    margin-bottom: 20px;
 }
 
-h1::after {
-    content: "";
-    display: block;
-    margin-top: 1rem;
+.draggable-image {
+    width: 200px;
+    text-align: center;
+    cursor: move;
+    transition: transform 0.2s;
+    background-color: #6D28A5; /* Dunkleres Lila */
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.draggable-image:hover {
+    transform: scale(1.05);
+}
+
+.draggable-image img {
     width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(186, 104, 255, 0.5), transparent);
-}
-
-.game-container {
-    background: rgba(74, 43, 107, 0.4);
-    border-radius: 15px;
-    padding: 2rem;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 104, 255, 0.2);
-}
-
-.image-container {
-    margin-bottom: 2rem;
-    position: relative;
-}
-
-#current-image {
-    max-width: 400px;
-    height: 400px;
-    width: 100%;
+    height: 300px;
     object-fit: cover;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(186, 104, 255, 0.2);
-    border: 3px solid rgba(186, 104, 255, 0.3);
+    margin-bottom: 10px;
+    display: block;
 }
 
-.character-info {
-    text-align: center;
-    margin: 1rem 0;
+.draggable-image h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
-#character-name {
-    font-size: 1.5rem;
-    color: #e2c4ff;
-    margin-bottom: 0.5rem;
+.dragging {
+    opacity: 0.5;
 }
 
-.counter {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 500;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    display: inline-block;
-    margin-top: 0.5rem;
-}
-
-.button-container {
+/* Drop Zones */
+.drop-zones {
     display: flex;
-    gap: 2.5rem;
-    justify-content: center;
-    margin-bottom: 2rem;
-    padding: 1rem;
+    justify-content: space-around;
+    margin-top: 20px;
 }
 
-.btn {
-    width: 100px;
-    height: 100px;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.btn:hover::before {
-    opacity: 1;
-}
-
-.btn:hover {
-    transform: translateY(-8px) scale(1.1);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
-}
-
-.btn:active {
-    transform: translateY(-2px) scale(1.05);
-}
-
-.smash {
-    background: linear-gradient(135deg, #ff0000, #cc0000);
-    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.4);
-}
-
-.smash:hover {
-    background: linear-gradient(135deg, #cc0000, #990000);
-    box-shadow: 0 15px 35px rgba(255, 0, 0, 0.6);
-}
-
-.marry {
-    background: linear-gradient(135deg, #FF69B4, #FF1493);
-    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
-}
-
-.marry:hover {
-    background: linear-gradient(135deg, #FF1493, #C71585);
-    box-shadow: 0 15px 35px rgba(255, 105, 180, 0.6);
-}
-
-.pass {
-    background: linear-gradient(135deg, #000000, #1a1a1a);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-}
-
-.pass:hover {
-    background: linear-gradient(135deg, #1a1a1a, #000000);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-}
-
-.reload {
-    background: linear-gradient(135deg, #4a90e2, #357abd);
-    box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
-    margin: 2rem auto 0 auto;
-}
-
-.reload:hover {
-    background: linear-gradient(135deg, #357abd, #2868a9);
-    box-shadow: 0 15px 35px rgba(74, 144, 226, 0.6);
-}
-
-.reload i {
-    animation: spin 1s linear infinite;
-    animation-play-state: paused;
-}
-
-.reload:hover i {
-    animation-play-state: running;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.btn i {
-    transition: transform 0.3s ease;
-}
-
-.btn:hover i {
-    transform: scale(1.2);
-}
-
-.marry i {
-    font-size: 2.5rem;
-    background: linear-gradient(45deg, #fff, #ffd700, #fff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
-}
-
-.marry:hover i {
-    animation: sparkle 1s infinite;
-}
-
-@keyframes sparkle {
-    0%, 100% {
-        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
-    }
-    50% {
-        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
-    }
-}
-
-.btn-content {
+.drop-zone {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #7C3AED;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    transition: all 0.3s;
+    background-color: #7C3AED;
 }
 
-.emoji {
-    font-size: 2.5rem;
+.drop-zone i {
+    font-size: 40px;
+    margin-bottom: 10px;
 }
 
-.btn-text {
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: -5px;
+.drop-zone span {
+    font-size: 18px;
 }
 
+.drag-over {
+    border-color: #4B2067;
+    background-color: #6D28A5;
+}
+
+.dropped {
+    border-color: #f472b6;
+    background-color: #f3e8ff;
+}
+
+/* Animation Emoji */
 .animation-emoji {
     position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    font-size: 150px;
-    z-index: 10;
-    pointer-events: none;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    font-size: 40px;
+    animation: float 1s ease-in-out;
 }
 
-@keyframes emojiPopup {
-    0% { 
-        transform: translate(-50%, -50%) scale(0); 
-        opacity: 0; 
-    }
-    20% { 
-        transform: translate(-50%, -50%) scale(1.5); 
-        opacity: 1; 
-    }
-    80% { 
-        transform: translate(-50%, -50%) scale(1.5); 
-        opacity: 1; 
-    }
-    100% { 
-        transform: translate(-50%, -50%) scale(3); 
-        opacity: 0; 
-    }
+@keyframes float {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-50px); opacity: 0; }
 }
 
-.emoji-animation {
-    animation: emojiPopup 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+/* Next Button */
+.next-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #22c55e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+    opacity: 0.5;
 }
 
-/* Smash Animation - Herzschlag und Wasserspritzer Effekt */
-@keyframes smashAnimation {
-    0% { 
-        transform: scale(1);
-        filter: brightness(1);
-    }
-    25% { 
-        transform: scale(1.1);
-        filter: brightness(1.2) hue-rotate(330deg) saturate(1.5);
-    }
-    50% { 
-        transform: scale(1);
-        filter: brightness(1.4) hue-rotate(345deg) saturate(2);
-    }
-    75% { 
-        transform: scale(1.15) rotate(-2deg);
-        filter: brightness(1.6) hue-rotate(355deg) saturate(2.5);
-    }
-    100% { 
-        transform: scale(0) rotate(5deg);
-        filter: brightness(2) hue-rotate(360deg) saturate(3);
-    }
+.next-btn:not([disabled]) {
+    opacity: 1;
+    transform: scale(1.05);
 }
 
-/* Marry Animation - Romantischer Übergang mit Glitzer */
-@keyframes marryAnimation {
-    0% { 
-        transform: scale(1);
-        filter: brightness(1) sepia(0);
+.next-btn:not([disabled]):hover {
+    background-color: #15803d;
+    transform: scale(1.1);
+}
+
+.next-btn i {
+    margin-right: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .draggable-images {
+        flex-direction: column;
+        align-items: center;
     }
-    25% { 
-        transform: scale(1.05) rotate(2deg);
-        filter: brightness(1.2) sepia(0.3) contrast(1.1);
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    
+    .draggable-image {
+        margin-bottom: 20px;
     }
-    50% { 
-        transform: scale(1.1) rotate(-2deg);
-        filter: brightness(1.4) sepia(0.6) contrast(1.2);
-        box-shadow: 0 0 40px rgba(255, 215, 0, 0.7);
+    
+    .drop-zones {
+        flex-direction: column;
+        align-items: center;
     }
-    75% { 
-        transform: scale(1.05) rotate(2deg);
-        filter: brightness(1.6) sepia(0.8) contrast(1.3);
-        box-shadow: 0 0 60px rgba(255, 215, 0, 0.9);
-    }
-    100% { 
-        transform: scale(0) rotate(360deg);
-        filter: brightness(2) sepia(1) contrast(1.4);
-        box-shadow: 0 0 80px rgba(255, 215, 0, 1);
+    
+    .drop-zone {
+        margin-bottom: 20px;
     }
 }
 
-/* Kill Animation - Dramatischer Zerfall Effekt */
-@keyframes killAnimation {
-    0% { 
-        transform: scale(1);
-        filter: grayscale(0) brightness(1);
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    }
-    25% { 
-        transform: scale(1.05) rotate(-2deg);
-        filter: grayscale(0.3) brightness(0.9);
-        clip-path: polygon(2% 2%, 98% 1%, 99% 98%, 1% 99%);
-    }
-    50% { 
-        transform: scale(1.1) rotate(2deg);
-        filter: grayscale(0.6) brightness(0.7);
-        clip-path: polygon(5% 5%, 95% 2%, 98% 95%, 2% 98%);
-    }
-    75% { 
-        transform: scale(0.95) rotate(-2deg);
-        filter: grayscale(0.8) brightness(0.5);
-        clip-path: polygon(10% 8%, 90% 5%, 95% 90%, 5% 95%);
-    }
-    100% { 
-        transform: scale(0) rotate(0deg);
-        filter: grayscale(1) brightness(0);
-        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
-    }
+.drop-results {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 18px;
+    text-align: center;
+}
+.drop-results > div {
+    flex: 1;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    min-height: 28px;
 }
 
-/* Button Hover Effekte verstärken */
-.btn.smash:hover {
-    background: linear-gradient(135deg, #ff0000, #ff69b4);
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
-    transform: translateY(-10px) scale(1.1);
-}
-
-.btn.marry:hover {
-    background: linear-gradient(135deg, #ff69b4, #ffd700);
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
-    transform: translateY(-10px) scale(1.1);
-}
-
-.btn.pass:hover {
-    background: linear-gradient(135deg, #000000, #4a0000);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-    transform: translateY(-10px) scale(1.1);
-}
-
-/* Bestehende Animation-Klassen */
-.smash-animation {
-    animation: smashAnimation 0.7s ease-in-out forwards;
-}
-
-.marry-animation {
-    animation: marryAnimation 0.7s ease-in-out forwards;
-}
-
-.kill-animation {
-    animation: killAnimation 0.7s ease-in-out forwards;
+.drop-zone img {
+    display: block;
+    max-width: 90%;
+    max-height: 90%;
+    margin: 0 auto 8px auto;
+    border-radius: 10px;
+    object-fit: cover;
 }
