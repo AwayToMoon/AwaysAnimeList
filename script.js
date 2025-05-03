@@ -319,6 +319,8 @@ const characters = [
     }
 ];
 
+let availableCharacters = [...characters];
+
 let droppedImages = 0;
 const totalImages = 3;
 
@@ -329,8 +331,15 @@ const nextBtn = document.getElementById('next-btn');
 
 // Zufällige 3 Charaktere auswählen
 function getRandomCharacters() {
-    const shuffled = [...characters].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 3);
+    if (availableCharacters.length < 3) {
+        // Wenn weniger als 3 übrig sind, Pool zurücksetzen
+        availableCharacters = [...characters];
+    }
+    const shuffled = [...availableCharacters].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 3);
+    // Entferne die gezogenen Charaktere aus dem Pool
+    availableCharacters = availableCharacters.filter(c => !selected.includes(c));
+    return selected;
 }
 
 // Bilder und Namen anzeigen
@@ -393,7 +402,7 @@ function handleDrop(e) {
         const draggedImage = document.querySelector('.dragging');
         if (draggedImage) {
             dropZone.classList.add('dropped');
-
+            
             // Bild-Element in die Drop-Zone verschieben
             const imgClone = draggedImage.querySelector('img').cloneNode(true);
             imgClone.style.width = '80px';
@@ -423,24 +432,24 @@ function handleDrop(e) {
             document.getElementById(resultId).textContent = resultText;
 
             // Animation Emoji
-            const emoji = document.createElement('div');
-            emoji.className = 'animation-emoji';
+    const emoji = document.createElement('div');
+    emoji.className = 'animation-emoji';
             emoji.textContent = type === 'smash' ? '💦' : type === 'marry' ? '👰🏽‍♀️' : '☠️';
             dropZone.appendChild(emoji);
-
+            
             // Bild als verschoben markieren
             draggedImage.style.opacity = '0.5';
             draggedImage.style.pointerEvents = 'none';
             droppedImages++;
-
+            
             if (droppedImages === totalImages) {
                 nextBtn.disabled = false;
             }
-
-            setTimeout(() => {
+    
+    setTimeout(() => {
                 dropZone.classList.remove('dropped');
-                emoji.remove();
-            }, 700);
+        emoji.remove();
+    }, 700);
         }
     }
 }
@@ -450,7 +459,7 @@ nextBtn.addEventListener('click', () => {
     droppedImages = 0;
     nextBtn.disabled = true;
     displayCharacters();
-
+    
     // Bilder zurücksetzen
     draggableImages.forEach(image => {
         image.style.opacity = '1';
