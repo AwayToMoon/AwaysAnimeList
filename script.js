@@ -45,105 +45,446 @@ const characters = [
     { name: "Salma Hayek", image: "https://imgix.ranker.com/user_node_img/99/1964570/original/salma-hayek-recording-artists-and-groups-photo-u54?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
     { name: "Sofia Vergara", image: "https://image.gala.de/24102332/t/bC/v5/w960/r0.6667/-/vergara-teaser.jpg" },
     { name: "Eva Mendes", image: "https://image.gala.de/24215244/t/qN/v4/w960/r0.6667/-/eva-mendes-teaser.jpg" },
-    { name: "Penélope Cruz", image: "https://de.web.img3.acsta.net/pictures/18/03/23/15/18/0881779.jpg" },
-    { name: "Monica Bellucci", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Monica_Bellucci%2C_Women%27s_World_Awards_2009_b.jpg/960px-Monica_Bellucci%2C_Women%27s_World_Awards_2009_b.jpg" },
-    { name: "Kate Beckinsale", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Kate_Beckinsale_2011_Comic-Con_%28truer_color%29.jpg/1200px-Kate_Beckinsale_2011_Comic-Con_%28truer_color%29.jpg" },
-    { name: "Charlize Theron", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Charlize_Theron_2013.jpg/640px-Charlize_Theron_2013.jpg" },
-    { name: "Mila Kunis", image: "https://i0.gmx.at/image/138/36652138,pd=1/mila-kunis.jpg" },
-    { name: "Adriana Lima", image: "https://imgix.ranker.com/user_node_img/21/403630/original/adriana-lima-photo-u249?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Mia Khalifa 😏", image: "https://i.ebayimg.com/images/g/IG4AAOSwIytgPsiu/s-l400.jpg" },
+    { 
+        name: "Penélope Cruz", 
+        image: "https://de.web.img3.acsta.net/pictures/18/03/23/15/18/0881779.jpg" 
+    },
+    { 
+        name: "Monica Bellucci", 
+        image: "https://media.vogue.de/photos/6156c7ca0abe9b3e33397efa/master/w_1600%2Cc_limit/GettyImages-2324787.jpg" 
+    },
+    { 
+        name: "Kate Beckinsale", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Kate_Beckinsale_2011_Comic-Con_%28truer_color%29.jpg/1200px-Kate_Beckinsale_2011_Comic-Con_%28truer_color%29.jpg" 
+    },
+    { 
+        name: "Charlize Theron", 
+        image: "https://cloudfront-eu-central-1.images.arcpublishing.com/madsack/OXCSTDB4J5ASFF2GNMLH6WTZI4.jpeg" 
+    },
+    { 
+        name: "Mila Kunis", 
+        image: "https://de.web.img2.acsta.net/pictures/15/07/08/17/25/133690.jpg" 
+    },
+    { 
+        name: "Adriana Lima", 
+        image: "https://i0.gmx.at/image/706/36609706,pd=2/adriana-lima.jpg" 
+    },
+    { 
+        name: "Florence Pugh", 
+        image: "https://bmg-images.forward-publishing.io/2024/12/15/9cfba81c-e3ea-45eb-a007-dd991fbbac9b.jpeg?w=1024&auto=format" 
+    },
+    { 
+        name: "Anya Taylor-Joy", 
+        image: "https://cdn.book-family.de/stylebook/data/uploads/2022/11/gettyimages-1441297387.jpg?impolicy=channel&imwidth=992" 
+    },
+    { 
+        name: "Jenna Ortega", 
+        image: "https://i0.gmx.at/image/292/37563292,pd=3,f=sdata11/jenna-ortega.jpg" 
+    },
+    { 
+        name: "Sophie Turner", 
+        image: "https://static.wikia.nocookie.net/avengers/images/2/2c/Sophie_Turner.jpg/revision/latest?cb=20150125185607&path-prefix=de" 
+    },
+    { 
+        name: "Maisie Williams", 
+        image: "https://i2-prod.bristolpost.co.uk/incoming/article2765949.ece/ALTERNATES/s615/1_Game-Of-Thrones-Season-8-Screening-Red-Carpet-Arrivals.jpg" 
+    },
+    { 
+        name: "Elle Fanning", 
+        image: "https://static.wikia.nocookie.net/actors/images/a/a8/Elle_Fanning.jpg/revision/latest?cb=20210325232353&path-prefix=de" 
+    },
+    { 
+        name: "Dakota Fanning", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Dakota_Fanning_SAG_AWARDS_2020.jpg/960px-Dakota_Fanning_SAG_AWARDS_2020.jpg" 
+    },
+    { 
+        name: "Amanda Seyfried", 
+        image: "https://i0.gmx.at/image/942/36609942,pd=2/amanda-seyfried.jpg" 
+    },
+    { 
+        name: "Rachel McAdams", 
+        image: "https://m.media-amazon.com/images/M/MV5BMTY5ODcxMDU4NV5BMl5BanBnXkFtZTcwMjAzNjQyNQ@@._V1_FMjpg_UX1000_.jpg" 
+    },
+    { 
+        name: "Keira Knightley", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Keira_Knightley_2005.jpg/250px-Keira_Knightley_2005.jpg" 
+    },
+    { 
+        name: "Carey Mulligan", 
+        image: "https://static.epd-film.de/get/?daid=00010001QMxbhWowDUDPvx1Enkd1qihE2Cm_aWVJSZo_Y75aJVG_000000255725&dfid=i-103" 
+    },
+    { 
+        name: "Danai Gurira", 
+        image: "https://deadline.com/wp-content/uploads/2018/11/danai-gurira.jpg" 
+    },
+    { 
+        name: "Letitia Wright", 
+        image: "https://de.web.img3.acsta.net/c_310_420/pictures/19/04/25/23/54/1990890.jpg" 
+    },
+    { 
+        name: "Gemma Chan", 
+        image: "https://hips.hearstapps.com/hmg-prod/images/gemma-chan-64f797657c927.jpg?crop=0.927xw:0.942xh;0.0255xw,0.0579xh&resize=980:*" 
+    },
+    { 
+        name: "Constance Wu", 
+        image: "https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2025-03/250327-Constance-Wu-ch-1324-2075e7.jpg" 
+    },
+    { 
+        name: "Priyanka Chopra", 
+        image: "https://image.gala.de/22558192/t/ON/v4/w960/r0.6667/-/priyanka-chopra.jpg" 
+    },
+    { 
+        name: "Deepika Padukone", 
+        image: "https://image.gala.de/22580474/t/RJ/v4/w960/r0.6667/-/deepika-padukone.jpg" 
+    },
+    { 
+        name: "Aishwarya Rai", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/3/3a/Aishwarya_Rai_Cannes_2017.jpg" 
+    },
+    { 
+        name: "Freida Pinto", 
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAqFTtMc9OQJgnaJL0JX-4yi_Fjux-KDE4cQ&s" 
+    },
+    { 
+        name: "Mindy Kaling", 
+        image: "https://www.antenne.nrw/media/cache/3/version/108163/hhscgr3rgc-v11-ax-s2048-v1.jpeg/29e7045fbe9eb7a80b6ccb912ad0bef9.jpg" 
+    },
+    { 
+        name: "Lucy Liu", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Lucy_Liu_Cannes_2008.jpg/250px-Lucy_Liu_Cannes_2008.jpg" 
+    },
+    { 
+        name: "Ming-Na Wen", 
+        image: "https://static.wikia.nocookie.net/agentsofshield/images/0/07/Ming-Na-Wen.jpg/revision/latest?cb=20180114125039&path-prefix=de" 
+    },
+    { 
+        name: "Jamie Chung", 
+        image: "https://static.wikia.nocookie.net/fox-thegifted/images/e/e6/Jamie_Chung.png/revision/latest?cb=20180923002834" 
+    },
+    { 
+        name: "Brenda Song", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/24/Brenda_Song_021109-R293.jpg" 
+    },
+    { 
+        name: "Lana Condor", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/29/Lana_Condor_2015_%282%29.jpg" 
+    },
+    { 
+        name: "Gigi Hadid", 
+        image: "https://image.gala.de/24105912/t/5L/v6/w960/r0.6667/-/gigi-hadid.jpg" 
+    },
+    { 
+        name: "Cara Delevingne", 
+        image: "https://static.wikia.nocookie.net/dckinofilme/images/6/64/Cara_Delevingne.jpg/revision/latest/thumbnail/width/360/height/360?cb=20141203133240&path-prefix=de" 
+    },
+    { 
+        name: "Karlie Kloss", 
+        image: "https://hips.hearstapps.com/hmg-prod/images/karlie-kloss-1549565171.jpg?resize=640:*" 
+    },
+    { 
+        name: "Miranda Kerr", 
+        image: "https://image.gala.de/24088660/t/Et/v3/w960/r0.6667/-/miranda-kerr.jpg" 
+    },
+    { 
+        name: "Rosie Huntington-Whiteley", 
+        image: "https://cache.net-a-porter.com/content/images/story-head-content-SUBBED-1540568687092.jpeg/w1900_q65.jpeg" 
+    },
+    { 
+        name: "Emily Ratajkowski", 
+        image: "https://static.instyle.de/0x0:844x1206/844x1206/images/2025-02/bildschirmfoto_2025-02-28_um_11.49.52.png" 
+    },
+    { 
+        name: "Kate Upton", 
+        image: "https://i0.gmx.at/image/866/36639866,pd=1/kate-upton.jpg" 
+    },
+    { 
+        name: "Chrissy Teigen", 
+        image: "https://people.com/thmb/hlz9t6ueMm1kZhdS5gh4ZS99Ujk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(737x287:739x289)/chrissy-teigen-hate-comments-rant-031625-12b9416df24841069cd8ef57a5c929e3.jpg" 
+    },
+    { 
+        name: "Tyra Banks", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/3/34/Tyra_Banks_2012_Shankbone_5.JPG" 
+    },
+    { 
+        name: "Naomi Campbell", 
+        image: "https://image.gala.de/23939016/t/WS/v12/w960/r0.6667/-/naomi-campbell.jpg" 
+    },
+    { 
+        name: "Gisele Bündchen", 
+        image: "https://image.stern.de/8369300/t/9W/v3/w1440/r1/-/gisele.jpg" 
+    },
+    { 
+        name: "Heidi Klum", 
+        image: "https://image.gala.de/24315182/t/Gb/v3/w960/r0.6667/-/03--sie-testet-oscar-kleid-auf-dem-trampolin---1-1---spoton-article-1087949.jpg" 
+    },
+    { 
+        name: "Alessandra Ambrosio", 
+        image: "https://vipcheck.wageindicator.org/media/Alessandra.ambrosio.jpeg" 
+    },
+    { 
+        name: "Candice Swanepoel", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/0/06/Candice-Swanepoel_2010-03-31_VictoriasSecretStoreChicago_photo-by-Adam_Bielawski.jpg" 
+    },
+    { 
+        name: "Behati Prinsloo", 
+        image: "https://image.gala.de/22987930/t/nr/v9/w960/r0.6667/-/behati-prinsloo.jpg" 
+    },
+    { 
+        name: "Lily Aldridge", 
+        image: "https://m.media-amazon.com/images/M/MV5BMTQxNTQwNzU5MV5BMl5BanBnXkFtZTcwNjIzNDMwNw@@._V1_.jpg" 
+    },
+    { 
+        name: "Elsa Hosk", 
+        image: "https://i0.gmx.at/image/028/37874028,pd=1/elsa-hosk.jpg" 
+    },
+    { 
+        name: "Jasmine Tookes", 
+        image: "https://image.gala.de/22504978/t/vZ/v7/w960/r0.6667/-/jasmine-tookes.jpg" 
+    },
+    { 
+        name: "Romee Strijd", 
+        image: "https://www.tips.at/image/thumbcrop/news/896260/616375/1200x733x0/1692890474.1031-victoria-s-secret-model-romee-strijd-urlaubt-mit-familie-in-oesterreich-kPiS5w.jpg" 
+    },
+    { 
+        name: "Sara Sampaio", 
+        image: "https://i0.gmx.at/image/130/37041130,pd=1/sara-sampaio.jpg" 
+    },
+    { 
+        name: "Taylor Hill", 
+        image: "https://www.makeup.com/-/media/project/loreal/brand-sites/mdc/americas/us/articles/2019/07_july/29-taylor-hill-interview/mudc-hero-taylor-hill-ralph-lauren-beyond-romance-07292019.jpg?cx=0.49&cy=0.54&cw=705&ch=529&blr=False&hash=49937EFD6B86BC93C1DB2472A14EF1BB" 
+    },
+    { 
+        name: "Grace Elizabeth", 
+        image: "https://media.zenfs.com/en/cover_media_309/47bc2511af10d601d869e7ca7ce93e3a" 
+    },
+    { 
+        name: "Barbara Palvin", 
+        image: "https://contentf5.dailynewshungary.com/wp-content/uploads/2024/10/Barbara-Palvin-e1728039854746.jpg" 
+    },
+    { 
+        name: "Lais Ribeiro", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Lais_Ribeiro_modeling.jpg/1200px-Lais_Ribeiro_modeling.jpg" 
+    },
+    { 
+        name: "Devon Windsor", 
+        image: "https://people.com/thmb/mxHi6AgfFUra-tm_s-Bj_yfBMEs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(757x0:759x2)/devon-windsor-1-43e01733cccd4ed8935cc29bdded8f80.jpg" 
+    },
+    { 
+        name: "Stella Maxwell", 
+        image: "https://assets.vogue.com/photos/5a208e77a2171b3fa480a492/master/pass/00-promo-stella-maxwell.jpg" 
+    },
+    { 
+        name: "Megan Williams", 
+        image: "https://i.mdel.net/i/db/2022/4/1684537/1684537-500w.jpg" 
+    },
+    { 
+        name: "Alanna Arrington", 
+        image: "https://i.mdel.net/i/db/2023/3/1915022/1915022-500w.jpg" 
+    },
+    { 
+        name: "Imaan Hammam", 
+        image: "https://fashionmagazine.mblycdn.com/fm/resized/2023/11/w768/Regimens_Product_Inline_9.jpg" 
+    },
+    { 
+        name: "Jourdan Dunn", 
+        image: "https://m.media-amazon.com/images/M/MV5BMjljMjMzZDItMGIxZC00YzdjLTlmNmYtYTIzNmI1ZGNiYzBmXkEyXkFqcGc@._V1_.jpg" 
+    },
+    { 
+        name: "Joan Smalls", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/d/dc/Joan_Smalls_DVF_ss14-33.jpg" 
+    },
+    { 
+        name: "Maria Borges", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Cannes_2018_32.jpg/250px-Cannes_2018_32.jpg" 
+    },
+    { 
+        name: "Lais Oliveira", 
+        image: "https://images.squarespace-cdn.com/content/v1/58c5d9cf9de4bb5b7f5502ae/1533058771325-DQRB8BFWHWPERTZUT1BP/IMG_1188x.jpg" 
+    },
+    { 
+        name: "Daniela Braga", 
+        image: "https://images.squarespace-cdn.com/content/v1/5625065be4b04bb42a217643/1506645779123-MGISZH8YWOWKOYEJO13J/Daniela%2BBraga%2B2016%2BFuture%2BFashion%2BRunway%2BShow%2BGu7zIo5387Jx.jpg" 
+    },
+    { 
+        name: "Bruna Lirio", 
+        image: "https://www.modelwerk.de/image/513916.jpg?size=rmbig" 
+    },
+    { 
+        name: "Fernanda Motta", 
+        image: "https://veja.abril.com.br/wp-content/uploads/2020/02/fernanda-motta-modelo-2020.jpg?crop=1&resize=1212,909" 
+    },
+    { 
+        name: "Izabel Goulart", 
+        image: "https://www.grazia-magazin.de/images/3x4_870/2024-04/izabel-goulart-im-interview.jpg?h=862e88c4" 
+    }
 ];
 
-let currentCharacterIndex = 0;
+let droppedImages = 0;
+const totalImages = 3;
 
 // DOM-Elemente
-const currentImage = document.getElementById('current-image');
-const characterName = document.getElementById('character-name');
-const smashBtn = document.getElementById('smash-btn');
-const marryBtn = document.getElementById('marry-btn');
-const passBtn = document.getElementById('pass-btn');
-const counter = document.getElementById('counter');
+const draggableImages = document.querySelectorAll('.draggable-image');
+const dropZones = document.querySelectorAll('.drop-zone');
+const nextBtn = document.getElementById('next-btn');
 
-// Funktion zum Anzeigen des aktuellen Charakters
-function displayCharacter() {
-    if (currentCharacterIndex < characters.length) {
-        const character = characters[currentCharacterIndex];
-        currentImage.src = character.image;
-        characterName.textContent = character.name;
-        counter.textContent = `${currentCharacterIndex + 1}/${characters.length}`;
-    } else {
-        // Spiel beendet
-        const gameContainer = document.querySelector('.game-container');
-        gameContainer.innerHTML = `
-            <h2>Spiel beendet!</h2>
-            <button onclick="resetGame()" class="btn reload"><i class="fas fa-redo-alt"></i></button>
-        `;
+// Zufällige 3 Charaktere auswählen
+function getRandomCharacters() {
+    const shuffled = [...characters].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 3);
+}
+
+// Bilder und Namen anzeigen
+function displayCharacters() {
+    const randomCharacters = getRandomCharacters();
+    draggableImages.forEach((container, index) => {
+        const character = randomCharacters[index];
+        const img = container.querySelector('img');
+        const name = container.querySelector('h2');
+        
+        if (character && img && name) {
+            // Bild laden und Fehlerbehandlung
+            img.onerror = function() {
+                console.error('Bild konnte nicht geladen werden:', character.image);
+                img.src = 'https://via.placeholder.com/200x300?text=Kein+Bild';
+            };
+            img.src = character.image;
+            img.alt = character.name;
+            name.textContent = character.name;
+        }
+    });
+}
+
+// Drag & Drop Event Handler
+function handleDragStart(e) {
+    const draggableImage = e.target.closest('.draggable-image');
+    if (draggableImage) {
+        draggableImage.classList.add('dragging');
+        e.dataTransfer.setData('text/plain', draggableImage.dataset.index);
     }
 }
 
-// Event Listener für Buttons
-smashBtn.addEventListener('click', () => {
-    // Emoji erstellen und hinzufügen
-    const emoji = document.createElement('div');
-    emoji.className = 'animation-emoji';
-    emoji.textContent = '💦';
-    currentImage.parentElement.appendChild(emoji);
-    
-    // Animationen starten
-    currentImage.classList.add('smash-animation');
-    emoji.classList.add('emoji-animation');
-    
-    setTimeout(() => {
-        currentCharacterIndex++;
-        displayCharacter();
-        currentImage.classList.remove('smash-animation');
-        emoji.remove();
-    }, 700);
-});
-
-marryBtn.addEventListener('click', () => {
-    // Emoji erstellen und hinzufügen
-    const emoji = document.createElement('div');
-    emoji.className = 'animation-emoji';
-    emoji.textContent = '👰🏽‍♀️';
-    currentImage.parentElement.appendChild(emoji);
-    
-    // Animationen starten
-    currentImage.classList.add('marry-animation');
-    emoji.classList.add('emoji-animation');
-    
-    setTimeout(() => {
-        currentCharacterIndex++;
-        displayCharacter();
-        currentImage.classList.remove('marry-animation');
-        emoji.remove();
-    }, 700);
-});
-
-passBtn.addEventListener('click', () => {
-    // Emoji erstellen und hinzufügen
-    const emoji = document.createElement('div');
-    emoji.className = 'animation-emoji';
-    emoji.textContent = '☠️';
-    currentImage.parentElement.appendChild(emoji);
-    
-    // Animationen starten
-    currentImage.classList.add('kill-animation');
-    emoji.classList.add('emoji-animation');
-    
-    setTimeout(() => {
-        currentCharacterIndex++;
-        displayCharacter();
-        currentImage.classList.remove('kill-animation');
-        emoji.remove();
-    }, 700);
-});
-
-// Funktion zum Zurücksetzen des Spiels
-function resetGame() {
-    currentCharacterIndex = 0;
-    displayCharacter();
+function handleDragEnd(e) {
+    const draggableImage = e.target.closest('.draggable-image');
+    if (draggableImage) {
+        draggableImage.classList.remove('dragging');
+    }
 }
 
-// Spiel initialisieren
-displayCharacter();
+function handleDragOver(e) {
+    e.preventDefault();
+    const dropZone = e.target.closest('.drop-zone');
+    if (dropZone) {
+        dropZone.classList.add('drag-over');
+    }
+}
+
+function handleDragLeave(e) {
+    const dropZone = e.target.closest('.drop-zone');
+    if (dropZone) {
+        dropZone.classList.remove('drag-over');
+    }
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    const dropZone = e.target.closest('.drop-zone');
+    if (dropZone) {
+        dropZone.classList.remove('drag-over');
+        const draggedImage = document.querySelector('.dragging');
+        if (draggedImage) {
+            dropZone.classList.add('dropped');
+
+            // Bild-Element in die Drop-Zone verschieben
+            const imgClone = draggedImage.querySelector('img').cloneNode(true);
+            imgClone.style.width = '80px';
+            imgClone.style.height = '120px';
+            imgClone.style.borderRadius = '8px';
+            imgClone.style.marginBottom = '8px';
+            dropZone.appendChild(imgClone);
+
+            // Text in der Drop-Zone ausblenden
+            const span = dropZone.querySelector('span');
+            if (span) span.style.visibility = 'hidden';
+
+            // Ergebnis-Text unterhalb anzeigen
+            const type = dropZone.dataset.type;
+            let resultId = '';
+            let resultText = '';
+            if (type === 'smash') {
+                resultId = 'smash-result';
+                resultText = 'Smash 💦';
+            } else if (type === 'marry') {
+                resultId = 'marry-result';
+                resultText = 'Marry 👰🏽‍♀️';
+            } else {
+                resultId = 'kill-result';
+                resultText = 'Kill ☠️';
+            }
+            document.getElementById(resultId).textContent = resultText;
+
+            // Animation Emoji
+            const emoji = document.createElement('div');
+            emoji.className = 'animation-emoji';
+            emoji.textContent = type === 'smash' ? '💦' : type === 'marry' ? '👰🏽‍♀️' : '☠️';
+            dropZone.appendChild(emoji);
+
+            // Bild als verschoben markieren
+            draggedImage.style.opacity = '0.5';
+            draggedImage.style.pointerEvents = 'none';
+            droppedImages++;
+
+            if (droppedImages === totalImages) {
+                nextBtn.disabled = false;
+            }
+
+            setTimeout(() => {
+                dropZone.classList.remove('dropped');
+                emoji.remove();
+            }, 700);
+        }
+    }
+}
+
+// Event Listener für den Weiter-Button
+nextBtn.addEventListener('click', () => {
+    droppedImages = 0;
+    nextBtn.disabled = true;
+    displayCharacters();
+
+    // Bilder zurücksetzen
+    draggableImages.forEach(image => {
+        image.style.opacity = '1';
+        image.style.pointerEvents = 'auto';
+    });
+    // Drop-Zonen leeren und Text wieder einblenden
+    dropZones.forEach(zone => {
+        Array.from(zone.querySelectorAll('img')).forEach(img => img.remove());
+        const span = zone.querySelector('span');
+        if (span) span.style.visibility = 'visible';
+    });
+    // Ergebnis-Texte leeren
+    document.getElementById('smash-result').textContent = '';
+    document.getElementById('marry-result').textContent = '';
+    document.getElementById('kill-result').textContent = '';
+});
+
+// Event Listener hinzufügen
+document.addEventListener('DOMContentLoaded', () => {
+    // Drag & Drop Event Listener für Bilder
+    draggableImages.forEach((image, index) => {
+        image.dataset.index = index;
+        image.setAttribute('draggable', 'true');
+        image.addEventListener('dragstart', handleDragStart);
+        image.addEventListener('dragend', handleDragEnd);
+    });
+
+    // Drop Zone Event Listener
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', handleDragOver);
+        zone.addEventListener('dragleave', handleDragLeave);
+        zone.addEventListener('drop', handleDrop);
+    });
+
+    // Initiale Anzeige
+    displayCharacters();
+});
