@@ -3,56 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smash💦, Marry👰🏽‍♀️, Kill☠️</title>
+    <title>Smash💦, Marry👰🏽, Kill☠️</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1><span>Smash</span>💦, <span>Marry</span>👰🏽‍♀️, <span>Kill</span>☠️</h1>
-
-        <div class="drag-drop-container">
-            <div class="draggable-images">
-                <div class="draggable-image" draggable="true">
-                    <img src="" alt="Charakter 1">
-                    <h2></h2>
-                </div>
-                <div class="draggable-image" draggable="true">
-                    <img src="" alt="Charakter 2">
-                    <h2></h2>
-                </div>
-                <div class="draggable-image" draggable="true">
-                    <img src="" alt="Charakter 3">
-                    <h2></h2>
-                </div>
-            </div>
-
-            <div class="drop-zones">
-                <div class="drop-zone" data-type="smash">
-                    <span style="font-size: 2.2rem; display: block;">💦</span>
-                    <span>Smash</span>
-                </div>
-                <div class="drop-zone" data-type="marry">
-                    <span style="font-size: 2.2rem; display: block;">👰🏽‍♀️</span>
-                    <span>Marry</span>
-                </div>
-                <div class="drop-zone" data-type="pass">
-                    <span style="font-size: 2.2rem; display: block;">☠️</span>
-                    <span>Kill</span>
-                </div>
-            </div>
-
-            <div class="drop-results" style="display: flex; justify-content: space-around; margin-top: 10px;">
-                <div id="smash-result"></div>
-                <div id="marry-result"></div>
-                <div id="kill-result"></div>
-            </div>
-
-            <button id="next-btn" class="next-btn" disabled>
-                <i class="fas fa-arrow-right"></i> Weiter
-            </button>
-        </div>
+    <div class="instructions">
+        <strong>Anleitung:</strong><br>
+        1. Ziehe die Charaktere per <span class="highlight">Linksklick gedrückt halten</span> in die Felder <span class="highlight">„Smash“</span>, <span class="highlight">„Marry“</span>, <span class="highlight">„Kill“</span>.<br>
+        2. Du kannst deine Wahl ändern, indem du auf das Bild in der Unteren Zeile <span class="highlight">klickst</span>.<br>
+        3. Wenn alle Charaktere bewertet wurden, ist das Spiel vorbei.
     </div>
+    <div class="container">
+        <h1>Smash, Marry, Kill</h1>
+        
+        <div class="character-container">
+            <div class="character-card draggable-image" draggable="true">
+                <img src="" alt="Anime Girl">
+                <h2></h2>
+            </div>
+            <div class="character-card draggable-image" draggable="true">
+                <img src="" alt="Anime Girl">
+                <h2></h2>
+            </div>
+            <div class="character-card draggable-image" draggable="true">
+                <img src="" alt="Anime Girl">
+                <h2></h2>
+            </div>
+        </div>
+
+        <div class="drop-zones">
+            <div class="drop-zone" data-type="smash">
+                <span>Smash💦</span>
+            </div>
+            <div class="drop-zone" data-type="marry">
+                <span>Marry👰🏽‍♀️</span>
+            </div>
+            <div class="drop-zone" data-type="pass">
+                <span>Kill☠️</span>
+            </div>
+        </div>
+
+        <div class="drop-results">
+            <div id="smash-result"></div>
+            <div id="marry-result"></div>
+            <div id="kill-result"></div>
+        </div>
+
+        <button id="next-btn" class="next-btn" disabled>Weiter</button>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
