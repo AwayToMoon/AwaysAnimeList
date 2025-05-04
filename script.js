@@ -1,5 +1,5 @@
 // Charaktere
-const characters = [
+let characters = [
     { name: "Margot Robbie", image: "https://imgix.ranker.com/user_node_img/1641/32800165/original/32800165-photo-u-1437653758?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
     { name: "Ana de Armas", image: "https://imgix.ranker.com/user_node_img/1551/31000870/original/ana-de-armas-photo-u26?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
     { name: "Scarlett Johansson", image: "https://imgix.ranker.com/user_node_img/100/1984943/original/scarlett-johansson-recording-artists-and-groups-photo-u166?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
@@ -332,8 +332,7 @@ const nextBtn = document.getElementById('next-btn');
 // Zufällige 3 Charaktere auswählen
 function getRandomCharacters() {
     if (availableCharacters.length < 3) {
-        // Wenn weniger als 3 übrig sind, Pool zurücksetzen
-        availableCharacters = [...characters];
+        return null; // Nicht genug Charaktere übrig
     }
     const shuffled = [...availableCharacters].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, 3);
@@ -345,19 +344,30 @@ function getRandomCharacters() {
 // Bilder und Namen anzeigen
 function displayCharacters() {
     const randomCharacters = getRandomCharacters();
+    if (!randomCharacters) {
+        // Spielende
+        draggableImages.forEach((container) => {
+            const img = container.querySelector('img');
+            const name = container.querySelector('h2');
+            img.style.display = 'none';
+            name.textContent = '';
+        });
+        document.querySelector('.character-container').innerHTML = '<h2 style="width:100%;text-align:center;color:#fff;">Alle Charaktere wurden Bewertet!<br>Danke fürs Mitmachen!</h2>';
+        nextBtn.disabled = true;
+        return;
+    }
     draggableImages.forEach((container, index) => {
         const character = randomCharacters[index];
         const img = container.querySelector('img');
         const name = container.querySelector('h2');
-        
         if (character && img && name) {
-            // Bild laden und Fehlerbehandlung
             img.onerror = function() {
                 console.error('Bild konnte nicht geladen werden:', character.image);
                 img.src = 'https://via.placeholder.com/200x300?text=Kein+Bild';
             };
             img.src = character.image;
             img.alt = character.name;
+            img.style.display = '';
             name.textContent = character.name;
         }
     });
@@ -402,13 +412,34 @@ function handleDrop(e) {
         const draggedImage = document.querySelector('.dragging');
         if (draggedImage) {
             dropZone.classList.add('dropped');
-            
+
             // Bild-Element in die Drop-Zone verschieben
             const imgClone = draggedImage.querySelector('img').cloneNode(true);
-            imgClone.style.width = '80px';
-            imgClone.style.height = '120px';
-            imgClone.style.borderRadius = '8px';
-            imgClone.style.marginBottom = '8px';
+            imgClone.className = 'drop-image';
+            // Klick-Event zum Entfernen
+            imgClone.addEventListener('click', function() {
+                // Bild entfernen
+                imgClone.remove();
+                // Drop-Zone zurücksetzen
+                const span = dropZone.querySelector('span');
+                if (span) span.style.visibility = 'visible';
+                // Emoji entfernen
+                const emoji = dropZone.querySelector('.animation-emoji');
+                if (emoji) emoji.remove();
+                // Ergebnis-Text leeren
+                const type = dropZone.dataset.type;
+                let resultId = '';
+                if (type === 'smash') resultId = 'smash-result';
+                else if (type === 'marry') resultId = 'marry-result';
+                else resultId = 'kill-result';
+                document.getElementById(resultId).textContent = '';
+                // Bild in der Auswahl wieder aktivieren
+                draggedImage.style.opacity = '1';
+                draggedImage.style.pointerEvents = 'auto';
+                droppedImages--;
+                // Weiter-Button ggf. deaktivieren
+                nextBtn.disabled = true;
+            });
             dropZone.appendChild(imgClone);
 
             // Text in der Drop-Zone ausblenden
@@ -432,24 +463,24 @@ function handleDrop(e) {
             document.getElementById(resultId).textContent = resultText;
 
             // Animation Emoji
-    const emoji = document.createElement('div');
-    emoji.className = 'animation-emoji';
+            const emoji = document.createElement('div');
+            emoji.className = 'animation-emoji';
             emoji.textContent = type === 'smash' ? '💦' : type === 'marry' ? '👰🏽‍♀️' : '☠️';
             dropZone.appendChild(emoji);
-            
+
             // Bild als verschoben markieren
             draggedImage.style.opacity = '0.5';
             draggedImage.style.pointerEvents = 'none';
             droppedImages++;
-            
+
             if (droppedImages === totalImages) {
                 nextBtn.disabled = false;
             }
-    
-    setTimeout(() => {
+
+            setTimeout(() => {
                 dropZone.classList.remove('dropped');
-        emoji.remove();
-    }, 700);
+                emoji.remove();
+            }, 700);
         }
     }
 }
