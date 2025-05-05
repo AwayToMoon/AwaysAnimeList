@@ -265,70 +265,6 @@ h1 {
     color: rgba(255, 255, 255, 0.5);
 }
 
-.leaderboard-section {
-    margin-top: 40px;
-    text-align: left;
-}
-
-.leaderboard-section h2 {
-    color: #fff;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.leaderboard {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.leaderboard-entry {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 10px;
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.1em;
-}
-
-.leaderboard-entry.top-1 {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.3));
-    border: 2px solid gold;
-}
-
-.leaderboard-entry.top-2 {
-    background: linear-gradient(135deg, rgba(192, 192, 192, 0.3), rgba(169, 169, 169, 0.3));
-    border: 2px solid silver;
-}
-
-.leaderboard-entry.top-3 {
-    background: linear-gradient(135deg, rgba(205, 127, 50, 0.3), rgba(184, 115, 51, 0.3));
-    border: 2px solid #cd7f32;
-}
-
-.leaderboard-entry .rank {
-    font-weight: bold;
-    width: 40px;
-}
-
-.leaderboard-entry .name {
-    flex: 1;
-    margin: 0 15px;
-}
-
-.leaderboard-entry .score {
-    font-weight: bold;
-    color: #2ed573;
-}
-
-.leaderboard-entry .details {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9em;
-    margin-left: 15px;
-}
-
 #gameOverScreen {
     position: fixed;
     top: 0;
@@ -385,24 +321,6 @@ h1 {
 @media (max-width: 600px) {
     .name-input-container {
         padding: 20px;
-    }
-    
-    .leaderboard-entry {
-        flex-direction: column;
-        text-align: center;
-        gap: 5px;
-    }
-    
-    .leaderboard-entry .rank {
-        width: auto;
-    }
-    
-    .leaderboard-entry .name {
-        margin: 5px 0;
-    }
-    
-    .leaderboard-entry .details {
-        margin-left: 0;
     }
     
     .game-over-content {
