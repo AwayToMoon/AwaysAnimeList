@@ -1,530 +1,546 @@
-// Charaktere
-let characters = [
-    { name: "Margot Robbie", image: "https://imgix.ranker.com/user_node_img/1641/32800165/original/32800165-photo-u-1437653758?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Ana de Armas", image: "https://imgix.ranker.com/user_node_img/1551/31000870/original/ana-de-armas-photo-u26?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Scarlett Johansson", image: "https://imgix.ranker.com/user_node_img/100/1984943/original/scarlett-johansson-recording-artists-and-groups-photo-u166?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Jessica Alba", image: "https://imgix.ranker.com/user_node_img/65/1285612/original/1285612-photo-u-1041207549?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Alexandra Daddario", image: "https://imgix.ranker.com/user_node_img/1548/30955921/original/alexandra-daddario-photo-u109?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Gal Gadot", image: "https://imgix.ranker.com/user_node_img/53/1041357/original/1041357-photo-u2146145864?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Emma Watson", image: "https://image.gala.de/22628744/t/PZ/v5/w960/r0.6667/-/emma-watson-2021-10-17.jpg" },
-    { name: "Sydney Sweeney", image: "https://imgix.ranker.com/user_node_img/1210/24194612/original/sydney-sweeney-u1895809208?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&crop=faces&bg=fff&h=300&w=300" },
-    { name: "Zendaya", image: "https://www.hollywoodreporter.com/wp-content/uploads/2023/08/GettyImages-1497018169-H-2023.jpg?w=1296&h=730&crop=1" },
-    { name: "Elizabeth Olsen", image: "https://imgix.ranker.com/user_node_img/1590/31793173/original/elizabeth-olsen-people-in-tv-photo-u16?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Emilia Clarke", image: "https://media.vogue.de/photos/5beeefec5c5243377bf1cb8a/2:3/w_2560%2Cc_limit/Emilia-Clarke-Aufmacher.jpg" },
-    { name: "Megan Fox", image: "https://imgix.ranker.com/user_node_img/78/1558135/original/1558135-photo-u-30226905?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Anne Hathaway", image: "https://imgix.ranker.com/user_node_img/24/468745/original/anne-hathaway-photo-u352?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Jennifer Lawrence", image: "https://imgix.ranker.com/user_node_img/65/1281504/original/1281504-photo-u-1423690460?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Emma Stone", image: "https://m.media-amazon.com/images/M/MV5BMjI4NjM1NDkyN15BMl5BanBnXkFtZTgwODgyNTY1MjE@._V1_FMjpg_UX1000_.jpg" },
-    { name: "Natalie Portman", image: "https://imgix.ranker.com/user_node_img/83/1648992/original/1648992-photo-u1088517660?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Selena Gomez", image: "https://i0.gmx.at/image/390/38731390,pd=2,f=size-l/selena-gomez.jpg" },
-    { name: "Angelina Jolie", image: "https://image.gala.de/24334032/t/t4/v3/w960/r0.6667/-/25--wurde-ihr-sohn-zu-ihrem-mieter----1-1---spoton-article-1090595.jpg" },
-    { name: "Blake Lively", image: "https://people.com/thmb/JWW3QV0Uzp2nbIyMOOLIuFreyKQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(749x0:751x2)/blake-lively--time100-04242025-924466c63120434e80ab621e8856d1ec.jpg" },
-    { name: "Lily Collins", image: "https://hips.hearstapps.com/hmg-prod/images/lily-collins-attends-the-devil-wears-prada-the-musical-news-photo-1733139409.jpg?crop=1xw:0.66699xh;center,top&resize=1200:*" },
-    { name: "Nina Dobrev", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Nina_Dobrev_at_PaleyFest2010.jpg/250px-Nina_Dobrev_at_PaleyFest2010.jpg" },
-    { name: "Victoria Justice", image: "https://m.media-amazon.com/images/M/MV5BMzE3NjEzYmQtODNhZS00ZDU1LTg5NGMtMmVlNzRjNDFiMzQ5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
-    { name: "Madison Beer", image: "https://imgix.ranker.com/user_node_img/4035/80686523/original/madison-beer-photo-u16?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Ariana Grande", image: "https://image.gala.de/23910930/t/5Z/v5/w960/r0.6667/-/ariana-grande.jpg" },
-    { name: "Hailee Steinfeld", image: "https://i0.gmx.at/image/382/37987382,pd=1,f=size-l/hailee-steinfeld.jpg" },
-    { name: "Barbara Palvin", image: "https://i.pinimg.com/736x/34/6a/fd/346afde34a1cf7413e729ce6b822183e.jpg" },
-    { name: "Kendall Jenner", image: "https://i0.gmx.at/image/234/39021234,pd=1/kendall-jenner.jpg" },
-    { name: "Bella Hadid", image: "https://content5.promiflash.de/article-images/square600/bella-hadid-laechelt-4.jpg" },
-    { name: "Dua Lipa", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Glasto24_28_300624_%28259_of_545%29_%2853838014719%29_%28cropped%29.jpg/1200px-Glasto24_28_300624_%28259_of_545%29_%2853838014719%29_%28cropped%29.jpg" },
-    { name: "Lily James", image: "https://de.web.img3.acsta.net/pictures/210/432/21043227_20130923203108321.jpg" },
-    { name: "Millie Bobby Brown", image: "https://image.gala.de/24310008/t/3g/v2/w1440/r1/-/millie-bobbie-brown-teaser.jpg" },
-    { name: "Olivia Rodrigo", image: "https://image.gala.de/22494124/t/K2/v5/w960/r1/-/olivia-rodrigo.jpg" },
-    { name: "Camila Mendes", image: "https://media.themoviedb.org/t/p/w500/pZAWRHdJtJlDcWuQHlgIwX12s02.jpg" },
-    { name: "Emily Ratajkowski", image: "https://imgix.ranker.com/user_node_img/3102/62021533/original/emily-ratajkowski-photo-u117?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Dove Cameron", image: "https://fr.web.img6.acsta.net/pictures/18/01/08/13/57/3752878.jpg" },
-    { name: "Taylor Swift", image: "https://i0.gmx.at/image/468/38837468,pd=1,f=size-l/taylor-swift.jpg" },
-    { name: "Rihanna", image: "https://www.rollingstone.de/wp-content/uploads/2021/02/17/15/rihanna-gettyimages-821622848-scaled.jpg" },
-    { name: "Beyoncé", image: "https://imageio.forbes.com/specials-images/imageserve/6760517984921923e8effbcd/0x0.jpg?format=jpg&crop=1736,1737,x834,y79,safe&height=416&width=416&fit=bounds" },
-    { name: "Lady Gaga", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Lady_Gaga_at_the_White_House_in_2023_%283%29.jpg/250px-Lady_Gaga_at_the_White_House_in_2023_%283%29.jpg" },
-    { name: "Katy Perry", image: "https://cdn1-production-images-kly.akamaized.net/MVCpPIEZaeUtcgInvwCIoOI_D1w=/800x1066/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4222292/original/002123100_1668100611-Katy_Perry-6.jpg" },
-    { name: "Jennifer Lopez", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Jennifer_Lopez_at_the_2025_Sundance_Film_Festival_%28cropped_3%29.jpg/1200px-Jennifer_Lopez_at_the_2025_Sundance_Film_Festival_%28cropped_3%29.jpg" },
-    { name: "Shakira", image: "https://upload.wikimedia.org/wikipedia/commons/b/b8/2023-11-16_Gala_de_los_Latin_Grammy%2C_03_%28cropped%2902.jpg" },
-    { name: "Salma Hayek", image: "https://imgix.ranker.com/user_node_img/99/1964570/original/salma-hayek-recording-artists-and-groups-photo-u54?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&w=500" },
-    { name: "Sofia Vergara", image: "https://image.gala.de/24102332/t/bC/v5/w960/r0.6667/-/vergara-teaser.jpg" },
-    { name: "Eva Mendes", image: "https://image.gala.de/24215244/t/qN/v4/w960/r0.6667/-/eva-mendes-teaser.jpg" },
-    { 
-        name: "Penélope Cruz", 
-        image: "https://de.web.img3.acsta.net/pictures/18/03/23/15/18/0881779.jpg" 
-    },
-    { 
-        name: "Monica Bellucci", 
-        image: "https://media.vogue.de/photos/6156c7ca0abe9b3e33397efa/master/w_1600%2Cc_limit/GettyImages-2324787.jpg" 
-    },
-    { 
-        name: "Kate Beckinsale", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Kate_Beckinsale_2011_Comic-Con_%28truer_color%29.jpg/1200px-Kate_Beckinsale_2011_Comic-Con_%28truer_color%29.jpg" 
-    },
-    { 
-        name: "Charlize Theron", 
-        image: "https://cloudfront-eu-central-1.images.arcpublishing.com/madsack/OXCSTDB4J5ASFF2GNMLH6WTZI4.jpeg" 
-    },
-    { 
-        name: "Mila Kunis", 
-        image: "https://de.web.img2.acsta.net/pictures/15/07/08/17/25/133690.jpg" 
-    },
-    { 
-        name: "Adriana Lima", 
-        image: "https://i0.gmx.at/image/706/36609706,pd=2/adriana-lima.jpg" 
-    },
-    { 
-        name: "Florence Pugh", 
-        image: "https://bmg-images.forward-publishing.io/2024/12/15/9cfba81c-e3ea-45eb-a007-dd991fbbac9b.jpeg?w=1024&auto=format" 
-    },
-    { 
-        name: "Anya Taylor-Joy", 
-        image: "https://cdn.book-family.de/stylebook/data/uploads/2022/11/gettyimages-1441297387.jpg?impolicy=channel&imwidth=992" 
-    },
-    { 
-        name: "Jenna Ortega", 
-        image: "https://i0.gmx.at/image/292/37563292,pd=3,f=sdata11/jenna-ortega.jpg" 
-    },
-    { 
-        name: "Sophie Turner", 
-        image: "https://static.wikia.nocookie.net/avengers/images/2/2c/Sophie_Turner.jpg/revision/latest?cb=20150125185607&path-prefix=de" 
-    },
-    { 
-        name: "Maisie Williams", 
-        image: "https://i2-prod.bristolpost.co.uk/incoming/article2765949.ece/ALTERNATES/s615/1_Game-Of-Thrones-Season-8-Screening-Red-Carpet-Arrivals.jpg" 
-    },
-    { 
-        name: "Elle Fanning", 
-        image: "https://static.wikia.nocookie.net/actors/images/a/a8/Elle_Fanning.jpg/revision/latest?cb=20210325232353&path-prefix=de" 
-    },
-    { 
-        name: "Dakota Fanning", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Dakota_Fanning_SAG_AWARDS_2020.jpg/960px-Dakota_Fanning_SAG_AWARDS_2020.jpg" 
-    },
-    { 
-        name: "Amanda Seyfried", 
-        image: "https://i0.gmx.at/image/942/36609942,pd=2/amanda-seyfried.jpg" 
-    },
-    { 
-        name: "Rachel McAdams", 
-        image: "https://m.media-amazon.com/images/M/MV5BMTY5ODcxMDU4NV5BMl5BanBnXkFtZTcwMjAzNjQyNQ@@._V1_FMjpg_UX1000_.jpg" 
-    },
-    { 
-        name: "Keira Knightley", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Keira_Knightley_2005.jpg/250px-Keira_Knightley_2005.jpg" 
-    },
-    { 
-        name: "Carey Mulligan", 
-        image: "https://static.epd-film.de/get/?daid=00010001QMxbhWowDUDPvx1Enkd1qihE2Cm_aWVJSZo_Y75aJVG_000000255725&dfid=i-103" 
-    },
-    { 
-        name: "Danai Gurira", 
-        image: "https://deadline.com/wp-content/uploads/2018/11/danai-gurira.jpg" 
-    },
-    { 
-        name: "Letitia Wright", 
-        image: "https://de.web.img3.acsta.net/c_310_420/pictures/19/04/25/23/54/1990890.jpg" 
-    },
-    { 
-        name: "Gemma Chan", 
-        image: "https://hips.hearstapps.com/hmg-prod/images/gemma-chan-64f797657c927.jpg?crop=0.927xw:0.942xh;0.0255xw,0.0579xh&resize=980:*" 
-    },
-    { 
-        name: "Constance Wu", 
-        image: "https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2025-03/250327-Constance-Wu-ch-1324-2075e7.jpg" 
-    },
-    { 
-        name: "Priyanka Chopra", 
-        image: "https://image.gala.de/22558192/t/ON/v4/w960/r0.6667/-/priyanka-chopra.jpg" 
-    },
-    { 
-        name: "Deepika Padukone", 
-        image: "https://image.gala.de/22580474/t/RJ/v4/w960/r0.6667/-/deepika-padukone.jpg" 
-    },
-    { 
-        name: "Aishwarya Rai", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/3/3a/Aishwarya_Rai_Cannes_2017.jpg" 
-    },
-    { 
-        name: "Freida Pinto", 
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAqFTtMc9OQJgnaJL0JX-4yi_Fjux-KDE4cQ&s" 
-    },
-    { 
-        name: "Mindy Kaling", 
-        image: "https://www.antenne.nrw/media/cache/3/version/108163/hhscgr3rgc-v11-ax-s2048-v1.jpeg/29e7045fbe9eb7a80b6ccb912ad0bef9.jpg" 
-    },
-    { 
-        name: "Lucy Liu", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Lucy_Liu_Cannes_2008.jpg/250px-Lucy_Liu_Cannes_2008.jpg" 
-    },
-    { 
-        name: "Ming-Na Wen", 
-        image: "https://static.wikia.nocookie.net/agentsofshield/images/0/07/Ming-Na-Wen.jpg/revision/latest?cb=20180114125039&path-prefix=de" 
-    },
-    { 
-        name: "Jamie Chung", 
-        image: "https://static.wikia.nocookie.net/fox-thegifted/images/e/e6/Jamie_Chung.png/revision/latest?cb=20180923002834" 
-    },
-    { 
-        name: "Brenda Song", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/2/24/Brenda_Song_021109-R293.jpg" 
-    },
-    { 
-        name: "Lana Condor", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/2/29/Lana_Condor_2015_%282%29.jpg" 
-    },
-    { 
-        name: "Gigi Hadid", 
-        image: "https://image.gala.de/24105912/t/5L/v6/w960/r0.6667/-/gigi-hadid.jpg" 
-    },
-    { 
-        name: "Cara Delevingne", 
-        image: "https://static.wikia.nocookie.net/dckinofilme/images/6/64/Cara_Delevingne.jpg/revision/latest/thumbnail/width/360/height/360?cb=20141203133240&path-prefix=de" 
-    },
-    { 
-        name: "Karlie Kloss", 
-        image: "https://hips.hearstapps.com/hmg-prod/images/karlie-kloss-1549565171.jpg?resize=640:*" 
-    },
-    { 
-        name: "Miranda Kerr", 
-        image: "https://image.gala.de/24088660/t/Et/v3/w960/r0.6667/-/miranda-kerr.jpg" 
-    },
-    { 
-        name: "Rosie Huntington-Whiteley", 
-        image: "https://cache.net-a-porter.com/content/images/story-head-content-SUBBED-1540568687092.jpeg/w1900_q65.jpeg" 
-    },
-    { 
-        name: "Emily Ratajkowski", 
-        image: "https://static.instyle.de/0x0:844x1206/844x1206/images/2025-02/bildschirmfoto_2025-02-28_um_11.49.52.png" 
-    },
-    { 
-        name: "Kate Upton", 
-        image: "https://i0.gmx.at/image/866/36639866,pd=1/kate-upton.jpg" 
-    },
-    { 
-        name: "Chrissy Teigen", 
-        image: "https://people.com/thmb/hlz9t6ueMm1kZhdS5gh4ZS99Ujk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(737x287:739x289)/chrissy-teigen-hate-comments-rant-031625-12b9416df24841069cd8ef57a5c929e3.jpg" 
-    },
-    { 
-        name: "Tyra Banks", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/3/34/Tyra_Banks_2012_Shankbone_5.JPG" 
-    },
-    { 
-        name: "Naomi Campbell", 
-        image: "https://image.gala.de/23939016/t/WS/v12/w960/r0.6667/-/naomi-campbell.jpg" 
-    },
-    { 
-        name: "Gisele Bündchen", 
-        image: "https://image.stern.de/8369300/t/9W/v3/w1440/r1/-/gisele.jpg" 
-    },
-    { 
-        name: "Heidi Klum", 
-        image: "https://image.gala.de/24315182/t/Gb/v3/w960/r0.6667/-/03--sie-testet-oscar-kleid-auf-dem-trampolin---1-1---spoton-article-1087949.jpg" 
-    },
-    { 
-        name: "Alessandra Ambrosio", 
-        image: "https://vipcheck.wageindicator.org/media/Alessandra.ambrosio.jpeg" 
-    },
-    { 
-        name: "Candice Swanepoel", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/0/06/Candice-Swanepoel_2010-03-31_VictoriasSecretStoreChicago_photo-by-Adam_Bielawski.jpg" 
-    },
-    { 
-        name: "Behati Prinsloo", 
-        image: "https://image.gala.de/22987930/t/nr/v9/w960/r0.6667/-/behati-prinsloo.jpg" 
-    },
-    { 
-        name: "Lily Aldridge", 
-        image: "https://m.media-amazon.com/images/M/MV5BMTQxNTQwNzU5MV5BMl5BanBnXkFtZTcwNjIzNDMwNw@@._V1_.jpg" 
-    },
-    { 
-        name: "Elsa Hosk", 
-        image: "https://i0.gmx.at/image/028/37874028,pd=1/elsa-hosk.jpg" 
-    },
-    { 
-        name: "Jasmine Tookes", 
-        image: "https://image.gala.de/22504978/t/vZ/v7/w960/r0.6667/-/jasmine-tookes.jpg" 
-    },
-    { 
-        name: "Romee Strijd", 
-        image: "https://www.tips.at/image/thumbcrop/news/896260/616375/1200x733x0/1692890474.1031-victoria-s-secret-model-romee-strijd-urlaubt-mit-familie-in-oesterreich-kPiS5w.jpg" 
-    },
-    { 
-        name: "Sara Sampaio", 
-        image: "https://i0.gmx.at/image/130/37041130,pd=1/sara-sampaio.jpg" 
-    },
-    { 
-        name: "Taylor Hill", 
-        image: "https://www.makeup.com/-/media/project/loreal/brand-sites/mdc/americas/us/articles/2019/07_july/29-taylor-hill-interview/mudc-hero-taylor-hill-ralph-lauren-beyond-romance-07292019.jpg?cx=0.49&cy=0.54&cw=705&ch=529&blr=False&hash=49937EFD6B86BC93C1DB2472A14EF1BB" 
-    },
-    { 
-        name: "Grace Elizabeth", 
-        image: "https://media.zenfs.com/en/cover_media_309/47bc2511af10d601d869e7ca7ce93e3a" 
-    },
-    { 
-        name: "Barbara Palvin", 
-        image: "https://contentf5.dailynewshungary.com/wp-content/uploads/2024/10/Barbara-Palvin-e1728039854746.jpg" 
-    },
-    { 
-        name: "Lais Ribeiro", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Lais_Ribeiro_modeling.jpg/1200px-Lais_Ribeiro_modeling.jpg" 
-    },
-    { 
-        name: "Devon Windsor", 
-        image: "https://people.com/thmb/mxHi6AgfFUra-tm_s-Bj_yfBMEs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(757x0:759x2)/devon-windsor-1-43e01733cccd4ed8935cc29bdded8f80.jpg" 
-    },
-    { 
-        name: "Stella Maxwell", 
-        image: "https://assets.vogue.com/photos/5a208e77a2171b3fa480a492/master/pass/00-promo-stella-maxwell.jpg" 
-    },
-    { 
-        name: "Megan Williams", 
-        image: "https://i.mdel.net/i/db/2022/4/1684537/1684537-500w.jpg" 
-    },
-    { 
-        name: "Alanna Arrington", 
-        image: "https://i.mdel.net/i/db/2023/3/1915022/1915022-500w.jpg" 
-    },
-    { 
-        name: "Imaan Hammam", 
-        image: "https://fashionmagazine.mblycdn.com/fm/resized/2023/11/w768/Regimens_Product_Inline_9.jpg" 
-    },
-    { 
-        name: "Jourdan Dunn", 
-        image: "https://m.media-amazon.com/images/M/MV5BMjljMjMzZDItMGIxZC00YzdjLTlmNmYtYTIzNmI1ZGNiYzBmXkEyXkFqcGc@._V1_.jpg" 
-    },
-    { 
-        name: "Joan Smalls", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/d/dc/Joan_Smalls_DVF_ss14-33.jpg" 
-    },
-    { 
-        name: "Maria Borges", 
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Cannes_2018_32.jpg/250px-Cannes_2018_32.jpg" 
-    },
-    { 
-        name: "Lais Oliveira", 
-        image: "https://images.squarespace-cdn.com/content/v1/58c5d9cf9de4bb5b7f5502ae/1533058771325-DQRB8BFWHWPERTZUT1BP/IMG_1188x.jpg" 
-    },
-    { 
-        name: "Daniela Braga", 
-        image: "https://images.squarespace-cdn.com/content/v1/5625065be4b04bb42a217643/1506645779123-MGISZH8YWOWKOYEJO13J/Daniela%2BBraga%2B2016%2BFuture%2BFashion%2BRunway%2BShow%2BGu7zIo5387Jx.jpg" 
-    },
-    { 
-        name: "Bruna Lirio", 
-        image: "https://www.modelwerk.de/image/513916.jpg?size=rmbig" 
-    },
-    { 
-        name: "Fernanda Motta", 
-        image: "https://veja.abril.com.br/wp-content/uploads/2020/02/fernanda-motta-modelo-2020.jpg?crop=1&resize=1212,909" 
-    },
-    { 
-        name: "Izabel Goulart", 
-        image: "https://www.grazia-magazin.de/images/3x4_870/2024-04/izabel-goulart-im-interview.jpg?h=862e88c4" 
-    }
-];
+import { addToLeaderboard, getLeaderboard } from './leaderboard.js';
 
-let availableCharacters = [...characters];
-
-let droppedImages = 0;
-const totalImages = 3;
-
-// DOM-Elemente
-const draggableImages = document.querySelectorAll('.draggable-image');
-const dropZones = document.querySelectorAll('.drop-zone');
-const nextBtn = document.getElementById('next-btn');
-
-// Zufällige 3 Charaktere auswählen
-function getRandomCharacters() {
-    if (availableCharacters.length < 3) {
-        return null; // Nicht genug Charaktere übrig
-    }
-    const shuffled = [...availableCharacters].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 3);
-    // Entferne die gezogenen Charaktere aus dem Pool
-    availableCharacters = availableCharacters.filter(c => !selected.includes(c));
-    return selected;
-}
-
-// Bilder und Namen anzeigen
-function displayCharacters() {
-    const randomCharacters = getRandomCharacters();
-    if (!randomCharacters) {
-        // Spielende
-        draggableImages.forEach((container) => {
-            const img = container.querySelector('img');
-            const name = container.querySelector('h2');
-            img.style.display = 'none';
-            name.textContent = '';
+class GameQuiz {
+    constructor() {
+        this.correct = 0;
+        this.wrong = 0;
+        this.hcfCoins = 0;
+        this.currentGame = null;
+        this.currentBlur = 20;
+        this.hintsUsed = 0;
+        this.playerName = '';
+        this.leaderboard = getLeaderboard();
+        this.playedGames = new Set();
+        this.playerId = this.generatePlayerId();
+        
+        // DOM Elemente
+        this.nextButton = document.getElementById('nextButton');
+        this.correctElement = document.getElementById('correct');
+        this.wrongElement = document.getElementById('wrong');
+        this.coinsElement = document.getElementById('coins');
+        this.hintButton = document.getElementById('hintButton');
+        this.endButton = document.getElementById('endButton');
+        this.options = document.querySelectorAll('.option');
+        this.nameInput = document.getElementById('nameInput');
+        this.startButton = document.getElementById('startButton');
+        this.leaderboardContainer = document.getElementById('leaderboard');
+        
+        // Event Listener
+        this.nextButton.addEventListener('click', () => this.nextGame());
+        this.hintButton.addEventListener('click', () => this.useHint());
+        this.endButton.addEventListener('click', () => this.endGame());
+        this.startButton.addEventListener('click', () => this.startGame());
+        this.options.forEach(option => {
+            option.addEventListener('click', () => this.checkAnswer(option));
         });
-        document.querySelector('.character-container').innerHTML = '<h2 style="width:100%;text-align:center;color:#fff;">Alle Charaktere wurden Bewertet!<br>Danke fürs Mitmachen!</h2>';
-        nextBtn.disabled = true;
-        return;
+        
+        // Leaderboard anzeigen
+        this.updateLeaderboard();
+        
+        // Prüfen ob Spieler bereits existiert
+        this.checkExistingPlayer();
     }
-    draggableImages.forEach((container, index) => {
-        const character = randomCharacters[index];
-        const img = container.querySelector('img');
-        const name = container.querySelector('h2');
-        if (character && img && name) {
-            img.onerror = function() {
-                console.error('Bild konnte nicht geladen werden:', character.image);
-                img.src = 'https://via.placeholder.com/200x300?text=Kein+Bild';
-            };
-            img.src = character.image;
-            img.alt = character.name;
-            img.style.display = '';
-            name.textContent = character.name;
-        }
-    });
-}
 
-// Drag & Drop Event Handler
-function handleDragStart(e) {
-    const draggableImage = e.target.closest('.draggable-image');
-    if (draggableImage) {
-        draggableImage.classList.add('dragging');
-        e.dataTransfer.setData('text/plain', draggableImage.dataset.index);
+    generatePlayerId() {
+        const id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        localStorage.setItem('playerId', id);
+        return id;
     }
-}
 
-function handleDragEnd(e) {
-    const draggableImage = e.target.closest('.draggable-image');
-    if (draggableImage) {
-        draggableImage.classList.remove('dragging');
-    }
-}
-
-function handleDragOver(e) {
-    e.preventDefault();
-    const dropZone = e.target.closest('.drop-zone');
-    if (dropZone) {
-        dropZone.classList.add('drag-over');
-    }
-}
-
-function handleDragLeave(e) {
-    const dropZone = e.target.closest('.drop-zone');
-    if (dropZone) {
-        dropZone.classList.remove('drag-over');
-    }
-}
-
-function handleDrop(e) {
-    e.preventDefault();
-    const dropZone = e.target.closest('.drop-zone');
-    if (dropZone) {
-        dropZone.classList.remove('drag-over');
-        const draggedImage = document.querySelector('.dragging');
-        if (draggedImage) {
-            dropZone.classList.add('dropped');
-
-            // Bild-Element in die Drop-Zone verschieben
-            const imgClone = draggedImage.querySelector('img').cloneNode(true);
-            imgClone.className = 'drop-image';
-            // Klick-Event zum Entfernen
-            imgClone.addEventListener('click', function() {
-                // Bild entfernen
-                imgClone.remove();
-                // Drop-Zone zurücksetzen
-                const span = dropZone.querySelector('span');
-                if (span) span.style.visibility = 'visible';
-                // Emoji entfernen
-                const emoji = dropZone.querySelector('.animation-emoji');
-                if (emoji) emoji.remove();
-                // Ergebnis-Text leeren
-                const type = dropZone.dataset.type;
-                let resultId = '';
-                if (type === 'smash') resultId = 'smash-result';
-                else if (type === 'marry') resultId = 'marry-result';
-                else resultId = 'kill-result';
-                document.getElementById(resultId).textContent = '';
-                // Bild in der Auswahl wieder aktivieren
-                draggedImage.style.opacity = '1';
-                draggedImage.style.pointerEvents = 'auto';
-                droppedImages--;
-                // Weiter-Button ggf. deaktivieren
-                nextBtn.disabled = true;
-            });
-            dropZone.appendChild(imgClone);
-
-            // Text in der Drop-Zone ausblenden
-            const span = dropZone.querySelector('span');
-            if (span) span.style.visibility = 'hidden';
-
-            // Ergebnis-Text unterhalb anzeigen
-            const type = dropZone.dataset.type;
-            let resultId = '';
-            let resultText = '';
-            if (type === 'smash') {
-                resultId = 'smash-result';
-                resultText = 'Smash 💦';
-            } else if (type === 'marry') {
-                resultId = 'marry-result';
-                resultText = 'Marry 👰🏽‍♀️';
-            } else {
-                resultId = 'kill-result';
-                resultText = 'Kill ☠️';
-            }
-            document.getElementById(resultId).textContent = resultText;
-
-            // Animation Emoji
-            const emoji = document.createElement('div');
-            emoji.className = 'animation-emoji';
-            emoji.textContent = type === 'smash' ? '💦' : type === 'marry' ? '👰🏽‍♀️' : '☠️';
-            dropZone.appendChild(emoji);
-
-            // Bild als verschoben markieren
-            draggedImage.style.opacity = '0.5';
-            draggedImage.style.pointerEvents = 'none';
-            droppedImages++;
-
-            if (droppedImages === totalImages) {
-                nextBtn.disabled = false;
-            }
-
-            setTimeout(() => {
-                dropZone.classList.remove('dropped');
-                emoji.remove();
-            }, 700);
+    checkExistingPlayer() {
+        const existingPlayer = this.leaderboard.find(entry => entry.playerId === this.playerId);
+        if (existingPlayer) {
+            this.nameInput.value = existingPlayer.name;
+            this.nameInput.disabled = true;
+            this.startButton.textContent = 'Weiterspielen';
         }
     }
+
+    startGame() {
+        const name = this.nameInput.value.trim();
+        if (name.length < 2) {
+            alert('Bitte gib einen Namen ein (mindestens 2 Zeichen)');
+            return;
+        }
+        
+        this.playerName = name;
+        document.getElementById('nameScreen').style.display = 'none';
+        document.getElementById('gameScreen').style.display = 'block';
+        this.loadNewGame();
+    }
+
+    updateLeaderboard() {
+        const leaderboardHTML = this.leaderboard
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 10)
+            .map((entry, index) => `
+                <div class="leaderboard-entry ${index < 3 ? 'top-' + (index + 1) : ''}">
+                    <span class="rank">#${index + 1}</span>
+                    <span class="name">${entry.name}</span>
+                    <span class="score">${entry.score} Punkte</span>
+                    <span class="details">(${entry.correct} richtig, ${entry.wrong} falsch)</span>
+                </div>
+            `)
+            .join('');
+        
+        this.leaderboardContainer.innerHTML = leaderboardHTML;
+    }
+
+    saveToLeaderboard() {
+        const score = this.correct * 10 - this.wrong * 5;
+        const entry = {
+            playerId: this.playerId,
+            name: this.playerName,
+            score: score,
+            correct: this.correct,
+            wrong: this.wrong,
+            date: new Date().toLocaleDateString()
+        };
+        
+        addToLeaderboard(entry);
+        this.leaderboard = getLeaderboard();
+        this.updateLeaderboard();
+    }
+
+    // Spiele-Quiz mit verschiedenen Kategorien
+    games = [
+        // Action-Adventure
+        {
+            title: "The Legend of Zelda: Breath of the Wild",
+            category: "Action-Adventure",
+            image: "https://assets.nintendo.eu/image/upload/f_auto,c_limit,w_992,q_auto:low/MNS/NOE/70010000000023/SQ_NSwitch_TheLegendOfZeldaBreathOfTheWild_E",
+            options: ["The Legend of Zelda: Breath of the Wild", "The Legend of Zelda: Skyward Sword", "The Legend of Zelda: Twilight Princess", "The Legend of Zelda: Wind Waker"]
+        },
+        {
+            title: "God of War Ragnarök",
+            category: "Action-Adventure",
+            image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2322010/capsule_616x353.jpg?t=1738256985",
+            options: ["God of War Ragnarök", "God of War (2018)", "God of War III", "God of War: Ghost of Sparta"]
+        },
+        {
+            title: "Red Dead Redemption 2",
+            category: "Action-Adventure",
+            image: "https://image.api.playstation.com/gs2-sec/appkgo/prod/CUSA08519_00/12/i_3da1cf7c41dc7652f9b639e1680d96436773658668c7dc3930c441291095713b/i/icon0.png",
+            options: ["Red Dead Redemption 2", "Red Dead Redemption", "GTA V", "GTA IV"]
+        },
+        {
+            title: "The Last of Us Part II",
+            category: "Action-Adventure",
+            image: "https://image.api.playstation.com/vulcan/img/rnd/202010/2618/w48z6bzefZPrRcJHc7L8SO66.png",
+            options: ["The Last of Us Part II", "The Last of Us", "Days Gone", "Resident Evil 4"]
+        },
+        {
+            title: "Elden Ring",
+            category: "Action-Adventure",
+            image: "https://image.api.playstation.com/vulcan/img/rnd/202111/0506/hcFeWRVGHYK72uOw6Mn6f4Ms.jpg",
+            options: ["Elden Ring", "Dark Souls III", "Bloodborne", "Sekiro: Shadows Die Twice"]
+        },
+        {
+            title: "Horizon Zero Dawn",
+            category: "Action-Adventure",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202409/2716/16b33fa9a5c7285ba86a035b4a1c5f8eb430b407eae35ffd.png",
+            options: ["Horizon Zero Dawn", "Horizon Forbidden West", "Assassin's Creed Valhalla", "Ghost of Tsushima"]
+        },
+        {
+            title: "Ghost of Tsushima",
+            category: "Action-Adventure",
+            image: "https://gmedia.playstation.com/is/image/SIEPDC/ghost-of-tsushima-directors-cut-keyart-01-en-15jun21?$facebook$",
+            options: ["Ghost of Tsushima", "Sekiro: Shadows Die Twice", "Nioh", "Tenchu"]
+        },
+        {
+            title: "Spider-Man",
+            category: "Action-Adventure",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202011/0402/C784xeOFo2wViCf4m5bxgoeH.png",
+            options: ["Spider-Man", "Spider-Man: Miles Morales", "Batman: Arkham Knight", "Infamous Second Son"]
+        },
+        {
+            title: "Assassin's Creed Valhalla",
+            category: "Action-Adventure",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202007/0208/Ud7Ikvjoyev61bx3n1PTC9u8.png",
+            options: ["Assassin's Creed Valhalla", "Assassin's Creed Odyssey", "Assassin's Creed Origins", "The Witcher 3"]
+        },
+        {
+            title: "Death Stranding",
+            category: "Action-Adventure",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202106/2214/UXDlNJfdtZJ080ONmH8q3CUX.png",
+            options: ["Death Stranding", "Metal Gear Solid V", "Horizon Zero Dawn", "Days Gone"]
+        },
+
+        // RPG
+        {
+            title: "The Witcher 3: Wild Hunt",
+            category: "RPG",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
+            options: ["The Witcher 3: Wild Hunt", "The Witcher 2", "Dragon Age: Inquisition", "Mass Effect Legendary Edition"]
+        },
+        {
+            title: "Final Fantasy XVI",
+            category: "RPG",
+            image: "https://fyre.cdn.sewest.net/ff-xvi/637cf9194dc880a0db62c591/hero_bg-tT8XHFrO5.jpg?quality=85&width=3840",
+            options: ["Final Fantasy XVI", "Final Fantasy XV", "Final Fantasy VII Remake", "Final Fantasy XIV"]
+        },
+        {
+            title: "Persona 5 Royal",
+            category: "RPG",
+            image: "https://image.api.playstation.com/vulcan/img/cfn/11307YAAIxp7MZ2CspnYs9t7Eh7peTJys3KSrDMBplPuTdG0xmlQGSIXvf6-4Z6PhtxTIFymdkdSCH_hRDdI9T7dh-wh_zfu.png",
+            options: ["Persona 5 Royal", "Persona 4 Golden", "Shin Megami Tensei V", "Tales of Arise"]
+        },
+        {
+            title: "Dragon Quest XI",
+            category: "RPG",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202007/1607/66kZtAtqVJ8PgopTNhzukiCU.png",
+            options: ["Dragon Quest XI", "Dragon Quest VIII", "Dragon Quest IX", "Dragon Quest X"]
+        },
+        {
+            title: "Baldur's Gate 3",
+            category: "RPG",
+            image: "https://store-images.s-microsoft.com/image/apps.4974.13550459053619040.81610713-4c64-470c-b543-bcffffaa6ea3.efb7c846-2f32-4a2d-b2d4-cd8109721332?q=90&w=480&h=270",
+            options: ["Baldur's Gate 3", "Divinity: Original Sin 2", "Pillars of Eternity", "Pathfinder: Wrath of the Righteous"]
+        },
+
+        // Shooter
+        {
+            title: "Call of Duty: Modern Warfare III",
+            category: "Shooter",
+            image: "https://store-images.s-microsoft.com/image/apps.55183.14623575291286193.52ecceb7-ac9f-47e8-a29f-30ab63f33131.048bddb8-7ab3-4ba2-85b8-6acb95ee03b5",
+            options: ["Call of Duty: Modern Warfare III", "Call of Duty: Modern Warfare II", "Call of Duty: Warzone", "Battlefield 2042"]
+        },
+        {
+            title: "Halo Infinite",
+            category: "Shooter",
+            image: "https://upload.wikimedia.org/wikipedia/en/1/14/Halo_Infinite.png",
+            options: ["Halo Infinite", "Halo 5: Guardians", "Halo 4", "Halo: Reach"]
+        },
+        {
+            title: "Destiny 2",
+            category: "Shooter",
+            image: "https://cdn1.epicgames.com/offer/428115def4ca4deea9d69c99c5a5a99e/EN_Bungie_D2_S26_OfferPortrait_S2_1200x1600_1200x1600-e028bac34f94e8d86a27bdc12a381c5e",
+            options: ["Destiny 2", "Destiny", "Borderlands 3", "Outriders"]
+        },
+        {
+            title: "Apex Legends",
+            category: "Shooter",
+            image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1172470/6f306d0c6bd5fb524a280cf2560f84854cadb829/capsule_616x353.jpg?t=1741980558",
+            options: ["Apex Legends", "Titanfall 2", "Overwatch 2", "Valorant"]
+        },
+        {
+            title: "Counter-Strike 2",
+            category: "Shooter",
+            image: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/CS2_Cover_Art.jpg/250px-CS2_Cover_Art.jpg",
+            options: ["Counter-Strike 2", "Counter-Strike: Global Offensive", "Valorant", "Rainbow Six Siege"]
+        },
+
+        // Fighting Games
+        {
+            title: "Street Fighter 6",
+            category: "Fighting",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202211/1408/ENialNds5tXo7Mb9ahX2yESt.png",
+            options: ["Street Fighter 6", "Street Fighter V", "Mortal Kombat 1", "Tekken 8"]
+        },
+        {
+            title: "Mortal Kombat 1",
+            category: "Fighting",
+            image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1971870/capsule_616x353.jpg?t=1729006754",
+            options: ["Mortal Kombat 1", "Mortal Kombat 11", "Injustice 2", "Guilty Gear Strive"]
+        },
+        {
+            title: "Tekken 8",
+            category: "Fighting",
+            image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1778820/capsule_616x353.jpg?t=1743744777",
+            options: ["Tekken 8", "Tekken 7", "Soulcalibur VI", "Virtua Fighter 5"]
+        },
+        {
+            title: "Guilty Gear Strive",
+            category: "Fighting",
+            image: "https://upload.wikimedia.org/wikipedia/en/7/7d/Guilty_Gear_Strive.jpg",
+            options: ["Guilty Gear Strive", "Guilty Gear Xrd", "BlazBlue", "Granblue Fantasy Versus"]
+        },
+        {
+            title: "Super Smash Bros. Ultimate",
+            category: "Fighting",
+            image: "https://assets.nintendo.eu/image/upload/v1616776822/MNS/Content%20Pages%20Assets/Category-List%20Pages/Franchises/Super%20Smash%20Bros/16.9_SuperSmashBrosUltimatejpg.jpg",
+            options: ["Super Smash Bros. Ultimate", "Super Smash Bros. for Wii U", "Super Smash Bros. Brawl", "Super Smash Bros. Melee"]
+        },
+
+        // Racing Games
+        {
+            title: "Gran Turismo 7",
+            category: "Racing",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202202/2806/QDzid2jNv4e44kgumGXDCscF.png",
+            options: ["Gran Turismo 7", "Gran Turismo Sport", "Forza Motorsport", "Project CARS 3"]
+        },
+        {
+            title: "Forza Horizon 5",
+            category: "Racing",
+            image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1551360/capsule_616x353.jpg?t=1741106928",
+            options: ["Forza Horizon 5", "Forza Horizon 4", "The Crew Motorfest", "Need for Speed Unbound"]
+        },
+        {
+            title: "Mario Kart 8 Deluxe",
+            category: "Racing",
+            image: "https://assets.nintendo.eu/image/upload/f_auto,c_limit,w_992,q_auto:low/MNS/NOE/70010000000126/SQ_NSwitch_MarioKart8Deluxe",
+            options: ["Mario Kart 8 Deluxe", "Mario Kart 8", "Mario Kart 7", "Mario Kart Wii"]
+        },
+        {
+            title: "F1 23",
+            category: "Racing",
+            image: "https://media.contentapi.ea.com/content/dam/ea/f1/f1-23/common/featured-image/f123-featured-image-16x9.jpg.adapt.crop191x100.1200w.jpg",
+            options: ["F1 23", "F1 22", "F1 2021", "F1 2020"]
+        },
+        {
+            title: "WRC Generations",
+            category: "Racing",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202205/1214/jrPHWEkxs0V0P19tJjgu2Li8.png",
+            options: ["WRC Generations", "WRC 10", "Dirt Rally 2.0", "Rally Simulator"]
+        },
+
+        // Sports Games
+        {
+            title: "FIFA 24",
+            category: "Sports",
+            image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2195250/f11315d7491f706b09b059d12424f711e9778b82/capsule_616x353.jpg?t=1743020121",
+            options: ["FIFA 24", "FIFA 23", "eFootball 2024", "Football Manager 2024"]
+        },
+        {
+            title: "NBA 2K24",
+            category: "Sports",
+            image: "https://images.g2a.com/360x600/1x1x1/nba-2k24-pc-steam-key-global-i10000340079003/ab48850851ea4383a0be3895",
+            options: ["NBA 2K24", "NBA 2K23", "NBA Live 19", "NBA 2K22"]
+        },
+        {
+            title: "Madden NFL 24",
+            category: "Sports",
+            image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2140330/capsule_616x353.jpg?t=1730826602",
+            options: ["Madden NFL 24", "Madden NFL 23", "NFL 2K5", "NFL Street"]
+        },
+        {
+            title: "MLB The Show 24",
+            category: "Sports",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3k4TNvvQWCi2LAq5kCHELrF0ZFk1GR8eP3Q&s",
+            options: ["MLB The Show 24", "MLB The Show 23", "MLB The Show 22", "MLB The Show 21"]
+        },
+        {
+            title: "WWE 2K24",
+            category: "Sports",
+            image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2315690/capsule_616x353.jpg?t=1731609533",
+            options: ["WWE 2K24", "WWE 2K23", "WWE 2K22", "WWE 2K20"]
+        },
+
+        // Strategy Games
+        {
+            title: "Civilization VI",
+            category: "Strategy",
+            image: "https://image.api.playstation.com/vulcan/img/cfn/11307KFcs3gBlcheONy-ZOYZ5kplFnq5jXinUSI8HkCc8P2gdI1_32JrKJ-vxns32LjXBcQteG2EOwuzWS_KXqE5VCYFmS4Z.png",
+            options: ["Civilization VI", "Civilization V", "Age of Empires IV", "Total War: Warhammer III"]
+        },
+        {
+            title: "Total War: Warhammer III",
+            category: "Strategy",
+            image: "https://store-images.s-microsoft.com/image/apps.27037.14262631053024293.1d44abbd-ea52-4439-a8e6-4e0afe1a1e5c.f0be82e7-4516-4f84-937d-7afc1862e7c0?q=90&w=480&h=270",
+            options: ["Total War: Warhammer III", "Total War: Warhammer II", "Total War: Three Kingdoms", "Total War: Rome II"]
+        },
+        {
+            title: "Age of Empires IV",
+            category: "Strategy",
+            image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Offizielle_Concept_Art_von_Age_of_Empires_IV.png",
+            options: ["Age of Empires IV", "Age of Empires III", "Age of Empires II", "Age of Empires"]
+        },
+        {
+            title: "Crusader Kings III",
+            category: "Strategy",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202108/1607/czGau6hOvx9iQYOOkACdxqDl.png",
+            options: ["Crusader Kings III", "Crusader Kings II", "Europa Universalis IV", "Hearts of Iron IV"]
+        },
+        {
+            title: "Stellaris",
+            category: "Strategy",
+            image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/281990/header.jpg?t=1744297340",
+            options: ["Stellaris", "Endless Space 2", "Sins of a Solar Empire", "Galactic Civilizations IV"]
+        },
+
+        // Platformer
+        {
+            title: "Super Mario Bros. Wonder",
+            category: "Platformer",
+            image: "https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_4/2x1_NSwitch_SuperMarioBrosWonder.jpg",
+            options: ["Super Mario Bros. Wonder", "Super Mario Odyssey", "Super Mario 3D World", "Super Mario Galaxy"]
+        },
+        {
+            title: "Sonic Frontiers",
+            category: "Platformer",
+            image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1237320/capsule_616x353.jpg?t=1741795892",
+            options: ["Sonic Frontiers", "Sonic Forces", "Sonic Mania", "Sonic Generations"]
+        },
+        {
+            title: "Crash Bandicoot 4",
+            category: "Platformer",
+            image: "https://image.api.playstation.com/vulcan/img/rnd/202111/1918/psoOkDbYuMdr1RsJo6TpU6bg.png",
+            options: ["Crash Bandicoot 4", "Crash Bandicoot N. Sane Trilogy", "Spyro Reignited Trilogy", "Ratchet & Clank"]
+        },
+        {
+            title: "Ratchet & Clank: Rift Apart",
+            category: "Platformer",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202101/2921/DwVjpbKOsFOyPdNzmSTSWuxG.png",
+            options: ["Ratchet & Clank: Rift Apart", "Ratchet & Clank (2016)", "Ratchet & Clank: A Crack in Time", "Ratchet & Clank: Tools of Destruction"]
+        },
+        {
+            title: "Hollow Knight",
+            category: "Platformer",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtdcVzU6WJ98bkU8prM5LOusS3QSk0cjYUvQ&s",
+            options: ["Hollow Knight", "Ori and the Will of the Wisps", "Celeste", "Cuphead"]
+        },
+
+        // Horror Games
+        {
+            title: "Resident Evil 4 Remake",
+            category: "Horror",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202210/0706/EVWyZD63pahuh95eKloFaJuC.png",
+            options: ["Resident Evil 4 Remake", "Resident Evil 4", "Resident Evil 2 Remake", "Resident Evil 3 Remake"]
+        },
+        {
+            title: "Dead Space Remake",
+            category: "Horror",
+            image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1693980/capsule_616x353.jpg?t=1702492799",
+            options: ["Dead Space Remake", "Dead Space", "Dead Space 2", "Dead Space 3"]
+        },
+        {
+            title: "Alan Wake 2",
+            category: "Horror",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202305/2420/c3daf3037feb797d9e71b81618e3b5ff3ff1f9609db5a4a2.png",
+            options: ["Alan Wake 2", "Alan Wake", "Control", "Quantum Break"]
+        },
+        {
+            title: "The Callisto Protocol",
+            category: "Horror",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202206/0222/pqZVlL42HwbUMdSAyNQoRnzg.png",
+            options: ["The Callisto Protocol", "Dead Space", "Alien: Isolation", "The Evil Within"]
+        },
+        {
+            title: "Layers of Fear",
+            category: "Horror",
+            image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1946700/capsule_616x353.jpg?t=1732889537",
+            options: ["Layers of Fear", "Layers of Fear 2", "Amnesia: The Dark Descent", "Outlast"]
+        }
+    ];
+
+    loadNewGame() {
+        // Prüfen ob alle Spiele bereits gespielt wurden
+        if (this.playedGames.size >= this.games.length) {
+            this.endGame();
+            return;
+        }
+        
+        // Zufälliges Spiel auswählen, das noch nicht gespielt wurde
+        let availableGames = this.games.filter(game => !this.playedGames.has(game.title));
+        this.currentGame = availableGames[Math.floor(Math.random() * availableGames.length)];
+        
+        // Spiel zur Liste der gespielten Spiele hinzufügen
+        this.playedGames.add(this.currentGame.title);
+        
+        // Bild-Container aktualisieren
+        const imageContainer = document.querySelector('.waveform');
+        imageContainer.innerHTML = `
+            <img class="game-preview" src="${this.currentGame.image}" alt="${this.currentGame.title}">
+        `;
+        
+        // Bild initial stark verschwommen
+        const image = imageContainer.querySelector('.game-preview');
+        image.style.filter = `blur(${this.currentBlur}px)`;
+        
+        // Optionen mischen und anzeigen
+        const shuffledOptions = this.shuffleArray([...this.currentGame.options]);
+        this.options.forEach((option, index) => {
+            option.textContent = shuffledOptions[index];
+            option.dataset.correct = shuffledOptions[index] === this.currentGame.title;
+            option.classList.remove('correct', 'wrong');
+        });
+        
+        // UI zurücksetzen
+        this.nextButton.disabled = true;
+        this.currentBlur = 20;
+        this.hintsUsed = 0;
+        this.hintButton.disabled = false;
+    }
+
+    useHint() {
+        if (this.hcfCoins > 0 && this.hintsUsed < 3) {
+            this.hcfCoins--;
+            this.coinsElement.textContent = this.hcfCoins;
+            this.hintsUsed++;
+            
+            const image = document.querySelector('.game-preview');
+            this.currentBlur = Math.max(0, this.currentBlur - 5);
+            image.style.filter = `blur(${this.currentBlur}px)`;
+            
+            if (this.hintsUsed >= 3) {
+                this.hintButton.disabled = true;
+            }
+        }
+    }
+
+    checkAnswer(selectedOption) {
+        if (this.nextButton.disabled === false) return; // Antwort bereits gegeben
+        
+        const isCorrect = selectedOption.dataset.correct === 'true';
+        
+        // Visuelles Feedback
+        selectedOption.classList.add(isCorrect ? 'correct' : 'wrong');
+        
+        if (isCorrect) {
+            this.correct++;
+            this.hcfCoins++;
+            this.correctElement.textContent = this.correct;
+            this.coinsElement.textContent = this.hcfCoins;
+        } else {
+            this.wrong++;
+            this.wrongElement.textContent = this.wrong;
+        }
+        
+        this.nextButton.disabled = false;
+    }
+
+    endGame() {
+        this.saveToLeaderboard();
+        
+        // Spiel-Overlay anzeigen
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const finalScore = this.correct * 10 - this.wrong * 5;
+        
+        gameOverScreen.innerHTML = `
+            <div class="game-over-content">
+                <h2>Spiel beendet!</h2>
+                <p>Dein Ergebnis:</p>
+                <div class="final-stats">
+                    <p>Richtig: ${this.correct}</p>
+                    <p>Falsch: ${this.wrong}</p>
+                    <p>HCF Coins: ${this.hcfCoins}</p>
+                    <p>Gesamtpunktzahl: ${finalScore}</p>
+                </div>
+                <button onclick="location.reload()">Neu starten</button>
+            </div>
+        `;
+        
+        gameOverScreen.style.display = 'flex';
+    }
+
+    nextGame() {
+        this.loadNewGame();
+    }
+
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 }
 
-// Event Listener für den Weiter-Button
-nextBtn.addEventListener('click', () => {
-    droppedImages = 0;
-    nextBtn.disabled = true;
-    displayCharacters();
-    
-    // Bilder zurücksetzen
-    draggableImages.forEach(image => {
-        image.style.opacity = '1';
-        image.style.pointerEvents = 'auto';
-    });
-    // Drop-Zonen leeren und Text wieder einblenden
-    dropZones.forEach(zone => {
-        Array.from(zone.querySelectorAll('img')).forEach(img => img.remove());
-        const span = zone.querySelector('span');
-        if (span) span.style.visibility = 'visible';
-    });
-    // Ergebnis-Texte leeren
-    document.getElementById('smash-result').textContent = '';
-    document.getElementById('marry-result').textContent = '';
-    document.getElementById('kill-result').textContent = '';
-});
-
-// Event Listener hinzufügen
+// Spiel initialisieren
 document.addEventListener('DOMContentLoaded', () => {
-    // Drag & Drop Event Listener für Bilder
-    draggableImages.forEach((image, index) => {
-        image.dataset.index = index;
-        image.setAttribute('draggable', 'true');
-        image.addEventListener('dragstart', handleDragStart);
-        image.addEventListener('dragend', handleDragEnd);
-    });
-
-    // Drop Zone Event Listener
-    dropZones.forEach(zone => {
-        zone.addEventListener('dragover', handleDragOver);
-        zone.addEventListener('dragleave', handleDragLeave);
-        zone.addEventListener('drop', handleDrop);
-    });
-
-    // Initiale Anzeige
-    displayCharacters();
+    new GameQuiz();
 });
