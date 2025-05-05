@@ -3,56 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smash💦, Marry👰🏽, Kill☠️</title>
+    <title>Spiele Quiz</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="instructions">
-        <strong>Anleitung:</strong><br>
-        1. Ziehe die Charaktere per <span class="highlight">Linksklick gedrückt halten</span> in die Felder <span class="highlight">„Smash“</span>, <span class="highlight">„Marry“</span>, <span class="highlight">„Kill“</span>.<br>
-        2. Du kannst deine Wahl ändern, indem du auf das Bild in der Unteren Zeile <span class="highlight">klickst</span>.<br>
-        3. Wenn alle Charaktere bewertet wurden, ist das Spiel vorbei.
-    </div>
     <div class="container">
-        <h1>Smash, Marry, Kill</h1>
-        
-        <div class="character-container">
-            <div class="character-card draggable-image" draggable="true">
-                <img src="" alt="Anime Girl">
-                <h2></h2>
-            </div>
-            <div class="character-card draggable-image" draggable="true">
-                <img src="" alt="Anime Girl">
-                <h2></h2>
-            </div>
-            <div class="character-card draggable-image" draggable="true">
-                <img src="" alt="Anime Girl">
-                <h2></h2>
+        <!-- Namenseingabe -->
+        <div id="nameScreen" class="screen">
+            <div class="name-input-container">
+                <h1>Spiele Quiz</h1>
+                <div class="input-group">
+                    <input type="text" id="nameInput" placeholder="Dein Name" maxlength="20">
+                    <button id="startButton" class="control-button">Spiel starten</button>
+                </div>
+                <div class="leaderboard-section">
+                    <h2>🏆 Bestenliste</h2>
+                    <div id="leaderboard" class="leaderboard"></div>
+                </div>
             </div>
         </div>
 
-        <div class="drop-zones">
-            <div class="drop-zone" data-type="smash">
-                <span>Smash💦</span>
-            </div>
-            <div class="drop-zone" data-type="marry">
-                <span>Marry👰🏽‍♀️</span>
-            </div>
-            <div class="drop-zone" data-type="pass">
-                <span>Kill☠️</span>
+        <!-- Spiel-Bereich -->
+        <div id="gameScreen" class="screen" style="display: none;">
+            <div class="game-container">
+                <div class="header">
+                    <h1>Spiele Quiz</h1>
+                    <div class="stats">
+                        <div class="score-container correct">
+                            <span>✅ Richtig: </span>
+                            <span id="correct">0</span>
+                        </div>
+                        <div class="score-container wrong">
+                            <span>❌ Falsch: </span>
+                            <span id="wrong">0</span>
+                        </div>
+                        <div class="coins-container">
+                            <span>🪙 HCF Coins: </span>
+                            <span id="coins">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-content">
+                    <div class="preview-container">
+                        <div class="waveform">
+                            <!-- Bild-Vorschau wird hier eingefügt -->
+                        </div>
+                    </div>
+                    
+                    <div class="options-container">
+                        <div class="option" data-correct="false"></div>
+                        <div class="option" data-correct="false"></div>
+                        <div class="option" data-correct="false"></div>
+                        <div class="option" data-correct="false"></div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button id="hintButton" class="control-button">💡 Hinweis (1 HCF Coin)</button>
+                        <button id="nextButton" class="control-button" disabled>Nächstes Spiel</button>
+                        <button id="endButton" class="control-button end-button">🏁 Spiel beenden</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="drop-results">
-            <div id="smash-result"></div>
-            <div id="marry-result"></div>
-            <div id="kill-result"></div>
+        <!-- Spiel-Ende Overlay -->
+        <div id="gameOverScreen" class="screen" style="display: none;">
+            <!-- Wird dynamisch gefüllt -->
         </div>
-
-        <button id="next-btn" class="next-btn" disabled>Weiter</button>
     </div>
-
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
