@@ -163,7 +163,7 @@ const games = [
     {
         name: "FIFA 24",
         image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2195250/f11315d7491f706b09b059d12424f711e9778b82/capsule_616x353.jpg?t=1743020121",
-        options: ["FIFA 24", "FIFA 23", "eFootball 2024", "Football Manager 2024"]
+        options: ["FIFA 24", "FIFA 23", "FIFA 22", "FIFA 25"]
     },
     {
         name: "NBA 2K24",
