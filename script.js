@@ -500,7 +500,7 @@ let isBlurred = true;
 function ensureBlur() {
     const gameImage = document.getElementById('game-image');
     const blurOverlay = document.querySelector('.blur-overlay');
-    gameImage.style.filter = 'blur(18px)';
+    gameImage.style.filter = 'blur(15px)';
     blurOverlay.style.opacity = '1';
     isBlurred = true;
 }
