@@ -1,9 +1,40 @@
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <title>IN ARBEIT...</title>
-    </head>
-    <body>
-    <p>IN ARBEIT...</p>
-    </body>
-    </html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IN ARBEIT...</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #1f1c2c, #928DAB);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .text {
+      color: white;
+      font-size: 3rem;
+      font-weight: bold;
+      position: relative;
+      animation: fadeIn 2s ease-in-out, pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <div class="text">IN ARBEIT...</div>
+</body>
+</html>
