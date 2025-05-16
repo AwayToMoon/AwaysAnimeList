@@ -10,41 +10,17 @@
       height: 100vh;
       background: linear-gradient(135deg, #1f1c2c, #928DAB);
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: white;
     }
 
     .text {
       color: #a965fc;
       font-size: 3rem;
       font-weight: bold;
+      position: relative;
       animation: fadeIn 2s ease-in-out, pulse 2s infinite ease-in-out;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .countdown {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: bold;
-      color: #00ffcc;
-      text-shadow: 0 0 15px #00ffcc;
-      animation: pulse 1.5s infinite alternate;
-    }
-
-    .label {
-      font-size: 1rem;
-      display: block;
-      margin-top: 0.5rem;
-      color: #ffffffaa;
-    }
-
-    .section {
-      display: inline-block;
-      margin: 0 1rem;
     }
 
     @keyframes fadeIn {
@@ -53,8 +29,8 @@
     }
 
     @keyframes pulse {
-      from { text-shadow: 0 0 10px #00ffcc; }
-      to { text-shadow: 0 0 25px #00ffee; }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
   </style>
 </head>
