@@ -1,93 +1,70 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GAME FÜR EMIR IN ARBEIT...</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #1f1c2c, #928DAB);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: white;
-    }
-
-    .text {
-      color: purple;
-      font-size: 3rem;
-      font-weight: bold;
-      animation: fadeIn 2s ease-in-out, pulse 2s infinite ease-in-out;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .countdown {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: bold;
-      color: #7007b6;
-      text-shadow: 0 0 15px #340a6b;
-      animation: pulse 1.5s infinite alternate;
-    }
-
-    .label {
-      font-size: 1rem;
-      display: block;
-      margin-top: 0.5rem;
-      color: #ffffffaa;
-    }
-
-    .section {
-      display: inline-block;
-      margin: 0 1rem;
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Errate den Song</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <div class="text">GAME FÜR EMIR IN ARBEIT...</div>
+    <div class="galaxy-background"></div>
+    <div class="container">
+        <div class="game-stats">
+            <div class="stats-header">
+                <i class="fas fa-trophy"></i>
+                <h2>Deine Points</h2>
+            </div>
+            <div class="score-display">
+                <div class="current-score">
+                    <span class="score-value">0</span>
+                    <span class="score-label">Richtig: <span id="correct-answers">0</span>Falsch: <span id="wrong-answers">0</span></span>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text">Song <span id="current-song">1</span> von <span id="total-songs">5</span></div>
+            </div>
+        </div>
 
-  <div class="countdown" id="countdown">
-    <div class="section"><span id="days">00</span><span class="label">Tage</span></div>
-    <div class="section"><span id="hours">00</span><span class="label">Stunden</span></div>
-    <div class="section"><span id="minutes">00</span><span class="label">Minuten</span></div>
-    <div class="section"><span id="seconds">00</span><span class="label">Sekunden</span></div>
-  </div>
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <div class="logo">
+                </div>
+                <h1>Errate den Song</h1>
+                <div class="subtitle">Für Emir/HigherCellF</div>
+            </div>
+            
+            <div id="quiz">
+                <div class="song-player">
+                    <div id="player"></div>
+                </div>
+                
+                <div id="question"></div>
+                <div id="answers"></div>
+                <button id="next-btn" disabled>
+                    <span>Nächster Song</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div id="result" style="display:none;">
+                <div class="result-content">
+                    <i class="fas fa-music result-icon"></i>
+                    <h2>Quiz beendet!</h2>
+                    <p class="final-score">Dein Score: <span>0</span> Punkte</p>
+                    <button class="restart-btn">
+                        <i class="fas fa-redo"></i>
+                        Neu starten
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    const targetDate = new Date("2025-05-17T20:00:00+02:00"); // 20:00 Uhr deutsche Zeit
-
-    function updateCountdown() {
-      const now = new Date();
-      const diff = targetDate - now;
-
-      if (diff <= 0) {
-        document.getElementById("countdown").innerHTML = "ZEIT ABGELAUFEN!";
-        return;
-      }
-
-      const seconds = Math.floor((diff / 1000) % 60);
-      const minutes = Math.floor((diff / 1000 / 60) % 60);
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-      document.getElementById("days").textContent = String(days).padStart(2, '0');
-      document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-      document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-      document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
-    }
-
-    updateCountdown(); // sofort starten
-    setInterval(updateCountdown, 1000); // jede Sekunde aktualisieren
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
