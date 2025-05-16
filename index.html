@@ -10,17 +10,41 @@
       height: 100vh;
       background: linear-gradient(135deg, #1f1c2c, #928DAB);
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
     }
 
     .text {
       color: #a965fc;
       font-size: 3rem;
       font-weight: bold;
-      position: relative;
       animation: fadeIn 2s ease-in-out, pulse 2s infinite ease-in-out;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .countdown {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 15px #00ffcc;
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    .label {
+      font-size: 1rem;
+      display: block;
+      margin-top: 0.5rem;
+      color: #ffffffaa;
+    }
+
+    .section {
+      display: inline-block;
+      margin: 0 1rem;
     }
 
     @keyframes fadeIn {
@@ -29,12 +53,46 @@
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      from { text-shadow: 0 0 10px #00ffcc; }
+      to { text-shadow: 0 0 25px #00ffee; }
     }
   </style>
 </head>
 <body>
   <div class="text">GAME FÜR EMIR IN ARBEIT...</div>
+
+  <div class="countdown" id="countdown">
+    <div class="section"><span id="days">00</span><span class="label">Tage</span></div>
+    <div class="section"><span id="hours">00</span><span class="label">Stunden</span></div>
+    <div class="section"><span id="minutes">00</span><span class="label">Minuten</span></div>
+    <div class="section"><span id="seconds">00</span><span class="label">Sekunden</span></div>
+  </div>
+
+  <script>
+    const targetDate = new Date("2025-05-18T20:00:00+02:00"); // 20:00 Uhr deutsche Zeit
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById("countdown").innerHTML = "ZEIT ABGELAUFEN!";
+        return;
+      }
+
+      const seconds = Math.floor((diff / 1000) % 60);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      document.getElementById("days").textContent = String(days).padStart(2, '0');
+      document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+    }
+
+    updateCountdown(); // sofort starten
+    setInterval(updateCountdown, 1000); // jede Sekunde aktualisieren
+  </script>
 </body>
 </html>
