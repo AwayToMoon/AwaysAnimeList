@@ -224,3 +224,14 @@ restartButton.addEventListener('click', () => {
     window.location.reload(); // Lädt die Seite neu, um das Spiel zurückzusetzen
 });
 
+// Event Listener, um das Layout nach vollständigem Laden der Seite zu aktualisieren
+window.addEventListener('load', () => {
+    const gameBoard = document.getElementById('game-board');
+    // Kleine Verzögerung einbauen, um sicherzustellen, dass das DOM bereit ist und Bilder geladen sind
+    setTimeout(() => {
+        gameBoard.style.display = 'none';
+        // Erzwingt ein Reflow/Neuberechnung des Layouts
+        gameBoard.offsetHeight; 
+        gameBoard.style.display = 'grid'; // Oder der ursprüngliche Display-Wert
+    }, 100); // 100ms Verzögerung
+});
