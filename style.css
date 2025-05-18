@@ -176,7 +176,7 @@ h2 {
     width: 100%;
     max-width: 1200px; /* Maximale Breite des Boards beibehalten */
     margin-bottom: 40px;
-    margin-top: -30px; /* Verschiebt das Spielbrett nach oben */
+    margin-top: -20px; /* Verschiebt das Spielbrett nach oben */
     padding: 0 20px; /* Mehr Padding an den Seiten */
     justify-content: center; /* Zentriert die Kategorien, wenn nicht die volle Breite genutzt wird */
 }
