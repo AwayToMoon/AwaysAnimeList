@@ -24,7 +24,7 @@ body {
     background-attachment: fixed; /* Hintergrund bleibt fest */
     color: #e0e0e0; /* Hellerer Text für dunklen Hintergrund */
     margin: 0;
-    padding: 1px; /* Abstand oben reduziert */
+    padding: 0,5px; /* Abstand oben reduziert */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -193,7 +193,6 @@ h2 {
     border: 1px solid rgba(255, 255, 255, 0.2); /* Leichter Rahmen */
     backdrop-filter: blur(5px); /* Leichter Blur-Effekt */
     -webkit-backdrop-filter: blur(5px); /* Für Safari */
-    animation: fadeInUp 0.8s ease-out backwards; /* Animation beim Erscheinen */
     transform-style: preserve-3d; /* Wichtig für 3D-Effekte */
 }
 
@@ -213,6 +212,7 @@ h2 {
 }
 
 /* Verzögere die Animation für jeden Kategorieblock */
+/*
 .category:nth-child(1) { animation-delay: 0.1s; }
 .category:nth-child(2) { animation-delay: 0.2s; }
 .category:nth-child(3) { animation-delay: 0.3s; }
@@ -221,11 +221,7 @@ h2 {
 .category:nth-child(6) { animation-delay: 0.6s; }
 .category:nth-child(7) { animation-delay: 0.7s; }
 .category:nth-child(8) { animation-delay: 0.8s; }
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+*/
 
 .category:hover {
     transform: translateY(-8px); /* Stärkerer Schwebeeffekt */
@@ -522,4 +518,3 @@ h2 {
 #end-screen button:active {
     transform: scale(0.97); /* Kleiner werdend beim Klicken */
 }
-
