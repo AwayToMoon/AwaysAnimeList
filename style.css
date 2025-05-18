@@ -24,7 +24,7 @@ body {
     background-attachment: fixed; /* Hintergrund bleibt fest */
     color: #e0e0e0; /* Hellerer Text für dunklen Hintergrund */
     margin: 0;
-    padding: 0,5px; /* Abstand oben reduziert */
+    padding: 1px; /* Abstand oben reduziert */
     display: flex;
     flex-direction: column;
     align-items: center;
