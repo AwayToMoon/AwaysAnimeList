@@ -1,1 +1,525 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modernerer Font */
+    background-color: #1a0a1a; /* Sehr dunkles Lila für den Weltraum */
+    background-image: 
+        radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), /* Kleine Sterne */
+        radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px), /* Kleinere Sterne */
+        radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 60px), /* Größere, seltenere Sterne */
+        radial-gradient(rgba(100, 0, 150, 0.5), transparent 70%), /* Dunkellila Nebel */
+        radial-gradient(rgba(200, 50, 200, 0.4), transparent 60%); /* Rosa-lila Nebel */
+    background-size: 
+        550px 550px, /* Größe der kleinen Sterne Muster */
+        350px 350px, /* Größe der kleineren Sterne Muster */
+        250px 250px, /* Größe der größeren Sterne Muster */
+        700px 700px, /* Größe des dunkellila Nebels */
+        600px 600px; /* Größe des rosa-lila Nebels */
+    background-position: 
+        0 0, /* Position der kleinen Sterne */
+        40px 60px, /* Position der kleineren Sterne */
+        -60px -20px, /* Position der größeren Sterne */
+        50% 50%, /* Position des dunkellila Nebels (zentriert) */
+        30% 60%; /* Position des rosa-lila Nebels */
+    background-repeat: repeat, repeat, repeat, no-repeat, no-repeat; /* Sterne wiederholen sich, Nebel nicht */
+    background-attachment: fixed; /* Hintergrund bleibt fest */
+    color: #e0e0e0; /* Hellerer Text für dunklen Hintergrund */
+    margin: 0;
+    padding: 0,5px; /* Abstand oben reduziert */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    line-height: 1.6;
+    box-sizing: border-box; /* Stellt sicher, dass padding und border in der Elementgröße enthalten sind */
+    overflow: hidden; /* Scrollen deaktivieren */
+    /* animation: backgroundAnimation 20s ease infinite alternate; */ /* Sanfter Hintergrundverlauf-Animation */
+}
+
+/* Die @keyframes backgroundAnimation Regel wird nicht mehr benötigt, da wir keinen Farbverlauf mehr animieren */
+
+h1 {
+    text-align: center;
+    color: #ffffff; /* Weißer Titel */
+    margin-bottom: 20px; /* Abstand nach unten reduzieren */
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    font-size: 2.8em;
+    animation: fadeInScaleUp 1.5s ease-out; /* Kombinierte Einblend- und Skalierungsanimation */
+    font-family: 'Montserrat', sans-serif; /* Ursprüngliche Schriftart */
+}
+
+@keyframes fadeInScaleUp {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Stil für die Unterüberschrift */
+h2 {
+    text-align: center;
+    color: #cccccc; /* Graue Farbe */
+    margin-top: -10px; /* Etwas nach oben verschieben (weniger Abstand zum Titel) */
+    margin-bottom: 15px; /* Abstand nach unten reduzieren (näher zum Punktestand) */
+    font-size: 1.2em; /* Kleinere Schrift */
+    animation: fadeInScaleUp 1.5s ease-out 0.3s backwards; /* Gleiche Animation, leicht verzögert */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Leichter Schatten */
+}
+
+/* Stil für die Anleitung */
+#guide-box {
+    position: relative; /* Oder entfernen, da es im Modal zentriert wird */
+    top: auto;
+    right: auto;
+    
+    background-color: rgba(255, 255, 255, 0.95); /* Hellerer Hintergrund für das Modal */
+    color: #333; /* Dunkler Text für hellen Hintergrund */
+    padding: 30px; /* Mehr Polsterung */
+    border-radius: 10px; /* Abgerundete Ecken */
+    font-size: 1.1em; /* Schriftgröße etwas erhöhen */
+    max-width: 500px; /* Maximale Breite des Modals */
+    text-align: left; /* Text linksbündig */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Stärkerer Schatten */
+    backdrop-filter: none; /* Blur ist für das Overlay */
+    -webkit-backdrop-filter: none; /* Für Safari */
+    z-index: 101; /* Über dem Overlay */
+    border: none; /* Rahmen entfernen */
+    animation: fadeIn 0.6s ease-out forwards; /* Einfache Einblendanimation für die Anleitung */
+}
+
+#guide-box p {
+    margin-top: 0;
+    margin-bottom: 15px; /* Mehr Abstand nach dem Titel */
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #4a0e7b; /* Passend zum Hintergrund */
+}
+
+#guide-box ul {
+    padding-left: 20px; /* Einrückung für die Liste */
+    margin: 0 0 20px 0; /* Abstand nach der Liste */
+}
+
+#guide-box li {
+    margin-bottom: 10px; /* Mehr Abstand zwischen Listenelementen */
+}
+
+#guide-box strong {
+    color: #6a11cb; /* Dunklere Farbe für wichtige Wörter */
+}
+
+#guide-box button {
+    display: block;
+    width: 100%; /* Button volle Breite */
+    padding: 12px; /* Polsterung */
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #28a745; /* Grüne Farbe */
+    color: white; /* Weißer Text */
+    transition: background-color 0.3s ease;
+    margin-top: 20px; /* Abstand nach der Liste */
+}
+
+#guide-box button:hover {
+    background-color: #218838; /* Dunkleres Grün beim Hover */
+}
+
+/* Stil für das Modal-Overlay */
+#guide-modal {
+    position: fixed; /* Fixierte Position, bedeckt den gesamten Viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Dunkler, halbtransparenter Hintergrund */
+    display: flex; /* Inhalt zentrieren */
+    justify-content: center;
+    align-items: center;
+    z-index: 100; /* Über dem Spielbrett, aber unter dem Modal-Inhalt */
+    backdrop-filter: blur(5px); /* Leichter Blur-Effekt für den Hintergrund */
+    -webkit-backdrop-filter: blur(5px); /* Für Safari */
+}
+
+/* Anfangs ausgeblendet, wird mit JavaScript geändert */
+#guide-modal.hidden {
+    display: none;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+#score {
+    font-size: 2em; /* Etwas größer */
+    font-weight: bold;
+    color: transparent; /* Text transparent machen */
+    background-image: linear-gradient(to right, #6a11cb, #2575fc); /* Blau-Violett Farbverlauf wie bei Buttons */
+    background-clip: text; /* Hintergrund auf Text zuschneiden */
+    -webkit-background-clip: text; /* Für Webkit-Browser */
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4); /* Schatten für besseren Kontrast */
+    animation: slideInFromTop 1s ease-out; /* Bereits vorhanden */
+    padding: 15px 25px; /* Innenabstand */
+    background-color: rgba(30, 10, 40, 0.6); /* Prominenterer transparenter lila Hintergrund */
+    border-radius: 8px; /* Abgerundete Ecken */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); /* Stärkerer Schatten */
+    border: 1px solid rgba(100, 0, 150, 0.4); /* Dezenter lila Rand */
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Mindestbreite der Spalten erhöhen */
+    gap: 30px; /* Größerer Abstand zwischen Kategorien und Zeilen */
+    width: 100%;
+    max-width: 1200px; /* Maximale Breite des Boards beibehalten */
+    margin-bottom: 40px;
+    padding: 0 20px; /* Mehr Padding an den Seiten */
+    justify-content: center; /* Zentriert die Kategorien, wenn nicht die volle Breite genutzt wird */
+}
+
+.category {
+    font-weight: bold;
+    padding: 20px; /* Mehr Polsterung rundherum */
+    background-color: rgba(255, 255, 255, 0.15); /* Etwas weniger transparent */
+    color: #ffffff;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.2); /* Stärkerer Schatten für Tiefe */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Zentriert Elemente horizontal */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Übergänge für Hover-Effekte */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Leichter Rahmen */
+    backdrop-filter: blur(5px); /* Leichter Blur-Effekt */
+    -webkit-backdrop-filter: blur(5px); /* Für Safari */
+    animation: fadeInUp 0.8s ease-out backwards; /* Animation beim Erscheinen */
+    transform-style: preserve-3d; /* Wichtig für 3D-Effekte */
+}
+
+/* Pseudo-Element für den 3D-Rand */
+.category::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1); /* Dunklere Farbe für den Rand */
+    transform: translateZ(-1px); /* Hinter dem Element positionieren */
+    border-radius: 8px;
+    z-index: -1; /* Hinter dem Inhalt */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Schatten für den Rand */
+}
+
+/* Verzögere die Animation für jeden Kategorieblock */
+.category:nth-child(1) { animation-delay: 0.1s; }
+.category:nth-child(2) { animation-delay: 0.2s; }
+.category:nth-child(3) { animation-delay: 0.3s; }
+.category:nth-child(4) { animation-delay: 0.4s; }
+.category:nth-child(5) { animation-delay: 0.5s; }
+.category:nth-child(6) { animation-delay: 0.6s; }
+.category:nth-child(7) { animation-delay: 0.7s; }
+.category:nth-child(8) { animation-delay: 0.8s; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.category:hover {
+    transform: translateY(-8px); /* Stärkerer Schwebeeffekt */
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5), 0 8px 8px rgba(0, 0, 0, 0.3); /* Stärkere Schatten beim Hover */
+}
+
+.category h3 {
+    margin-top: 0;
+    margin-bottom: 15px; /* Abstand nach dem Titel */
+    font-size: 1.5em; /* Größere Schrift für den Titel */
+    color: #ffffff; /* Weiße Farbe für den Titel */
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.category button {
+    display: block;
+    width: calc(100% - 20px); /* Anpassen für Padding */
+    margin: 6px auto; /* Abstand zwischen Buttons und zum Rand */
+    padding: 12px; /* Polsterung erhöhen */
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: linear-gradient(to right, #6a11cb, #2575fc); /* Blau-Violett Farbverlauf */
+    color: white; /* Textfarbe auf Weiß ändern für besseren Kontrast */
+    transition: all 0.2s ease; /* Übergang für Hover/Active */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    animation: scaleUp 0.5s ease-out backwards; /* Animation beim Erscheinen */
+}
+
+ /* Verzögere die Animation für die Buttons in jeder Kategorie */
+.category button:nth-of-type(1) { animation-delay: 0.4s; }
+.category button:nth-of-type(2) { animation-delay: 0.5s; }
+.category button:nth-of-type(3) { animation-delay: 0.6s; }
+.category button:nth-of-type(4) { animation-delay: 0.7s; }
+.category button:nth-of-type(5) { animation-delay: 0.8s; }
+
+@keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.category button:first-of-type {
+    margin-top: 15px; /* Mehr Abstand zwischen Titel und erstem Button */
+}
+ .category button:last-of-type {
+    margin-bottom: 0; /* Kein zusätzlicher Abstand nach dem letzten Button */
+}
+.category button:hover {
+    background: linear-gradient(to right, #2575fc, #6a11cb); /* Umgekehrter Verlauf beim Hover */
+    transform: scale(1.03); /* Leichte Vergrößerung */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+ .category button:active {
+    transform: scale(0.97); /* Kleiner werdend beim Klicken */
+}
+
+/* Stil für beantwortete Fragen */
+.category button.answered {
+    background-color: #6c757d; /* Dunkleres Grau */
+    color: transparent; /* Text unsichtbar machen */
+    text-decoration: line-through; /* Durchgestrichen */
+    text-decoration-thickness: 2px; /* Dickere Linie */
+    opacity: 0.7; /* Etwas transparenter */
+    cursor: not-allowed; /* Mauszeiger ändern */
+    pointer-events: none; /* Verhindert Klicks */
+    text-decoration-color: rgba(255, 255, 255, 0.7); /* Farbe für die durchgestrichene Linie */
+    animation: fadeOutShrink 0.5s ease-out forwards; /* Animation beim Beantworten */
+}
+
+@keyframes fadeOutShrink {
+    to { opacity: 0; transform: scale(0.8); }
+}
+
+#question-container {
+    background-color: rgba(255, 255, 255, 0.98); /* Fast weiß mit leichter Transparenz */
+    color: #333; /* Dunkler Text */
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 8px 8px rgba(0, 0, 0, 0.3); /* Stärkere Schatten */
+    margin: 20px auto;
+    max-width: 600px; /* Breiter */
+    width: calc(100% - 60px); /* Anpassen für Polsterung */
+    display: none; /* Standardmäßig ausgeblendet */
+    text-align: center;
+    position: fixed; /* Über anderen Elementen */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Zentrieren */
+    z-index: 100; /* Über anderen Inhalten */
+    backdrop-filter: blur(10px); /* Starker Blur für den Hintergrund */
+    -webkit-backdrop-filter: blur(10px); /* Für Safari */
+    animation: fadeInScaleUpModal 0.4s ease-out forwards; /* Animation beim Erscheinen */
+    border: 2px solid rgba(255, 255, 255, 0.4); /* Deutlicherer Rahmen */
+}
+
+@keyframes fadeInScaleUpModal {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Hinzugefügt, um das Ausblenden des Modals zu animieren */
+#question-container.hidden { /* Fügen Sie diese Klasse in script.js hinzu, wenn das Modal ausgeblendet wird */
+    animation: fadeOutScaleDownModal 0.4s ease-in forwards; /* Animation beim Ausblenden */
+}
+
+ @keyframes fadeOutScaleDownModal {
+    from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    to { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+}
+
+#question-container h2 {
+    margin-top: 0;
+    color: #4a0e7b; /* Passend zum Hintergrund */
+    font-size: 1.6em;
+    margin-bottom: 20px;
+}
+#question-container input[type="text"] {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+#question-container button {
+    padding: 12px 25px;
+    background-color: #17a2b8; /* Türkisblauer Button */
+    color: white;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+#question-container button:hover {
+    background-color: #138496;
+}
+
+#feedback {
+    margin-top: 25px;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 1.3em;
+    border-radius: 5px;
+    text-align: center;
+    animation: fadeIn 0.6s ease-out; /* Animation für Feedback */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideInFromTop {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    #score {
+        font-size: 1.6em;
+    }
+    #game-board {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        padding: 0 10px;
+    }
+    .category {
+        padding: 15px;
+    }
+    .category h3 {
+        font-size: 1.3em;
+    }
+    .category button {
+        padding: 10px;
+    }
+    #question-container {
+        padding: 20px;
+        width: calc(100% - 40px);
+    }
+    #question-container h2 {
+         font-size: 1.4em;
+    }
+    #feedback {
+        font-size: 1em;
+    }
+    #countdown-timer {
+         font-size: 1em;
+    }
+}
+
+/* Stil für beantwortete Fragen */
+.category button.answered {
+    background-color: #6c757d; /* Dunkleres Grau */
+    color: transparent; /* Text unsichtbar machen */
+    text-decoration: line-through; /* Durchgestrichen */
+    text-decoration-thickness: 2px; /* Dickere Linie */
+    opacity: 0.7; /* Etwas transparenter */
+    cursor: not-allowed; /* Mauszeiger ändern */
+    pointer-events: none; /* Verhindert Klicks */
+    text-decoration-color: rgba(255, 255, 255, 0.7); /* Farbe für die durchgestrichene Linie */
+    animation: fadeOutShrink 0.5s ease-out forwards; /* Animation beim Beantworten */
+}
+
+@keyframes fadeOutShrink {
+    to { opacity: 0; transform: scale(0.8); }
+}
+
+/* Stil für richtiges Feedback */
+#feedback.correct-feedback {
+    color: #28a745; /* Grün */
+    background-color: rgba(40, 167, 69, 0.2); /* Leichter grüner Hintergrund */
+}
+
+/* Stil für falsches Feedback */
+#feedback.incorrect-feedback {
+    color: #dc3545; /* Rot */
+    background-color: rgba(220, 53, 69, 0.2); /* Leichter roter Hintergrund */
+}
+
+#countdown-timer {
+    margin-top: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #555; /* Dunkleres Grau */
+    animation: pulseTimer 1s infinite; /* Pulsierende Animation für den Timer */
+}
+
+@keyframes pulseTimer {
+    0% { transform: scale(1); color: #555; }
+    50% { transform: scale(1.1); color: #fff; }
+    100% { transform: scale(1); color: #555; }
+}
+
+/* Stil für den Endbildschirm */
+#end-screen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.98); /* Fast weiß mit leichter Transparenz */
+    color: #333; /* Dunkler Text */
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 8px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 100;
+    display: none; /* Standardmäßig ausgeblendet */
+    max-width: 500px;
+    width: calc(100% - 80px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+#end-screen h2 {
+    color: #4a0e7b; /* Passend zum Thema */
+    margin-top: 0;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+#end-screen p {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px; /* Abstand zum Button */
+}
+
+#end-screen button {
+    padding: 12px 25px;
+    background-color: #17a2b8; /* Türkisblau wie der Einreichen Button */
+    color: white;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#end-screen button:hover {
+    background-color: #138496;
+    transform: scale(1.03); /* Leichte Vergrößerung beim Hover */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); /* Schatten beim Hover */
+}
+
+#end-screen button:active {
+    transform: scale(0.97); /* Kleiner werdend beim Klicken */
+}
 
