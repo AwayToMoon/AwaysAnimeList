@@ -1,40 +1,49 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GAME FÜR EMIR IN ARBEIT...</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #1f1c2c, #928DAB);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .text {
-      color: #a965fc;
-      font-size: 3rem;
-      font-weight: bold;
-      position: relative;
-      animation: fadeIn 2s ease-in-out, pulse 2s infinite ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Für Emir</title>
+    <link rel="icon" href="pfad/zu/deinem/favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="text">GAME FÜR EMIR IN ARBEIT...</div>
+    <h1>Quiz Für Emir</h1>
+    <h2>Wie schlau bist du wirklich Emir🤔💡</h2>
+
+    <div id="guide-modal">
+        <div id="guide-box">
+            <p>Anleitung:</p>
+            <ul>
+                <li>Das Quiz besteht aus <strong>Allgemeinwissensfragen</strong>.</li>
+                <li>Klicke auf einen Button mit einer <strong>Punktzahl</strong>, um eine Frage zu beantworten.</li>
+                <li>Höhere Punktzahlen</strong> Sind <strong>Schwerer</strong> und niedrigere Punktzahlen</strong> sind <strong>leichter</strong>.</li>
+                <li>Für eine <strong>richtige</strong> Antwort erhältst du <strong>Punkte</strong>, für eine <strong>falsche</strong> Antwort werden <strong>Punkte abgezogen</strong>.</li>
+                <li>Gib deine Antwort ein und klicke auf <strong>'Antwort einreichen'</strong>.</li>
+                <li>Du siehst dann, ob deine Antwort <strong>richtig</strong> oder <strong>falsch</strong> war.</li>
+                <li>Bereits Beantwortete Fragen <strong> verschwinden</strong>.</li>
+                <li><strong>KEIN GOOGELN 😠 GANZ WICHTIG!!!</strong></li>
+            </ul>
+            <button id="close-guide-modal">Spiel starten</button>
+        </div>
+    </div>
+
+    <div id="score">Punktestand: 0</div>
+    <div id="game-board"></div>
+    <div id="question-container" class="question">
+        <h2 id="question"></h2>
+        <input type="text" id="answer" placeholder="Ihre Antwort...">
+        <button id="submit-answer">Antwort einreichen</button>
+        <p id="feedback"></p>
+        <div id="countdown-timer" style="margin-top: 15px; font-size: 1.1em; font-weight: bold; color: #555;"></div>
+    </div>
+
+    <div id="end-screen">
+        <h2>Spiel Vorbei!</h2>
+        <p id="final-score">Dein Endpunktestand: 0</p>
+        <button id="restart-button">Neues Spiel</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
