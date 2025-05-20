@@ -125,7 +125,8 @@ document.getElementById('submit-answer').onclick = () => {
     // Clear previous feedback classes
     feedbackElement.classList.remove('correct-feedback', 'incorrect-feedback');
 
-    if (userAnswer.toLowerCase() === currentQuestion.answer.toLowerCase()) {
+    // Check if the user answer includes the correct answer (case-insensitive)
+    if (userAnswer.toLowerCase().includes(currentQuestion.answer.toLowerCase())) {
         feedbackText = "Richtig!";
         pointsChange = currentQuestion.points;
         score += pointsChange;
