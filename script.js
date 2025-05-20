@@ -119,6 +119,19 @@ document.getElementById('submit-answer').onclick = () => {
     submitButton.style.pointerEvents = 'none'; // Disable clicks
 
     const userAnswer = answerInput.value.trim();
+
+    // Check if the answer input is empty
+    if (userAnswer === '') {
+        feedbackElement.innerText = "Bitte gib eine Antwort ein.";
+        feedbackElement.classList.remove('correct-feedback', 'incorrect-feedback');
+        // Re-enable and show the submit button immediately
+        submitButton.disabled = false;
+        submitButton.style.visibility = 'visible';
+        submitButton.style.pointerEvents = 'auto';
+        // Do not proceed with the rest of the function
+        return;
+    }
+
     let feedbackText = "";
     let pointsChange = 0;
 
