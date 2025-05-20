@@ -159,6 +159,11 @@ h2 {
 }
 
 #score {
+    /* display: none; /* Initial ausblenden - Removed by user changes */
+    position: fixed; /* Fixierte Position im Viewport */
+    top: 55px; /* Abstand vom oberen Rand */
+    right: 500px; /* Abstand vom rechten Rand */
+    z-index: 10; /* Stellt sicher, dass es über anderen Elementen liegt */
     font-size: 2em; /* Etwas größer */
     font-weight: bold;
     color: transparent; /* Text transparent machen */
