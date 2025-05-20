@@ -1,15 +1,15 @@
 const categories = {
     "Geographie": [
-        { question: "Was ist die Hauptstadt von Frankreich?", answer: "Paris", points: 100 },
-        { question: "Welcher Fluss fließt durch Ägypten?", answer: "Nil", points: 200 },
-        { question: "Was ist der größte Ozean der Welt?", answer: "Pazifischer Ozean", points: 400 },
-        { question: "Welche Wüste ist die größte heiße Wüste der Welt?", answer: "Sahara", points: 500 }
+        { question: "Was ist das größte Land der Welt nach Fläche?", answer: "Russland", points: 100 },
+        { question: "Wie heißt das längste Gebirge Südamerikas?", answer: "Anden", points: 200 },
+        { question: "Welcher Fluss ist länger, der Nil oder der Amazonas?", answer: "Amazonas", points: 400 },
+        { question: "In welchem Land befindet sich der Mount Everest?", answer: "Nepal", points: 500 }
     ],
     "Geschichte": [
-        { question: "Wer war der erste Präsident der USA?", answer: "George Washington", points: 100 },
-        { question: "In welchem Jahr begann der Zweite Weltkrieg?", answer: "1939", points: 200 },
-        { question: "Welche antike Zivilisation baute die Pyramiden von Gizeh?", answer: "Ägypter", points: 400 },
-        { question: "Wer war der erste Mensch auf dem Mond?", answer: "Neil Armstrong", points: 500 }
+        { question: "Wer war der erste römische Kaiser?", answer: "Augustus", points: 100 },
+        { question: "Wann fiel die Berliner Mauer?", answer: "1989", points: 200 },
+        { question: "Wer schrieb die Unabhängigkeitserklärung der Vereinigten Staaten?", answer: "Thomas Jefferson", points: 400 },
+        { question: "Welches Ereignis markiert oft den Beginn des Mittelalters in Europa?", answer: "Fall des Weströmischen Reiches", points: 500 }
     ],
     "Wissenschaft": [
         { question: "Was ist das chemische Symbol für Wasser?", answer: "H2O", points: 100 },
