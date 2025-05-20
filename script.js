@@ -221,15 +221,26 @@ createGameBoard();
 // Modal-Logik
 const guideModal = document.getElementById('guide-modal');
 const closeGuideModalButton = document.getElementById('close-guide-modal');
+const readGuideCheckbox = document.getElementById('read-guide'); // Neue Checkbox
 
 // Zeige das Modal beim Laden der Seite
 window.addEventListener('load', () => {
     guideModal.classList.remove('hidden');
+    closeGuideModalButton.disabled = true; // Button am Anfang deaktivieren
+});
+
+// Event Listener für die Checkbox
+readGuideCheckbox.addEventListener('change', () => {
+    // Button aktivieren/deaktivieren basierend auf dem Zustand der Checkbox
+    closeGuideModalButton.disabled = !readGuideCheckbox.checked;
 });
 
 // Schließe das Modal, wenn der Button geklickt wird
 closeGuideModalButton.addEventListener('click', () => {
     guideModal.classList.add('hidden');
+    // Spielbrett und Punktestand anzeigen
+    gameBoard.style.display = 'grid';
+    scoreElement.style.display = 'block';
 });
 
 // Neustart-Button Logik
