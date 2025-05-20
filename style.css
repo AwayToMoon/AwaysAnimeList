@@ -159,7 +159,6 @@ h2 {
 }
 
 #score {
-    display: none; /* Initial ausblenden */
     font-size: 2em; /* Etwas größer */
     font-weight: bold;
     color: transparent; /* Text transparent machen */
@@ -178,7 +177,7 @@ h2 {
 }
 
 #game-board {
-    display: none; /* Initial ausblenden */
+    display: grid; /* Initial ausblenden */
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Mindestbreite der Spalten erhöhen */
     gap: 30px; /* Größerer Abstand zwischen Kategorien und Zeilen */
     width: 100%;
