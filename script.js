@@ -238,9 +238,6 @@ readGuideCheckbox.addEventListener('change', () => {
 // Schließe das Modal, wenn der Button geklickt wird
 closeGuideModalButton.addEventListener('click', () => {
     guideModal.classList.add('hidden');
-    // Spielbrett und Punktestand anzeigen
-    gameBoard.style.display = 'grid';
-    scoreElement.style.display = 'block';
 });
 
 // Neustart-Button Logik
