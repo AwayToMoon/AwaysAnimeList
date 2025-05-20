@@ -44,7 +44,7 @@ h1 {
     margin-bottom: 20px; /* Abstand nach unten reduzieren */
     text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
     font-size: 2.8em;
-    margin-top: -5px; /* Verschiebt den Titel nach oben */
+    margin-top: -30px; /* Verschiebt den Titel nach oben */
     animation: fadeInScaleUp 1.5s ease-out; /* Kombinierte Einblend- und Skalierungsanimation */
     font-family: 'Montserrat', sans-serif; /* Ursprüngliche Schriftart */
 }
@@ -125,6 +125,13 @@ h2 {
     background-color: #218838; /* Dunkleres Grün beim Hover */
 }
 
+#guide-box button:disabled {
+    background-color: #cccccc; /* Grauer Hintergrund */
+    color: #666666; /* Dunkler grauer Text */
+    cursor: not-allowed; /* Zeigt an, dass es nicht klickbar ist */
+    opacity: 0.7; /* Etwas transparenter */
+}
+
 /* Stil für das Modal-Overlay */
 #guide-modal {
     position: fixed; /* Fixierte Position, bedeckt den gesamten Viewport */
@@ -152,6 +159,7 @@ h2 {
 }
 
 #score {
+    display: none; /* Initial ausblenden */
     font-size: 2em; /* Etwas größer */
     font-weight: bold;
     color: transparent; /* Text transparent machen */
@@ -170,13 +178,12 @@ h2 {
 }
 
 #game-board {
-    display: grid;
+    display: none; /* Initial ausblenden */
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Mindestbreite der Spalten erhöhen */
     gap: 30px; /* Größerer Abstand zwischen Kategorien und Zeilen */
     width: 100%;
     max-width: 1200px; /* Maximale Breite des Boards beibehalten */
     margin-bottom: 40px;
-    margin-top: -20px; /* Verschiebt das Spielbrett nach oben */
     padding: 0 20px; /* Mehr Padding an den Seiten */
     justify-content: center; /* Zentriert die Kategorien, wenn nicht die volle Breite genutzt wird */
 }
