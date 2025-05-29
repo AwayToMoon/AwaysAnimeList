@@ -51,6 +51,31 @@ const words = [
                 word: "PHANTOM",
                 hint: "Fliegender Nacht-Mob",
                 difficulty: 2
+            },
+            {
+                word: "RAVAGER",
+                hint: "Großer Kampf-Mob",
+                difficulty: 3
+            },
+            {
+                word: "WARDEN",
+                hint: "Blinder Höhlen-Mob",
+                difficulty: 3
+            },
+            {
+                word: "PIGLIN",
+                hint: "Nether-Bewohner",
+                difficulty: 2
+            },
+            {
+                word: "HOGLIN",
+                hint: "Nether-Schwein",
+                difficulty: 2
+            },
+            {
+                word: "STRIDER",
+                hint: "Lava-Läufer",
+                difficulty: 2
             }
         ]
     },
@@ -106,6 +131,31 @@ const words = [
                 word: "COMMAND",
                 hint: "Befehls-Block",
                 difficulty: 3
+            },
+            {
+                word: "AMETHYST",
+                hint: "Violetter Kristall",
+                difficulty: 2
+            },
+            {
+                word: "DEEPSLATE",
+                hint: "Tiefe Steine",
+                difficulty: 2
+            },
+            {
+                word: "SCULK",
+                hint: "Dunkler Höhlen-Block",
+                difficulty: 3
+            },
+            {
+                word: "COPPER",
+                hint: "Rostender Metall-Block",
+                difficulty: 2
+            },
+            {
+                word: "MUD",
+                hint: "Nasser Erdboden",
+                difficulty: 1
             }
         ]
     },
@@ -161,6 +211,31 @@ const words = [
                 word: "SHEARS",
                 hint: "Zum Scheren",
                 difficulty: 1
+            },
+            {
+                word: "SHIELD",
+                hint: "Zum Blockieren",
+                difficulty: 2
+            },
+            {
+                word: "ELYTRA",
+                hint: "Flug-Item",
+                difficulty: 3
+            },
+            {
+                word: "SPYGLASS",
+                hint: "Zum Weitsehen",
+                difficulty: 2
+            },
+            {
+                word: "BRUSH",
+                hint: "Zum Ausgraben",
+                difficulty: 2
+            },
+            {
+                word: "RECOVERYCOMPASS",
+                hint: "Zeigt Todesort",
+                difficulty: 3
             }
         ]
     },
@@ -216,6 +291,31 @@ const words = [
                 word: "OCEAN",
                 hint: "Großes Gewässer",
                 difficulty: 1
+            },
+            {
+                word: "DEEPDARK",
+                hint: "Dunkle Höhlen",
+                difficulty: 3
+            },
+            {
+                word: "DRIPSTONE",
+                hint: "Tropfsteinhöhlen",
+                difficulty: 2
+            },
+            {
+                word: "LUSHCAVES",
+                hint: "Üppige Höhlen",
+                difficulty: 2
+            },
+            {
+                word: "MEADOW",
+                hint: "Blumenwiese",
+                difficulty: 1
+            },
+            {
+                word: "GROVE",
+                hint: "Schneebedeckter Wald",
+                difficulty: 2
             }
         ]
     },
@@ -271,6 +371,31 @@ const words = [
                 word: "ELYTRA",
                 hint: "Flug-Item",
                 difficulty: 3
+            },
+            {
+                word: "AMETHYSTSHARD",
+                hint: "Violetter Kristall",
+                difficulty: 2
+            },
+            {
+                word: "ECHOSHARD",
+                hint: "Höhlen-Kristall",
+                difficulty: 2
+            },
+            {
+                word: "SCULKCATALYST",
+                hint: "Dunkler Katalysator",
+                difficulty: 3
+            },
+            {
+                word: "RECOVERYCOMPASS",
+                hint: "Zeigt Todesort",
+                difficulty: 3
+            },
+            {
+                word: "GOATHORN",
+                hint: "Ziegenhorn",
+                difficulty: 2
             }
         ]
     },
@@ -331,6 +456,31 @@ const words = [
                 word: "NIGHTVISION",
                 hint: "Im Dunkeln sehen",
                 difficulty: 2
+            },
+            {
+                word: "INVISIBILITY",
+                hint: "Unsichtbar werden",
+                difficulty: 3
+            },
+            {
+                word: "LEVITATION",
+                hint: "Schweben",
+                difficulty: 3
+            },
+            {
+                word: "SLOWFALLING",
+                hint: "Langsam fallen",
+                difficulty: 2
+            },
+            {
+                word: "CONDUIT",
+                hint: "Unterwasser-Atmen",
+                difficulty: 3
+            },
+            {
+                word: "DOLPHINSGRACE",
+                hint: "Schneller schwimmen",
+                difficulty: 2
             }
         ]
     },
@@ -360,6 +510,141 @@ const words = [
             {
                 word: "BASTION",
                 hint: "Nether-Festung",
+                difficulty: 3
+            },
+            {
+                word: "ANCIENTCITY",
+                hint: "Alte Stadt",
+                difficulty: 3
+            },
+            {
+                word: "TRAILRUINS",
+                hint: "Verlassene Pfade",
+                difficulty: 2
+            },
+            {
+                word: "RUINEDPORTAL",
+                hint: "Zerstörtes Portal",
+                difficulty: 2
+            },
+            {
+                word: "SHIPWRECK",
+                hint: "Schiffswrack",
+                difficulty: 2
+            },
+            {
+                word: "PILLAGEROUTPOST",
+                hint: "Plünderer-Posten",
+                difficulty: 2
+            }
+        ]
+    },
+    {
+        category: "Rüstungen",
+        items: [
+            {
+                word: "HELMET",
+                hint: "Kopfschutz",
+                difficulty: 1
+            },
+            {
+                word: "CHESTPLATE",
+                hint: "Brustschutz",
+                difficulty: 1
+            },
+            {
+                word: "LEGGINGS",
+                hint: "Beinschutz",
+                difficulty: 1
+            },
+            {
+                word: "BOOTS",
+                hint: "Fußschutz",
+                difficulty: 1
+            },
+            {
+                word: "TURTLEHELMET",
+                hint: "Schildkrötenhelm",
+                difficulty: 2
+            },
+            {
+                word: "ELYTRA",
+                hint: "Flug-Rüstung",
+                difficulty: 3
+            },
+            {
+                word: "NETHERITE",
+                hint: "Stärkstes Material",
+                difficulty: 3
+            },
+            {
+                word: "DIAMOND",
+                hint: "Wertvolles Material",
+                difficulty: 2
+            },
+            {
+                word: "GOLDEN",
+                hint: "Schwaches Material",
+                difficulty: 1
+            },
+            {
+                word: "CHAINMAIL",
+                hint: "Mittelstarkes Material",
+                difficulty: 2
+            }
+        ]
+    },
+    {
+        category: "Zauber",
+        items: [
+            {
+                word: "SHARPNESS",
+                hint: "Mehr Schaden",
+                difficulty: 2
+            },
+            {
+                word: "PROTECTION",
+                hint: "Mehr Schutz",
+                difficulty: 2
+            },
+            {
+                word: "EFFICIENCY",
+                hint: "Schneller abbauen",
+                difficulty: 2
+            },
+            {
+                word: "FORTUNE",
+                hint: "Mehr Ressourcen",
+                difficulty: 3
+            },
+            {
+                word: "MENDING",
+                hint: "Repariert Items",
+                difficulty: 3
+            },
+            {
+                word: "UNBREAKING",
+                hint: "Längere Haltbarkeit",
+                difficulty: 2
+            },
+            {
+                word: "LOOTING",
+                hint: "Mehr Beute",
+                difficulty: 2
+            },
+            {
+                word: "FROSTWALKER",
+                hint: "Läuft auf Wasser",
+                difficulty: 3
+            },
+            {
+                word: "DEPTHSTRIDER",
+                hint: "Schneller im Wasser",
+                difficulty: 2
+            },
+            {
+                word: "THORNS",
+                hint: "Reflektiert Schaden",
                 difficulty: 3
             }
         ]
