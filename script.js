@@ -375,6 +375,7 @@ let remainingLetters = 0;
 let gameStarted = false;
 let timeLeft = 60; // 60 Sekunden Zeitlimit
 let timerInterval;
+let allWords = []; // Array für alle Wörter
 
 const startButton = document.getElementById('start-btn');
 const nextButton = document.getElementById('next-btn');
@@ -485,6 +486,23 @@ function stopTimer() {
     clearInterval(timerInterval);
 }
 
+// Funktion zum Erstellen des Wortpools
+function createWordPool() {
+    allWords = [];
+    words.forEach(category => {
+        category.items.forEach(item => {
+            allWords.push({
+                word: item.word,
+                hint: item.hint,
+                difficulty: item.difficulty,
+                category: category.category
+            });
+        });
+    });
+    // Mische die Wörter zufällig
+    allWords.sort(() => Math.random() - 0.5);
+}
+
 function startQuiz() {
     gameStarted = true;
     startButton.classList.add('hide');
@@ -492,10 +510,9 @@ function startQuiz() {
     currentWordIndex = 0;
     score = 0;
     points = 0;
-    currentCategory = Math.floor(Math.random() * words.length);
     
-    // Mische die Wörter zufällig
-    words[currentCategory].items.sort(() => Math.random() - 0.5);
+    // Erstelle den Wortpool
+    createWordPool();
     
     updateStats();
     
@@ -515,7 +532,7 @@ function startQuiz() {
 
 function setNextWord() {
     resetState();
-    const currentWord = words[currentCategory].items[currentWordIndex];
+    const currentWord = allWords[currentWordIndex];
     hintText.textContent = currentWord.hint;
     remainingLetters = currentWord.word.length;
     lettersCount.textContent = remainingLetters;
@@ -528,7 +545,7 @@ function setNextWord() {
 }
 
 function updateWordDisplay() {
-    const currentWord = words[currentCategory].items[currentWordIndex].word;
+    const currentWord = allWords[currentWordIndex].word;
     const display = currentWord
         .split('')
         .map(letter => guessedLetters.has(letter) ? letter : '_')
@@ -555,7 +572,7 @@ function calculatePoints(letter, isCorrect) {
     let pointsGained = 0;
     
     if (isCorrect) {
-        const currentWord = words[currentCategory].items[currentWordIndex];
+        const currentWord = allWords[currentWordIndex];
         // Basis-Punkte basierend auf Schwierigkeitsgrad
         pointsGained = 10 * currentWord.difficulty;
         
@@ -571,7 +588,7 @@ function calculatePoints(letter, isCorrect) {
         }
     } else {
         // Minuspunkte für falsche Buchstaben
-        const currentWord = words[currentCategory].items[currentWordIndex];
+        const currentWord = allWords[currentWordIndex];
         // Basis-Minuspunkte basierend auf Schwierigkeitsgrad
         pointsGained = -5 * currentWord.difficulty;
         
@@ -588,7 +605,7 @@ function calculatePoints(letter, isCorrect) {
 }
 
 function checkLetter(letter) {
-    const currentWord = words[currentCategory].items[currentWordIndex].word;
+    const currentWord = allWords[currentWordIndex].word;
     const key = Array.from(keys).find(k => k.textContent === letter);
     
     if (guessedLetters.has(letter)) return;
@@ -616,7 +633,7 @@ function checkLetter(letter) {
             score++;
             // Stoppe Timer wenn Wort fertig
             clearInterval(timerInterval);
-            if (currentWordIndex < words[currentCategory].items.length - 1) {
+            if (currentWordIndex < allWords.length - 1) {
                 nextButton.classList.remove('hide');
             } else {
                 showScore();
@@ -649,11 +666,10 @@ function showScore() {
     wordDisplay.parentElement.classList.add('hide');
     scoreContainer.classList.remove('hide');
     scoreElement.textContent = score;
-    totalElement.textContent = words[currentCategory].items.length;
+    totalElement.textContent = allWords.length;
     finalPointsElement.textContent = points;
     
     // Berechne und zeige die Erfolgsrate
-    const successRate = Math.round((score / words[currentCategory].items.length) * 100);
+    const successRate = Math.round((score / allWords.length) * 100);
     document.getElementById('success-rate').textContent = successRate;
 }
-
