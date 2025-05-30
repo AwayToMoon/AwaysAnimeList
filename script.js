@@ -1,651 +1,326 @@
 const words = [
     {
-        category: "Mobs",
+        category: "Anime-Serien",
         items: [
             {
-                word: "CREEPER",
-                hint: "Grüner Explosions-Mob",
+                word: "NARUTO",
+                hint: "Ninja mit Fuchsdämon",
                 difficulty: 1
             },
             {
-                word: "ZOMBIE",
-                hint: "Untoter Mob",
+                word: "DRAGONBALL",
+                hint: "Kampf um die Drachenkugeln",
                 difficulty: 1
             },
             {
-                word: "SKELETON",
-                hint: "Schießt mit Pfeilen",
+                word: "ONEPIECE",
+                hint: "Schatzsuche auf See",
                 difficulty: 2
             },
             {
-                word: "ENDERMAN",
-                hint: "Teleportiert sich",
+                word: "ATTACKONTITAN",
+                hint: "Kampf gegen Riesen",
                 difficulty: 3
             },
             {
-                word: "SPIDER",
-                hint: "Klettert an Wänden",
+                word: "DEATHNOTE",
+                hint: "Todesnotizbuch",
                 difficulty: 2
             },
             {
-                word: "SLIME",
-                hint: "Grüner springender Mob",
+                word: "DEMONSLAYER",
+                hint: "Kampf gegen Dämonen",
+                difficulty: 2
+            },
+            {
+                word: "MYHEROACADEMIA",
+                hint: "Superhelden-Akademie",
+                difficulty: 3
+            },
+            {
+                word: "TOKYOGHOUL",
+                hint: "Menschenfresser in Tokio",
+                difficulty: 3
+            },
+            {
+                word: "FAIRYTAIL",
+                hint: "Magische Gilde",
+                difficulty: 2
+            },
+            {
+                word: "BLACKCLOVER",
+                hint: "Magier ohne Magie",
+                difficulty: 2
+            },
+            {
+                word: "HUNTERXHUNTER",
+                hint: "Jagd nach Abenteuern",
+                difficulty: 3
+            },
+            {
+                word: "FULLMETALALCHEMIST",
+                hint: "Brüder auf der Suche",
+                difficulty: 3
+            },
+            {
+                word: "BLEACH",
+                hint: "Seelenretter",
+                difficulty: 2
+            },
+            {
+                word: "JOJO",
+                hint: "Bizarrer Kampf",
                 difficulty: 1
             },
             {
-                word: "BLAZE",
-                hint: "Feuer-Mob im Nether",
-                difficulty: 3
-            },
-            {
-                word: "GHAST",
-                hint: "Fliegender Nether-Mob",
-                difficulty: 3
-            },
-            {
-                word: "WITCH",
-                hint: "Wirft Tränke",
-                difficulty: 2
-            },
-            {
-                word: "PHANTOM",
-                hint: "Fliegender Nacht-Mob",
-                difficulty: 2
-            },
-            {
-                word: "RAVAGER",
-                hint: "Großer Kampf-Mob",
-                difficulty: 3
-            },
-            {
-                word: "WARDEN",
-                hint: "Blinder Höhlen-Mob",
-                difficulty: 3
-            },
-            {
-                word: "PIGLIN",
-                hint: "Nether-Bewohner",
-                difficulty: 2
-            },
-            {
-                word: "HOGLIN",
-                hint: "Nether-Schwein",
-                difficulty: 2
-            },
-            {
-                word: "STRIDER",
-                hint: "Lava-Läufer",
-                difficulty: 2
-            }
-        ]
-    },
-    {
-        category: "Blöcke",
-        items: [
-            {
-                word: "DIAMOND",
-                hint: "Wertvoller blauer Block",
-                difficulty: 2
-            },
-            {
-                word: "ORE",
-                hint: "Kommt in Höhlen vor",
-                difficulty: 1
-            },
-            {
-                word: "OBSIDIAN",
-                hint: "Schwarzer harter Block",
-                difficulty: 2
-            },
-            {
-                word: "REDSTONE",
-                hint: "Roter Energieblock",
-                difficulty: 3
-            },
-            {
-                word: "GLOWSTONE",
-                hint: "Leuchtender Block",
-                difficulty: 2
-            },
-            {
-                word: "NETHERRACK",
-                hint: "Nether-Block",
-                difficulty: 2
-            },
-            {
-                word: "ENDSTONE",
-                hint: "End-Dimension Block",
-                difficulty: 3
-            },
-            {
-                word: "PRISMARINE",
-                hint: "Meerestempel Block",
-                difficulty: 3
-            },
-            {
-                word: "BEACON",
-                hint: "Leuchtender Effekt-Block",
-                difficulty: 3
-            },
-            {
-                word: "COMMAND",
-                hint: "Befehls-Block",
-                difficulty: 3
-            },
-            {
-                word: "AMETHYST",
-                hint: "Violetter Kristall",
-                difficulty: 2
-            },
-            {
-                word: "DEEPSLATE",
-                hint: "Tiefe Steine",
-                difficulty: 2
-            },
-            {
-                word: "SCULK",
-                hint: "Dunkler Höhlen-Block",
-                difficulty: 3
-            },
-            {
-                word: "COPPER",
-                hint: "Rostender Metall-Block",
-                difficulty: 2
-            },
-            {
-                word: "MUD",
-                hint: "Nasser Erdboden",
-                difficulty: 1
-            }
-        ]
-    },
-    {
-        category: "Werkzeuge",
-        items: [
-            {
-                word: "PICKAXE",
-                hint: "Zum Abbauen von Steinen",
-                difficulty: 1
-            },
-            {
-                word: "SWORD",
-                hint: "Zum Kämpfen",
-                difficulty: 1
-            },
-            {
-                word: "AXE",
-                hint: "Zum Fällen von Bäumen",
-                difficulty: 1
-            },
-            {
-                word: "SHOVEL",
-                hint: "Zum Graben",
-                difficulty: 1
-            },
-            {
-                word: "HOE",
-                hint: "Zum Bearbeiten von Erde",
-                difficulty: 2
-            },
-            {
-                word: "FISHINGROD",
-                hint: "Zum Angeln",
-                difficulty: 2
-            },
-            {
-                word: "BOW",
-                hint: "Zum Schießen",
-                difficulty: 2
-            },
-            {
-                word: "CROSSBOW",
-                hint: "Stärkere Schusswaffe",
-                difficulty: 3
-            },
-            {
-                word: "TRIDENT",
-                hint: "Dreizack-Waffe",
-                difficulty: 3
-            },
-            {
-                word: "SHEARS",
-                hint: "Zum Scheren",
-                difficulty: 1
-            },
-            {
-                word: "SHIELD",
-                hint: "Zum Blockieren",
-                difficulty: 2
-            },
-            {
-                word: "ELYTRA",
-                hint: "Flug-Item",
-                difficulty: 3
-            },
-            {
-                word: "SPYGLASS",
-                hint: "Zum Weitsehen",
-                difficulty: 2
-            },
-            {
-                word: "BRUSH",
-                hint: "Zum Ausgraben",
-                difficulty: 2
-            },
-            {
-                word: "RECOVERYCOMPASS",
-                hint: "Zeigt Todesort",
+                word: "EVANGELION",
+                hint: "Riesenroboter",
                 difficulty: 3
             }
         ]
     },
     {
-        category: "Biome",
+        category: "Charaktere",
         items: [
             {
-                word: "DESERT",
-                hint: "Heiße Sandlandschaft",
+                word: "GOKU",
+                hint: "Saiyajin-Krieger",
                 difficulty: 1
             },
             {
-                word: "FOREST",
-                hint: "Viele Bäume",
-                difficulty: 1
-            },
-            {
-                word: "JUNGLE",
-                hint: "Dichter Regenwald",
+                word: "LIGHT",
+                hint: "Todesnotizbuch-Besitzer",
                 difficulty: 2
             },
             {
-                word: "TAIGA",
-                hint: "Schneewald",
+                word: "EREN",
+                hint: "Titan-Jäger",
                 difficulty: 2
             },
             {
-                word: "MUSHROOM",
-                hint: "Pilzlandschaft",
+                word: "MONKEYDLUFFY",
+                hint: "Gummi-Pirat",
                 difficulty: 3
             },
             {
-                word: "SAVANNA",
-                hint: "Afrikanische Steppe",
-                difficulty: 2
-            },
-            {
-                word: "BADLANDS",
-                hint: "Farbige Canyons",
-                difficulty: 2
-            },
-            {
-                word: "DARKFOREST",
-                hint: "Dunkler Wald",
-                difficulty: 2
-            },
-            {
-                word: "SWAMP",
-                hint: "Sumpflandschaft",
-                difficulty: 2
-            },
-            {
-                word: "OCEAN",
-                hint: "Großes Gewässer",
+                word: "NARUTO",
+                hint: "Ninja mit Fuchsdämon",
                 difficulty: 1
             },
             {
-                word: "DEEPDARK",
-                hint: "Dunkle Höhlen",
+                word: "TANJIRO",
+                hint: "Dämonenjäger",
+                difficulty: 2
+            },
+            {
+                word: "DEKU",
+                hint: "Superhelden-Schüler",
+                difficulty: 2
+            },
+            {
+                word: "KANAKI",
+                hint: "Tokio Ghoul",
                 difficulty: 3
             },
             {
-                word: "DRIPSTONE",
-                hint: "Tropfsteinhöhlen",
+                word: "EDWARD",
+                hint: "Stahl-Alchemist",
                 difficulty: 2
             },
             {
-                word: "LUSHCAVES",
-                hint: "Üppige Höhlen",
+                word: "ICHIGO",
+                hint: "Seelenretter",
                 difficulty: 2
             },
             {
-                word: "MEADOW",
-                hint: "Blumenwiese",
+                word: "GON",
+                hint: "Jäger",
                 difficulty: 1
             },
             {
-                word: "GROVE",
-                hint: "Schneebedeckter Wald",
+                word: "SHINJI",
+                hint: "Eva-Pilot",
+                difficulty: 2
+            },
+            {
+                word: "SAITAMA",
+                hint: "Ein-Punch-Man",
+                difficulty: 2
+            },
+            {
+                word: "LEVI",
+                hint: "Menschenjäger",
+                difficulty: 2
+            },
+            {
+                word: "KAKASHI",
+                hint: "Kopier-Ninja",
                 difficulty: 2
             }
         ]
     },
     {
-        category: "Items",
+        category: "Genres",
         items: [
             {
-                word: "APPLE",
-                hint: "Rotes Obst",
+                word: "SHONEN",
+                hint: "Jugendliche Helden",
                 difficulty: 1
             },
             {
-                word: "BREAD",
-                hint: "Gebackenes Getreide",
+                word: "SEINEN",
+                hint: "Erwachsene Zielgruppe",
+                difficulty: 2
+            },
+            {
+                word: "SHOUJO",
+                hint: "Mädchen-Anime",
+                difficulty: 2
+            },
+            {
+                word: "MECHA",
+                hint: "Riesenroboter",
                 difficulty: 1
             },
             {
-                word: "GOLDENAPPLE",
-                hint: "Besonderer Apfel",
+                word: "ISEKAI",
+                hint: "Andere Welt",
                 difficulty: 2
             },
             {
-                word: "ENCHANTEDBOOK",
-                hint: "Buch mit Zaubern",
-                difficulty: 3
-            },
-            {
-                word: "ENDERPEARL",
-                hint: "Teleportations-Item",
-                difficulty: 3
-            },
-            {
-                word: "EYEOFENDER",
-                hint: "Führt zum Portal",
-                difficulty: 3
-            },
-            {
-                word: "NETHERSTAR",
-                hint: "Droppe vom Wither",
-                difficulty: 3
-            },
-            {
-                word: "DRAGONEGG",
-                hint: "Eier des Drachen",
-                difficulty: 3
-            },
-            {
-                word: "TRIDENT",
-                hint: "Dreizack-Waffe",
-                difficulty: 3
-            },
-            {
-                word: "ELYTRA",
-                hint: "Flug-Item",
-                difficulty: 3
-            },
-            {
-                word: "AMETHYSTSHARD",
-                hint: "Violetter Kristall",
+                word: "SLICEOFLIFE",
+                hint: "Alltagsgeschichten",
                 difficulty: 2
             },
             {
-                word: "ECHOSHARD",
-                hint: "Höhlen-Kristall",
-                difficulty: 2
+                word: "HORROR",
+                hint: "Gruselgeschichten",
+                difficulty: 1
             },
             {
-                word: "SCULKCATALYST",
-                hint: "Dunkler Katalysator",
-                difficulty: 3
+                word: "ROMANCE",
+                hint: "Liebesgeschichten",
+                difficulty: 1
             },
             {
-                word: "RECOVERYCOMPASS",
-                hint: "Zeigt Todesort",
-                difficulty: 3
+                word: "SPORTS",
+                hint: "Sportanime",
+                difficulty: 1
             },
             {
-                word: "GOATHORN",
-                hint: "Ziegenhorn",
+                word: "MAGICALGIRL",
+                hint: "Magische Mädchen",
                 difficulty: 2
             }
         ]
     },
     {
-        category: "Dimensionen",
+        category: "Studios",
         items: [
             {
-                word: "OVERWORLD",
-                hint: "Hauptwelt",
+                word: "GHIBLI",
+                hint: "Miyazaki Studio",
                 difficulty: 1
             },
             {
-                word: "NETHER",
-                hint: "Unterwelt",
+                word: "MAPPA",
+                hint: "Attack on Titan Studio",
                 difficulty: 2
             },
             {
-                word: "END",
-                hint: "Drachen-Dimension",
+                word: "BONES",
+                hint: "My Hero Academia Studio",
+                difficulty: 2
+            },
+            {
+                word: "MADHOUSE",
+                hint: "Death Note Studio",
+                difficulty: 2
+            },
+            {
+                word: "UFOTABLE",
+                hint: "Demon Slayer Studio",
+                difficulty: 2
+            },
+            {
+                word: "WIT",
+                hint: "Attack on Titan Studio",
+                difficulty: 2
+            },
+            {
+                word: "A1PICTURES",
+                hint: "Sword Art Online Studio",
+                difficulty: 2
+            },
+            {
+                word: "KYOTOANIMATION",
+                hint: "Violet Evergarden Studio",
                 difficulty: 3
             },
             {
-                word: "VOID",
-                hint: "Leerer Raum",
+                word: "TRIGGER",
+                hint: "Kill la Kill Studio",
                 difficulty: 2
             },
             {
-                word: "DEEPSLATE",
-                hint: "Tiefe Steine",
+                word: "SUNRISE",
+                hint: "Gundam Studio",
                 difficulty: 2
             }
         ]
     },
     {
-        category: "Effekte",
+        category: "Begriffe",
         items: [
             {
-                word: "SPEED",
-                hint: "Schneller laufen",
+                word: "OTAKU",
+                hint: "Anime-Fan",
                 difficulty: 1
             },
             {
-                word: "JUMP",
-                hint: "Höher springen",
+                word: "MANGA",
+                hint: "Japanische Comics",
                 difficulty: 1
             },
             {
-                word: "STRENGTH",
-                hint: "Stärker schlagen",
-                difficulty: 2
-            },
-            {
-                word: "REGENERATION",
-                hint: "Gesundheit regenerieren",
-                difficulty: 2
-            },
-            {
-                word: "NIGHTVISION",
-                hint: "Im Dunkeln sehen",
-                difficulty: 2
-            },
-            {
-                word: "INVISIBILITY",
-                hint: "Unsichtbar werden",
-                difficulty: 3
-            },
-            {
-                word: "LEVITATION",
-                hint: "Schweben",
-                difficulty: 3
-            },
-            {
-                word: "SLOWFALLING",
-                hint: "Langsam fallen",
-                difficulty: 2
-            },
-            {
-                word: "CONDUIT",
-                hint: "Unterwasser-Atmen",
-                difficulty: 3
-            },
-            {
-                word: "DOLPHINSGRACE",
-                hint: "Schneller schwimmen",
-                difficulty: 2
-            }
-        ]
-    },
-    {
-        category: "Strukturen",
-        items: [
-            {
-                word: "VILLAGE",
-                hint: "Dorf der Bewohner",
+                word: "ANIME",
+                hint: "Japanische Animation",
                 difficulty: 1
             },
             {
-                word: "TEMPLE",
-                hint: "Alte Struktur",
-                difficulty: 2
-            },
-            {
-                word: "MANSION",
-                hint: "Großes Waldhaus",
-                difficulty: 3
-            },
-            {
-                word: "STRONGHOLD",
-                hint: "Versteckte Festung",
-                difficulty: 3
-            },
-            {
-                word: "BASTION",
-                hint: "Nether-Festung",
-                difficulty: 3
-            },
-            {
-                word: "ANCIENTCITY",
-                hint: "Alte Stadt",
-                difficulty: 3
-            },
-            {
-                word: "TRAILRUINS",
-                hint: "Verlassene Pfade",
-                difficulty: 2
-            },
-            {
-                word: "RUINEDPORTAL",
-                hint: "Zerstörtes Portal",
-                difficulty: 2
-            },
-            {
-                word: "SHIPWRECK",
-                hint: "Schiffswrack",
-                difficulty: 2
-            },
-            {
-                word: "PILLAGEROUTPOST",
-                hint: "Plünderer-Posten",
-                difficulty: 2
-            }
-        ]
-    },
-    {
-        category: "Rüstungen",
-        items: [
-            {
-                word: "HELMET",
-                hint: "Kopfschutz",
+                word: "COSPLAY",
+                hint: "Kostümierung",
                 difficulty: 1
             },
             {
-                word: "CHESTPLATE",
-                hint: "Brustschutz",
+                word: "CHIBI",
+                hint: "Niedliche Mini-Version",
                 difficulty: 1
             },
             {
-                word: "LEGGINGS",
-                hint: "Beinschutz",
+                word: "KAIJU",
+                hint: "Riesenmonster",
+                difficulty: 2
+            },
+            {
+                word: "MEKA",
+                hint: "Riesenroboter",
                 difficulty: 1
             },
             {
-                word: "BOOTS",
-                hint: "Fußschutz",
+                word: "SHONEN",
+                hint: "Jugendliche Helden",
                 difficulty: 1
             },
             {
-                word: "TURTLEHELMET",
-                hint: "Schildkrötenhelm",
+                word: "SEINEN",
+                hint: "Erwachsene Zielgruppe",
                 difficulty: 2
             },
             {
-                word: "ELYTRA",
-                hint: "Flug-Rüstung",
-                difficulty: 3
-            },
-            {
-                word: "NETHERITE",
-                hint: "Stärkstes Material",
-                difficulty: 3
-            },
-            {
-                word: "DIAMOND",
-                hint: "Wertvolles Material",
+                word: "SHOUJO",
+                hint: "Mädchen-Anime",
                 difficulty: 2
-            },
-            {
-                word: "GOLDEN",
-                hint: "Schwaches Material",
-                difficulty: 1
-            },
-            {
-                word: "CHAINMAIL",
-                hint: "Mittelstarkes Material",
-                difficulty: 2
-            }
-        ]
-    },
-    {
-        category: "Zauber",
-        items: [
-            {
-                word: "SHARPNESS",
-                hint: "Mehr Schaden",
-                difficulty: 2
-            },
-            {
-                word: "PROTECTION",
-                hint: "Mehr Schutz",
-                difficulty: 2
-            },
-            {
-                word: "EFFICIENCY",
-                hint: "Schneller abbauen",
-                difficulty: 2
-            },
-            {
-                word: "FORTUNE",
-                hint: "Mehr Ressourcen",
-                difficulty: 3
-            },
-            {
-                word: "MENDING",
-                hint: "Repariert Items",
-                difficulty: 3
-            },
-            {
-                word: "UNBREAKING",
-                hint: "Längere Haltbarkeit",
-                difficulty: 2
-            },
-            {
-                word: "LOOTING",
-                hint: "Mehr Beute",
-                difficulty: 2
-            },
-            {
-                word: "FROSTWALKER",
-                hint: "Läuft auf Wasser",
-                difficulty: 3
-            },
-            {
-                word: "DEPTHSTRIDER",
-                hint: "Schneller im Wasser",
-                difficulty: 2
-            },
-            {
-                word: "THORNS",
-                hint: "Reflektiert Schaden",
-                difficulty: 3
             }
         ]
     }
