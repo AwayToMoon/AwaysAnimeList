@@ -3,19 +3,9 @@ const words = [
         category: "Anime-Serien",
         items: [
             {
-                word: "NARUTO",
-                hint: "Ninja mit Fuchsdämon",
-                difficulty: 1
-            },
-            {
-                word: "DRAGONBALL",
-                hint: "Kampf um die Drachenkugeln",
-                difficulty: 1
-            },
-            {
-                word: "ONEPIECE",
-                hint: "Schatzsuche auf See",
-                difficulty: 2
+                word: "FULLMETALALCHEMIST",
+                hint: "Brüder auf der Suche",
+                difficulty: 3
             },
             {
                 word: "ATTACKONTITAN",
@@ -28,9 +18,49 @@ const words = [
                 difficulty: 2
             },
             {
+                word: "COWBOYBEBOP",
+                hint: "Weltraum-Cowboys",
+                difficulty: 2
+            },
+            {
+                word: "STEINSGATE",
+                hint: "Zeitreise",
+                difficulty: 3
+            },
+            {
+                word: "GHOSTINTHEshell",
+                hint: "Cyberpunk",
+                difficulty: 3
+            },
+            {
+                word: "MONSTER",
+                hint: "Jagd nach einem Mörder",
+                difficulty: 3
+            },
+            {
+                word: "CODEGEASS",
+                hint: "Macht über Geist",
+                difficulty: 2
+            },
+            {
+                word: "EVANGELION",
+                hint: "Riesenroboter",
+                difficulty: 3
+            },
+            {
+                word: "HUNTERXHUNTER",
+                hint: "Jagd nach Abenteuern",
+                difficulty: 3
+            },
+            {
                 word: "DEMONSLAYER",
                 hint: "Kampf gegen Dämonen",
                 difficulty: 2
+            },
+            {
+                word: "JUJUTSUKAISEN",
+                hint: "Fluch-Techniken",
+                difficulty: 3
             },
             {
                 word: "MYHEROACADEMIA",
@@ -38,9 +68,59 @@ const words = [
                 difficulty: 3
             },
             {
-                word: "TOKYOGHOUL",
-                hint: "Menschenfresser in Tokio",
-                difficulty: 3
+                word: "VINLANDSAGA",
+                hint: "Wikinger-Abenteuer",
+                difficulty: 2
+            },
+            {
+                word: "MADOKAMAGICA",
+                hint: "Magische Mädchen",
+                difficulty: 2
+            },
+            {
+                word: "PARASYTE",
+                hint: "Alien-Parasiten",
+                difficulty: 2
+            },
+            {
+                word: "ERASED",
+                hint: "Zeitreise-Krimi",
+                difficulty: 2
+            },
+            {
+                word: "SPYFAMILY",
+                hint: "Geheimagenten-Familie",
+                difficulty: 2
+            },
+            {
+                word: "CHAINSAWMAN",
+                hint: "Dämonenjäger mit Säge",
+                difficulty: 2
+            },
+            {
+                word: "NARUTO",
+                hint: "Ninja mit Fuchsdämon",
+                difficulty: 1
+            },
+            {
+                word: "ONEPIECE",
+                hint: "Schatzsuche auf See",
+                difficulty: 2
+            },
+            {
+                word: "BLEACH",
+                hint: "Seelenretter",
+                difficulty: 2
+            },
+            {
+                word: "DRAGONBALL",
+                hint: "Kampf um die Drachenkugeln",
+                difficulty: 1
+            },
+            {
+                word: "JOJO",
+                hint: "Bizarrer Kampf",
+                difficulty: 1
             },
             {
                 word: "FAIRYTAIL",
@@ -53,9 +133,19 @@ const words = [
                 difficulty: 2
             },
             {
-                word: "HUNTERXHUNTER",
-                hint: "Jagd nach Abenteuern",
+                word: "TOKYOGHOUL",
+                hint: "Menschenfresser in Tokio",
                 difficulty: 3
+            },
+            {
+                word: "SWORDARTONLINE",
+                hint: "Virtuelle Realität",
+                difficulty: 3
+            },
+            {
+                word: "SOULEATER",
+                hint: "Waffe und Meister",
+                difficulty: 2
             },
             {
                 word: "FULLMETALALCHEMIST",
@@ -63,267 +153,152 @@ const words = [
                 difficulty: 3
             },
             {
-                word: "BLEACH",
-                hint: "Seelenretter",
+                word: "SAMURAICHAMPLOO",
+                hint: "Samurai auf Reisen",
                 difficulty: 2
             },
             {
-                word: "JOJO",
-                hint: "Bizarrer Kampf",
-                difficulty: 1
-            },
-            {
-                word: "EVANGELION",
-                hint: "Riesenroboter",
-                difficulty: 3
-            }
-        ]
-    },
-    {
-        category: "Charaktere",
-        items: [
-            {
-                word: "GOKU",
-                hint: "Saiyajin-Krieger",
-                difficulty: 1
-            },
-            {
-                word: "LIGHT",
-                hint: "Todesnotizbuch-Besitzer",
+                word: "TRIGUN",
+                hint: "Wandernder Schütze",
                 difficulty: 2
             },
             {
-                word: "EREN",
-                hint: "Titan-Jäger",
+                word: "GURRENLAGANN",
+                hint: "Bohrer und Roboter",
                 difficulty: 2
             },
             {
-                word: "MONKEYDLUFFY",
-                hint: "Gummi-Pirat",
+                word: "KILLLAKILL",
+                hint: "Kampf mit Kleidung",
+                difficulty: 2
+            },
+            {
+                word: "FLCL",
+                hint: "Verrückte Gitarre",
                 difficulty: 3
             },
             {
-                word: "NARUTO",
-                hint: "Ninja mit Fuchsdämon",
-                difficulty: 1
+                word: "SPACEDANDY",
+                hint: "Weltraum-Jäger",
+                difficulty: 2
             },
             {
-                word: "TANJIRO",
+                word: "BACCANO",
+                hint: "Unsterbliche Gangster",
+                difficulty: 3
+            },
+            {
+                word: "DURARARA",
+                hint: "Verwirrte Stadt",
+                difficulty: 2
+            },
+            {
+                word: "NORAGAMI",
+                hint: "Gott ohne Schrein",
+                difficulty: 2
+            },
+            {
+                word: "BLUEEXORCIST",
                 hint: "Dämonenjäger",
                 difficulty: 2
             },
             {
-                word: "DEKU",
-                hint: "Superhelden-Schüler",
+                word: "DORORO",
+                hint: "Samurai ohne Gliedmaßen",
                 difficulty: 2
             },
             {
-                word: "KANAKI",
-                hint: "Tokio Ghoul",
+                word: "DRIFTERS",
+                hint: "Historische Krieger",
+                difficulty: 2
+            },
+            {
+                word: "HELLSING",
+                hint: "Vampirjäger",
+                difficulty: 2
+            },
+            {
+                word: "BLACKLAGOON",
+                hint: "Mercenaries",
+                difficulty: 2
+            },
+            {
+                word: "GANGSTA",
+                hint: "Handlanger",
+                difficulty: 2
+            },
+            {
+                word: "AFROSAMURAI",
+                hint: "Afro-Samurai",
+                difficulty: 2
+            },
+            {
+                word: "SAMURAIDEEPERKYO",
+                hint: "Samurai mit Dämon",
+                difficulty: 2
+            },
+            {
+                word: "BERSERK",
+                hint: "Dunkler Schwertkämpfer",
                 difficulty: 3
             },
             {
-                word: "EDWARD",
-                hint: "Stahl-Alchemist",
+                word: "VINLANDSAGA",
+                hint: "Wikinger-Abenteuer",
                 difficulty: 2
             },
             {
-                word: "ICHIGO",
-                hint: "Seelenretter",
+                word: "KONOSUBA",
+                hint: "Isekai Comedy",
                 difficulty: 2
             },
             {
-                word: "GON",
-                hint: "Jäger",
-                difficulty: 1
-            },
-            {
-                word: "SHINJI",
-                hint: "Eva-Pilot",
+                word: "REZERO",
+                hint: "Isekai mit Tod",
                 difficulty: 2
             },
             {
-                word: "SAITAMA",
-                hint: "Ein-Punch-Man",
+                word: "OVERLORD",
+                hint: "MMORPG Isekai",
                 difficulty: 2
             },
             {
-                word: "LEVI",
-                hint: "Menschenjäger",
+                word: "SLIME",
+                hint: "Isekai mit Schleim",
                 difficulty: 2
             },
             {
-                word: "KAKASHI",
-                hint: "Kopier-Ninja",
-                difficulty: 2
-            }
-        ]
-    },
-    {
-        category: "Genres",
-        items: [
-            {
-                word: "SHONEN",
-                hint: "Jugendliche Helden",
-                difficulty: 1
-            },
-            {
-                word: "SEINEN",
-                hint: "Erwachsene Zielgruppe",
+                word: "SHIELDHERO",
+                hint: "Isekai mit Schild",
                 difficulty: 2
             },
             {
-                word: "SHOUJO",
-                hint: "Mädchen-Anime",
+                word: "MOBPSYCHO",
+                hint: "Psychische Kräfte",
                 difficulty: 2
             },
             {
-                word: "MECHA",
-                hint: "Riesenroboter",
-                difficulty: 1
-            },
-            {
-                word: "ISEKAI",
-                hint: "Andere Welt",
+                word: "ONEPUNCHMAN",
+                hint: "Ein Schlag",
                 difficulty: 2
             },
             {
-                word: "SLICEOFLIFE",
-                hint: "Alltagsgeschichten",
-                difficulty: 2
-            },
-            {
-                word: "HORROR",
-                hint: "Gruselgeschichten",
-                difficulty: 1
-            },
-            {
-                word: "ROMANCE",
-                hint: "Liebesgeschichten",
-                difficulty: 1
-            },
-            {
-                word: "SPORTS",
-                hint: "Sportanime",
-                difficulty: 1
-            },
-            {
-                word: "MAGICALGIRL",
-                hint: "Magische Mädchen",
-                difficulty: 2
-            }
-        ]
-    },
-    {
-        category: "Studios",
-        items: [
-            {
-                word: "GHIBLI",
-                hint: "Miyazaki Studio",
-                difficulty: 1
-            },
-            {
-                word: "MAPPA",
-                hint: "Attack on Titan Studio",
-                difficulty: 2
-            },
-            {
-                word: "BONES",
-                hint: "My Hero Academia Studio",
-                difficulty: 2
-            },
-            {
-                word: "MADHOUSE",
-                hint: "Death Note Studio",
-                difficulty: 2
-            },
-            {
-                word: "UFOTABLE",
-                hint: "Demon Slayer Studio",
-                difficulty: 2
-            },
-            {
-                word: "WIT",
-                hint: "Attack on Titan Studio",
-                difficulty: 2
-            },
-            {
-                word: "A1PICTURES",
-                hint: "Sword Art Online Studio",
-                difficulty: 2
-            },
-            {
-                word: "KYOTOANIMATION",
-                hint: "Violet Evergarden Studio",
+                word: "PSYCHOPASS",
+                hint: "Dystopische Zukunft",
                 difficulty: 3
             },
             {
-                word: "TRIGGER",
-                hint: "Kill la Kill Studio",
-                difficulty: 2
+                word: "FATEZERO",
+                hint: "Heiliger Gral",
+                difficulty: 3
             },
             {
-                word: "SUNRISE",
-                hint: "Gundam Studio",
+                word: "FMA",
+                hint: "Brüder auf der Suche",
                 difficulty: 2
             }
         ]
     },
-    {
-        category: "Begriffe",
-        items: [
-            {
-                word: "OTAKU",
-                hint: "Anime-Fan",
-                difficulty: 1
-            },
-            {
-                word: "MANGA",
-                hint: "Japanische Comics",
-                difficulty: 1
-            },
-            {
-                word: "ANIME",
-                hint: "Japanische Animation",
-                difficulty: 1
-            },
-            {
-                word: "COSPLAY",
-                hint: "Kostümierung",
-                difficulty: 1
-            },
-            {
-                word: "CHIBI",
-                hint: "Niedliche Mini-Version",
-                difficulty: 1
-            },
-            {
-                word: "KAIJU",
-                hint: "Riesenmonster",
-                difficulty: 2
-            },
-            {
-                word: "MEKA",
-                hint: "Riesenroboter",
-                difficulty: 1
-            },
-            {
-                word: "SHONEN",
-                hint: "Jugendliche Helden",
-                difficulty: 1
-            },
-            {
-                word: "SEINEN",
-                hint: "Erwachsene Zielgruppe",
-                difficulty: 2
-            },
-            {
-                word: "SHOUJO",
-                hint: "Mädchen-Anime",
-                difficulty: 2
-            }
-        ]
-    }
 ];
 
 let currentWordIndex = 0;
@@ -582,7 +557,7 @@ function checkLetter(letter) {
         showPointsPopup(pointsGained, key.offsetLeft, key.offsetTop);
         
         // Zeit-Bonus für richtigen Buchstaben
-        addTime(1);
+        addTime(3);
         
         if (remainingLetters === 0) {
             // Bonus für vollständiges Wort
