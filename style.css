@@ -8,24 +8,24 @@
 }
 
 :root {
-    --primary-color: #54c754;
-    --secondary-color: #2d8a2d;
+    --primary-color: #ff69b4;
+    --secondary-color: #ff1493;
     --wrong-color: #ff5555;
-    --correct-color: #54c754;
+    --correct-color: #00ff7f;
     --background-color: #1a1a1a;
     --container-bg: #2d2d2d;
     --text-color: #ffffff;
     --shadow-color: rgba(0, 0, 0, 0.5);
-    --border-color: #4a4a4a;
-    --accent-color: #ffd700;
+    --border-color: #ff69b4;
+    --accent-color: #ff69b4;
 }
 
 body {
     background: #1a1a1a;
     background-image: 
         linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(0, 0, 0, 0.1) 50px, rgba(0, 0, 0, 0.1) 51px),
-        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0, 0, 0, 0.1) 50px, rgba(0, 0, 0, 0.1) 51px);
+        repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255, 105, 180, 0.1) 50px, rgba(255, 105, 180, 0.1) 51px),
+        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 105, 180, 0.1) 50px, rgba(255, 105, 180, 0.1) 51px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,7 +37,7 @@ body {
 .container {
     background-color: var(--container-bg);
     border: 4px solid var(--border-color);
-    border-radius: 0;
+    border-radius: 15px;
     box-shadow: 0 0 30px var(--shadow-color);
     padding: 1.5rem;
     width: 90%;
@@ -46,8 +46,8 @@ body {
     overflow: hidden;
     image-rendering: pixelated;
     background-image: 
-        linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%, transparent),
-        linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%, transparent);
+        linear-gradient(45deg, rgba(255, 105, 180, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 105, 180, 0.1) 50%, rgba(255, 105, 180, 0.1) 75%, transparent 75%, transparent),
+        linear-gradient(45deg, rgba(255, 105, 180, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 105, 180, 0.1) 50%, rgba(255, 105, 180, 0.1) 75%, transparent 75%, transparent);
     background-size: 20px 20px, 20px 20px;
     background-position: 0 0, 10px 10px;
     position: relative;
@@ -151,7 +151,7 @@ h1 {
 .key {
     background-color: #3a3a3a;
     border: 3px solid var(--border-color);
-    border-radius: 0;
+    border-radius: 10px;
     color: var(--text-color);
     cursor: pointer;
     font-size: 1.5rem;
@@ -163,7 +163,7 @@ h1 {
 }
 
 .key:hover {
-    background-color: #4a4a4a;
+    background-color: var(--primary-color);
     transform: translateY(-2px);
     box-shadow: 0 6px 0 #1a1a1a;
 }
@@ -183,15 +183,15 @@ h1 {
 .key.correct {
     background-color: var(--correct-color);
     color: white;
-    border-color: #2d8a2d;
-    box-shadow: 0 4px 0 #2d8a2d;
+    border-color: #00cc66;
+    box-shadow: 0 4px 0 #00cc66;
 }
 
 .key.wrong {
     background-color: var(--wrong-color);
     color: white;
-    border-color: #8a2d2d;
-    box-shadow: 0 4px 0 #8a2d2d;
+    border-color: #cc0000;
+    box-shadow: 0 4px 0 #cc0000;
 }
 
 .btn {
@@ -396,20 +396,20 @@ h1 {
     margin-top: 1.5rem;
     font-size: 1.5rem;
     padding: 1rem 2rem;
-    background: var(--accent-color);
-    border-color: #b8860b;
-    color: #000;
+    background: var(--primary-color);
+    border-color: var(--secondary-color);
+    color: #fff;
     text-shadow: none;
 }
 
 #restart-btn:hover {
-    background: #ffed4a;
-    box-shadow: 0 6px 0 #b8860b;
+    background: var(--secondary-color);
+    box-shadow: 0 6px 0 #cc0066;
 }
 
 #restart-btn:active {
     transform: translateY(2px);
-    box-shadow: 0 2px 0 #b8860b;
+    box-shadow: 0 2px 0 #cc0066;
 }
 
 @keyframes fadeIn {
@@ -621,4 +621,3 @@ h1 {
         transform: translate(-50%, -50%) scale(1.5);
     }
 }
-
