@@ -99,7 +99,7 @@ h1 {
     height: auto;
     display: block;
     object-fit: cover;
-    transition: all 0.5s ease;
+    transition: opacity 0.3s ease;
     filter: blur(20px);
     user-select: none;
     -webkit-user-drag: none;
