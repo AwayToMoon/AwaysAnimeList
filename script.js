@@ -1,610 +1,274 @@
-const words = [
+const questions = [
     {
-        category: "Anime-Serien",
-        items: [
-            {
-                word: "FULLMETALALCHEMIST",
-                hint: "Brüder auf der Suche",
-                difficulty: 3
-            },
-            {
-                word: "ATTACKONTITAN",
-                hint: "Kampf gegen Riesen",
-                difficulty: 3
-            },
-            {
-                word: "DEATHNOTE",
-                hint: "Todesnotizbuch",
-                difficulty: 2
-            },
-            {
-                word: "COWBOYBEBOP",
-                hint: "Weltraum-Cowboys",
-                difficulty: 2
-            },
-            {
-                word: "STEINSGATE",
-                hint: "Zeitreise",
-                difficulty: 3
-            },
-            {
-                word: "GHOSTINTHEshell",
-                hint: "Cyberpunk",
-                difficulty: 3
-            },
-            {
-                word: "MONSTER",
-                hint: "Jagd nach einem Mörder",
-                difficulty: 3
-            },
-            {
-                word: "CODEGEASS",
-                hint: "Macht über Geist",
-                difficulty: 2
-            },
-            {
-                word: "EVANGELION",
-                hint: "Riesenroboter",
-                difficulty: 3
-            },
-            {
-                word: "HUNTERXHUNTER",
-                hint: "Jagd nach Abenteuern",
-                difficulty: 3
-            },
-            {
-                word: "DEMONSLAYER",
-                hint: "Kampf gegen Dämonen",
-                difficulty: 2
-            },
-            {
-                word: "JUJUTSUKAISEN",
-                hint: "Fluch-Techniken",
-                difficulty: 3
-            },
-            {
-                word: "MYHEROACADEMIA",
-                hint: "Superhelden-Akademie",
-                difficulty: 3
-            },
-            {
-                word: "VINLANDSAGA",
-                hint: "Wikinger-Abenteuer",
-                difficulty: 2
-            },
-            {
-                word: "MADOKAMAGICA",
-                hint: "Magische Mädchen",
-                difficulty: 2
-            },
-            {
-                word: "PARASYTE",
-                hint: "Alien-Parasiten",
-                difficulty: 2
-            },
-            {
-                word: "ERASED",
-                hint: "Zeitreise-Krimi",
-                difficulty: 2
-            },
-            {
-                word: "SPYFAMILY",
-                hint: "Geheimagenten-Familie",
-                difficulty: 2
-            },
-            {
-                word: "CHAINSAWMAN",
-                hint: "Dämonenjäger mit Säge",
-                difficulty: 2
-            },
-            {
-                word: "NARUTO",
-                hint: "Ninja mit Fuchsdämon",
-                difficulty: 1
-            },
-            {
-                word: "ONEPIECE",
-                hint: "Schatzsuche auf See",
-                difficulty: 2
-            },
-            {
-                word: "BLEACH",
-                hint: "Seelenretter",
-                difficulty: 2
-            },
-            {
-                word: "DRAGONBALL",
-                hint: "Kampf um die Drachenkugeln",
-                difficulty: 1
-            },
-            {
-                word: "JOJO",
-                hint: "Bizarrer Kampf",
-                difficulty: 1
-            },
-            {
-                word: "FAIRYTAIL",
-                hint: "Magische Gilde",
-                difficulty: 2
-            },
-            {
-                word: "BLACKCLOVER",
-                hint: "Magier ohne Magie",
-                difficulty: 2
-            },
-            {
-                word: "TOKYOGHOUL",
-                hint: "Menschenfresser in Tokio",
-                difficulty: 3
-            },
-            {
-                word: "SWORDARTONLINE",
-                hint: "Virtuelle Realität",
-                difficulty: 3
-            },
-            {
-                word: "SOULEATER",
-                hint: "Waffe und Meister",
-                difficulty: 2
-            },
-            {
-                word: "FULLMETALALCHEMIST",
-                hint: "Brüder auf der Suche",
-                difficulty: 3
-            },
-            {
-                word: "SAMURAICHAMPLOO",
-                hint: "Samurai auf Reisen",
-                difficulty: 2
-            },
-            {
-                word: "TRIGUN",
-                hint: "Wandernder Schütze",
-                difficulty: 2
-            },
-            {
-                word: "GURRENLAGANN",
-                hint: "Bohrer und Roboter",
-                difficulty: 2
-            },
-            {
-                word: "KILLLAKILL",
-                hint: "Kampf mit Kleidung",
-                difficulty: 2
-            },
-            {
-                word: "FLCL",
-                hint: "Verrückte Gitarre",
-                difficulty: 3
-            },
-            {
-                word: "SPACEDANDY",
-                hint: "Weltraum-Jäger",
-                difficulty: 2
-            },
-            {
-                word: "BACCANO",
-                hint: "Unsterbliche Gangster",
-                difficulty: 3
-            },
-            {
-                word: "DURARARA",
-                hint: "Verwirrte Stadt",
-                difficulty: 2
-            },
-            {
-                word: "NORAGAMI",
-                hint: "Gott ohne Schrein",
-                difficulty: 2
-            },
-            {
-                word: "BLUEEXORCIST",
-                hint: "Dämonenjäger",
-                difficulty: 2
-            },
-            {
-                word: "DORORO",
-                hint: "Samurai ohne Gliedmaßen",
-                difficulty: 2
-            },
-            {
-                word: "DRIFTERS",
-                hint: "Historische Krieger",
-                difficulty: 2
-            },
-            {
-                word: "HELLSING",
-                hint: "Vampirjäger",
-                difficulty: 2
-            },
-            {
-                word: "BLACKLAGOON",
-                hint: "Mercenaries",
-                difficulty: 2
-            },
-            {
-                word: "GANGSTA",
-                hint: "Handlanger",
-                difficulty: 2
-            },
-            {
-                word: "AFROSAMURAI",
-                hint: "Afro-Samurai",
-                difficulty: 2
-            },
-            {
-                word: "SAMURAIDEEPERKYO",
-                hint: "Samurai mit Dämon",
-                difficulty: 2
-            },
-            {
-                word: "BERSERK",
-                hint: "Dunkler Schwertkämpfer",
-                difficulty: 3
-            },
-            {
-                word: "VINLANDSAGA",
-                hint: "Wikinger-Abenteuer",
-                difficulty: 2
-            },
-            {
-                word: "KONOSUBA",
-                hint: "Isekai Comedy",
-                difficulty: 2
-            },
-            {
-                word: "REZERO",
-                hint: "Isekai mit Tod",
-                difficulty: 2
-            },
-            {
-                word: "OVERLORD",
-                hint: "MMORPG Isekai",
-                difficulty: 2
-            },
-            {
-                word: "SLIME",
-                hint: "Isekai mit Schleim",
-                difficulty: 2
-            },
-            {
-                word: "SHIELDHERO",
-                hint: "Isekai mit Schild",
-                difficulty: 2
-            },
-            {
-                word: "MOBPSYCHO",
-                hint: "Psychische Kräfte",
-                difficulty: 2
-            },
-            {
-                word: "ONEPUNCHMAN",
-                hint: "Ein Schlag",
-                difficulty: 2
-            },
-            {
-                word: "PSYCHOPASS",
-                hint: "Dystopische Zukunft",
-                difficulty: 3
-            },
-            {
-                word: "FATEZERO",
-                hint: "Heiliger Gral",
-                difficulty: 3
-            },
-            {
-                word: "FMA",
-                hint: "Brüder auf der Suche",
-                difficulty: 2
-            }
-        ]
+        character: "Demon Slayer",
+        imageUrl: "https://img.anime2you.de/2023/11/Demon-Slayer-2-768x432.jpg"
     },
+    {
+        character: "Jujutsu Kaisen",
+        imageUrl: "https://img.anime2you.de/2023/11/Jujutsu-Kaisen-7-768x432.jpg"
+    },
+    {
+        character: "Hunter x Hunter",
+        imageUrl: "https://img.anime2you.de/2023/11/Hunter-x-Hunter-2011-768x432.jpg"
+    },
+    {
+        character: "Fullmetal Alchemist",
+        imageUrl: "https://img.anime2you.de/2023/11/Fullmetal-Alchemist-Brotherhood-1-768x432.jpg"
+    },
+    {
+        character: "One Piece",
+        imageUrl: "https://img.anime2you.de/2023/11/One-Piece-1-768x432.jpg"
+    },
+    {
+        character: "Naruto Shippuden",
+        imageUrl: "https://img.anime2you.de/2023/11/Naruto-Shippuden-2-768x432.jpg"
+    },
+    {
+        character: "One Punch Man",
+        imageUrl: "https://img.anime2you.de/2023/11/One-Punch-Man-768x432.jpg"
+    },
+    {
+        character: "Attack on Titan",
+        imageUrl: "https://img.anime2you.de/2023/11/Attack-on-Titan-5-768x432.jpg"
+    },
+    {
+        character: "Black Clover",
+        imageUrl: "https://img.anime2you.de/2023/11/Black-Clover-1-768x432.jpg"
+    },
+    {
+        character: "Naruto",
+        imageUrl: "https://img.anime2you.de/2023/11/Naruto-1-768x432.jpg"
+    },
+    {
+        character: "My Hero Academia",
+        imageUrl: "https://img.anime2you.de/2023/11/My-Hero-Academia-768x432.jpg"
+    },
+    {
+        character: "Vinland Saga",
+        imageUrl: "https://img.anime2you.de/2023/11/Vinland-Saga-768x432.jpg"
+    },
+    {
+        character: "Death Note",
+        imageUrl: "https://img.anime2you.de/2023/11/Death-Note-768x432.jpg"
+    },
+    {
+        character: "Tokyo Ghoul",
+        imageUrl: "https://img.anime2you.de/2023/11/Tokyo-Ghoul-768x432.jpg"
+    },
+    {
+        character: "Dr. STONE",
+        imageUrl: "https://img.anime2you.de/2023/11/Dr.-STONE-768x432.jpg"
+    },
+    {
+        character: "The Promised Neverland",
+        imageUrl: "https://img.anime2you.de/2023/11/The-Promised-Neverland-768x432.jpg"
+    },
+    {
+        character: "Erased",
+        imageUrl: "https://img.anime2you.de/2023/11/Erased-768x432.jpg"
+    },
+    {
+        character: "That Time I Got Reincarnated as a Slime",
+        imageUrl: "https://img.anime2you.de/2023/11/That-Time-I-Got-Reincarnated-as-a-Slime-768x432.jpg"
+    },
+    {
+        character: "Code Geass",
+        imageUrl: "https://img.anime2you.de/2023/11/Code-Geass-Lelouch-of-the-Rebellion-768x432.jpg"
+    },
+    {
+        character: "The Rising of the Shield Hero",
+        imageUrl: "https://img.anime2you.de/2023/11/The-Rising-of-the-Shield-Hero-768x432.jpg"
+    },
+    {
+        character: "The Seven Deadly Sins",
+        imageUrl: "https://img.anime2you.de/2023/11/The-Seven-Deadly-Sins-768x432.jpg"
+    },
+    {
+        character: "Dragon Ball",
+        imageUrl: "https://img.anime2you.de/2023/11/Dragon-Ball-Z-1-768x432.jpg"
+    },
+    {
+        character: "Mob Psycho 100",
+        imageUrl: "https://img.anime2you.de/2023/11/Mob-Psycho-100-768x432.jpg"
+    },
+    {
+        character: "Food Wars",
+        imageUrl: "https://img.anime2you.de/2023/11/Food-Wars-768x432.jpeg"
+    },
+    {
+        character: "Violet Evergarden",
+        imageUrl: "https://img.anime2you.de/2023/11/Violet-Evergarden-768x432.jpg"
+    },
+    {
+        character: "Bleach",
+        imageUrl: "https://img.anime2you.de/2023/11/Bleach-1-768x432.jpg"
+    },
+    {
+        character: "ReZERO",
+        imageUrl: "https://img.anime2you.de/2023/11/Re-ZERO-768x432.jpg"
+    },
+    {
+        character: "Haikyu",
+        imageUrl: "https://img.anime2you.de/2023/11/Haikyu-768x432.jpg"
+    },
+    {
+        character: "The Disastrous Life of Saiki K.",
+        imageUrl: "https://img.anime2you.de/2023/11/The-Disastrous-Life-of-Saiki-K-768x432.jpg"
+    },
+    {
+        character: "Fairy Tail",
+        imageUrl: "https://img.anime2you.de/2023/11/Fairy-Tail-768x432.jpg"
+    },
+    {
+        character: "Assassination Classroom",
+        imageUrl: "https://img.anime2you.de/2023/11/Assassination-Classroom-768x432.jpg"
+    },
+    {
+        character: "JoJos Bizarre Adventure",
+        imageUrl: "https://img.anime2you.de/2023/11/JoJos-Bizarre-Adventure-768x432.jpg"
+    },
+    {
+        character: "Elfen Lied",
+        imageUrl: "https://anime-palast.de/wp-content/uploads/2024/10/elfen-lied.jpg"
+    },
+    {
+        character: "Spy x Family",
+        imageUrl: "https://img.anime2you.de/2023/11/Spy-x-Family-3-768x432.jpg"
+    },
+    {
+        character: "Parasyte",
+        imageUrl: "https://img.anime2you.de/2023/11/Parasyte-768x432.jpg"
+    },
+    {
+        character: "Noragami",
+        imageUrl: "https://img.anime2you.de/2023/11/Noragami-768x432.jpg"
+    },
+    {
+        character: "Overlord",
+        imageUrl: "https://img.anime2you.de/2023/11/Overlord-768x432.jpg"
+    },
+    {
+        character: "Pokemon",
+        imageUrl: "https://cdn.sortiraparis.com/images/80/98390/869370-pokemon-le-dernier-episode-du-dessin-anime-diffuse-25-ans-apres-ses-debuts.jpg"
+    },
+    {
+        character: "Classroom of the Elite",
+        imageUrl: "https://img.anime2you.de/2023/11/Classroom-of-the-Elite-768x432.jpg"
+    },
+    {
+        character: "Tokyo Revengers",
+        imageUrl: "https://img.anime2you.de/2023/11/Tokyo-Revengers-1-768x432.jpg"
+    },
+    {
+        character: "Fire Force",
+        imageUrl: "https://img.anime2you.de/2023/11/Fire-Force-768x432.jpg"
+    },
+    {
+        character: "Mushoku Tensei",
+        imageUrl: "https://img.anime2you.de/2023/11/Mushoku-Tensei-768x432.jpg"
+    },
+    {
+        character: "Maid-Sama",
+        imageUrl: "https://img.anime2you.de/2023/11/Maid-Sama-768x432.jpg"
+    },
+    {
+        character: "Shigatsu wa Kimi no Uso",
+        imageUrl: "https://img.anime2you.de/2023/11/Shigatsu-wa-Kimi-no-Uso-768x432.jpg"
+    },
+    {
+        character: "Cowboy Bebop",
+        imageUrl: "https://img.anime2you.de/2023/11/Cowboy-Bebop-768x432.jpg"
+    },
+    {
+        character: "Seraph of the End",
+        imageUrl: "https://img.anime2you.de/2023/11/Seraph-of-the-End-1-768x432.jpg"
+    },
+    {
+        character: "Fullmetal Alchemist",
+        imageUrl: "https://img.anime2you.de/2023/11/Fullmetal-Alchemist-768x432.jpg"
+    },
+    {
+        character: "Akame ga KILL",
+        imageUrl: "https://img.anime2you.de/2023/11/Akame-ga-KILL-1.jpg"
+    },
+    {
+        character: "Sword Art Online",
+        imageUrl: "https://m.media-amazon.com/images/S/pv-target-images/e76f7e26728da794585f191f15852bbf60197ac7a5a6724485b605861a5cd7ea._SX1080_FMjpg_.jpg"
+    },
+    {
+        character: "Steins Gate",
+        imageUrl: "https://img.anime2you.de/2023/11/SteinsGate.jpg"
+    }
 ];
 
-let currentWordIndex = 0;
-let score = 0;
-let points = 0;
-let currentCategory = 0;
-let guessedLetters = new Set();
-let remainingLetters = 0;
-let gameStarted = false;
-let timeLeft = 60; // 60 Sekunden Zeitlimit
-let timerInterval;
-let allWords = []; // Array für alle Wörter
+let currentQuestion = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let canAnswer = true;
 
-const startButton = document.getElementById('start-btn');
-const nextButton = document.getElementById('next-btn');
-const wordDisplay = document.getElementById('word-display');
-const hintText = document.getElementById('hint-text');
-const lettersCount = document.getElementById('letters-count');
-const scoreContainer = document.getElementById('score-container');
-const scoreElement = document.getElementById('score');
-const totalElement = document.getElementById('total');
-const restartButton = document.getElementById('restart-btn');
-const keys = document.querySelectorAll('.key');
-const pointsElement = document.getElementById('points');
-const pointsInfo = document.getElementById('points-info');
-const finalPointsElement = document.getElementById('final-points');
-const tutorial = document.getElementById('tutorial');
-const tutorialClose = document.getElementById('tutorial-close');
-const timerElement = document.getElementById('timer');
+const answerInput = document.getElementById('answerInput');
+const checkButton = document.getElementById('checkAnswer');
+const nextButton = document.getElementById('nextQuestion');
+const correctCountElement = document.getElementById('correctCount');
+const wrongCountElement = document.getElementById('wrongCount');
+const characterImage = document.getElementById('characterImage');
+const feedbackElement = document.getElementById('feedback');
 
-// Deaktiviere alle Tasten am Anfang
-keys.forEach(key => {
-    key.disabled = true;
-    key.classList.add('disabled');
+function loadQuestion() {
+    const question = questions[currentQuestion];
+    
+    // Lade das Bild
+    characterImage.src = question.imageUrl;
+    characterImage.alt = `Charakter aus ${question.character}`;
+    
+    // Reset UI
+    answerInput.value = '';
+    answerInput.disabled = false;
+    checkButton.disabled = false;
+    nextButton.disabled = true;
+    feedbackElement.textContent = '';
+    feedbackElement.className = 'feedback';
+    
+    canAnswer = true;
+}
+
+function checkAnswer() {
+    if (!canAnswer) return;
+    
+    const userAnswer = answerInput.value.trim().toLowerCase();
+    const correctAnswer = questions[currentQuestion].character.toLowerCase();
+    
+    canAnswer = false;
+    answerInput.disabled = true;
+    checkButton.disabled = true;
+    
+    if (userAnswer === correctAnswer) {
+        correctCount++;
+        correctCountElement.textContent = correctCount;
+        feedbackElement.textContent = 'Richtig! 🎉';
+        feedbackElement.className = 'feedback correct';
+    } else {
+        wrongCount++;
+        wrongCountElement.textContent = wrongCount;
+        feedbackElement.textContent = `Falsch! Die richtige Antwort war: ${questions[currentQuestion].character}`;
+        feedbackElement.className = 'feedback wrong';
+    }
+    
+    nextButton.disabled = false;
+}
+
+// Event Listener
+checkButton.addEventListener('click', checkAnswer);
+answerInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        checkAnswer();
+    }
 });
 
-// Tutorial-Event-Listener
-tutorialClose.addEventListener('click', () => {
-    tutorial.style.display = 'none';
-    startButton.disabled = false;
-});
-
-startButton.addEventListener('click', startQuiz);
 nextButton.addEventListener('click', () => {
-    currentWordIndex++;
-    setNextWord();
-});
-restartButton.addEventListener('click', startQuiz);
-
-keys.forEach(key => {
-    key.addEventListener('click', () => {
-        if (gameStarted) {
-            const letter = key.textContent;
-            checkLetter(letter);
-        }
-    });
+    currentQuestion = (currentQuestion + 1) % questions.length;
+    loadQuestion();
 });
 
-document.addEventListener('keydown', (e) => {
-    if (gameStarted) {
-        const letter = e.key.toUpperCase();
-        if (/^[A-Z]$/.test(letter)) {
-            const key = Array.from(keys).find(k => k.textContent === letter);
-            if (key && !key.classList.contains('used')) {
-                checkLetter(letter);
-            }
-        }
-    }
-});
-
-function updateTimer() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    
-    if (timeLeft <= 10) {
-        timerElement.classList.add('warning');
-    }
-    
-    if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        showScore();
-    }
-}
-
-function addTime(seconds) {
-    timeLeft += seconds;
-    // Entferne die Zeitbegrenzung von 60 Sekunden
-    updateTimer();
-    
-    // Zeige Zeit-Bonus/Malus Animation
-    const timePopup = document.createElement('div');
-    timePopup.className = 'time-popup';
-    timePopup.textContent = seconds > 0 ? `+${seconds}s` : `${seconds}s`;
-    timePopup.style.color = seconds > 0 ? '#54c754' : '#ff5555';
-    document.body.appendChild(timePopup);
-    
-    // Position in der Mitte des Bildschirms
-    timePopup.style.left = '50%';
-    timePopup.style.top = '50%';
-    timePopup.style.transform = 'translate(-50%, -50%)';
-    
-    // Entferne nach Animation
-    setTimeout(() => {
-        timePopup.remove();
-    }, 1000);
-}
-
-function startTimer() {
-    timeLeft = 60;
-    updateTimer();
-    timerElement.classList.remove('warning');
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        updateTimer();
-    }, 1000);
-}
-
-function stopTimer() {
-    clearInterval(timerInterval);
-}
-
-// Funktion zum Erstellen des Wortpools
-function createWordPool() {
-    allWords = [];
-    words.forEach(category => {
-        category.items.forEach(item => {
-            allWords.push({
-                word: item.word,
-                hint: item.hint,
-                difficulty: item.difficulty,
-                category: category.category
-            });
-        });
-    });
-    // Mische die Wörter zufällig
-    allWords.sort(() => Math.random() - 0.5);
-}
-
-function startQuiz() {
-    gameStarted = true;
-    startButton.classList.add('hide');
-    scoreContainer.classList.add('hide');
-    currentWordIndex = 0;
-    score = 0;
-    points = 0;
-    
-    // Erstelle den Wortpool
-    createWordPool();
-    
-    updateStats();
-    
-    // Aktiviere alle Tasten
-    keys.forEach(key => {
-        key.disabled = false;
-        key.classList.remove('disabled');
-    });
-    
-    // Initialisiere Timer
-    timeLeft = 60;
-    updateTimer();
-    timerElement.classList.remove('warning');
-    
-    setNextWord();
-}
-
-function setNextWord() {
-    resetState();
-    const currentWord = allWords[currentWordIndex];
-    hintText.textContent = currentWord.hint;
-    remainingLetters = currentWord.word.length;
-    lettersCount.textContent = remainingLetters;
-    updateWordDisplay();
-    // Starte Timer für neues Wort
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        updateTimer();
-    }, 1000);
-}
-
-function updateWordDisplay() {
-    const currentWord = allWords[currentWordIndex].word;
-    const display = currentWord
-        .split('')
-        .map(letter => guessedLetters.has(letter) ? letter : '_')
-        .join(' ');
-    wordDisplay.textContent = display;
-}
-
-function updateStats() {
-    pointsElement.textContent = points;
-}
-
-function showPointsPopup(points, x, y) {
-    pointsInfo.textContent = points > 0 ? `+${points}` : `${points}`;
-    pointsInfo.style.left = `${x}px`;
-    pointsInfo.style.top = `${y}px`;
-    pointsInfo.classList.add('show');
-    pointsInfo.style.color = points > 0 ? 'var(--correct-color)' : 'var(--wrong-color)';
-    setTimeout(() => {
-        pointsInfo.classList.remove('show');
-    }, 1000);
-}
-
-function calculatePoints(letter, isCorrect) {
-    let pointsGained = 0;
-    
-    if (isCorrect) {
-        const currentWord = allWords[currentWordIndex];
-        // Basis-Punkte basierend auf Schwierigkeitsgrad
-        pointsGained = 10 * currentWord.difficulty;
-        
-        // Bonus für seltene Buchstaben
-        const rareLetters = ['Q', 'X', 'Y', 'Z'];
-        if (rareLetters.includes(letter)) {
-            pointsGained *= 2;
-        }
-        
-        // Bonus für schnelles Raten (erste 3 Versuche)
-        if (guessedLetters.size < 3) {
-            pointsGained *= 1.5;
-        }
-    } else {
-        // Minuspunkte für falsche Buchstaben
-        const currentWord = allWords[currentWordIndex];
-        // Basis-Minuspunkte basierend auf Schwierigkeitsgrad
-        pointsGained = -5 * currentWord.difficulty;
-        
-        // Zusätzliche Minuspunkte für seltene Buchstaben
-        const rareLetters = ['Q', 'X', 'Y', 'Z'];
-        if (rareLetters.includes(letter)) {
-            pointsGained *= 1.5;
-        }
-    }
-    
-    points += Math.round(pointsGained);
-    updateStats();
-    return Math.round(pointsGained);
-}
-
-function checkLetter(letter) {
-    const currentWord = allWords[currentWordIndex].word;
-    const key = Array.from(keys).find(k => k.textContent === letter);
-    
-    if (guessedLetters.has(letter)) return;
-    
-    guessedLetters.add(letter);
-    key.classList.add('used');
-    
-    if (currentWord.includes(letter)) {
-        key.classList.add('correct');
-        remainingLetters -= (currentWord.match(new RegExp(letter, 'g')) || []).length;
-        lettersCount.textContent = remainingLetters;
-        
-        const pointsGained = calculatePoints(letter, true);
-        showPointsPopup(pointsGained, key.offsetLeft, key.offsetTop);
-        
-        // Zeit-Bonus für richtigen Buchstaben
-        addTime(3);
-        
-        if (remainingLetters === 0) {
-            // Bonus für vollständiges Wort
-            const wordBonus = Math.round(points * 0.2);
-            points += wordBonus;
-            updateStats();
-            
-            score++;
-            // Stoppe Timer wenn Wort fertig
-            clearInterval(timerInterval);
-            if (currentWordIndex < allWords.length - 1) {
-                nextButton.classList.remove('hide');
-            } else {
-                showScore();
-            }
-        }
-    } else {
-        key.classList.add('wrong');
-        calculatePoints(letter, false);
-        // Zeit-Malus für falschen Buchstaben
-        addTime(-2);
-    }
-    
-    updateWordDisplay();
-}
-
-function resetState() {
-    guessedLetters.clear();
-    keys.forEach(key => {
-        key.classList.remove('used', 'correct', 'wrong');
-        if (!gameStarted) {
-            key.disabled = true;
-            key.classList.add('disabled');
-        }
-    });
-    nextButton.classList.add('hide');
-}
-
-function showScore() {
-    stopTimer();
-    wordDisplay.parentElement.classList.add('hide');
-    scoreContainer.classList.remove('hide');
-    scoreElement.textContent = score;
-    totalElement.textContent = allWords.length;
-    finalPointsElement.textContent = points;
-    
-    // Berechne und zeige die Erfolgsrate
-    const successRate = Math.round((score / allWords.length) * 100);
-    document.getElementById('success-rate').textContent = successRate;
-}
+// Start the game
+loadQuestion();
