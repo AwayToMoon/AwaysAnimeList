@@ -205,6 +205,8 @@ let currentQuestion = 0;
 let correctCount = 0;
 let wrongCount = 0;
 let canAnswer = true;
+let attemptsLeft = 3;
+let isLastAttempt = false;
 
 const answerInput = document.getElementById('answerInput');
 const checkButton = document.getElementById('checkAnswer');
@@ -213,13 +215,43 @@ const correctCountElement = document.getElementById('correctCount');
 const wrongCountElement = document.getElementById('wrongCount');
 const characterImage = document.getElementById('characterImage');
 const feedbackElement = document.getElementById('feedback');
+const attemptDots = document.querySelectorAll('.attempt');
+
+function updateAttempts() {
+    attemptDots.forEach((dot, index) => {
+        dot.classList.remove('active', 'used');
+        if (index < attemptsLeft) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.add('used');
+        }
+    });
+}
+
+function updateBlur() {
+    if (isLastAttempt) {
+        characterImage.classList.remove('blur-2', 'blur-1', 'blur-0');
+        return;
+    }
+    
+    characterImage.classList.remove('blur-2', 'blur-1', 'blur-0');
+    if (attemptsLeft > 0) {
+        characterImage.classList.add(`blur-${attemptsLeft - 1}`);
+    }
+}
 
 function loadQuestion() {
     const question = questions[currentQuestion];
     
+    // Reset attempts and last attempt flag
+    attemptsLeft = 3;
+    isLastAttempt = false;
+    updateAttempts();
+    
     // Lade das Bild
     characterImage.src = question.imageUrl;
     characterImage.alt = `Charakter aus ${question.character}`;
+    characterImage.classList.add('blur-2');
     
     // Reset UI
     answerInput.value = '';
@@ -238,23 +270,35 @@ function checkAnswer() {
     const userAnswer = answerInput.value.trim().toLowerCase();
     const correctAnswer = questions[currentQuestion].character.toLowerCase();
     
-    canAnswer = false;
-    answerInput.disabled = true;
-    checkButton.disabled = true;
+    attemptsLeft--;
+    updateAttempts();
     
     if (userAnswer === correctAnswer) {
         correctCount++;
         correctCountElement.textContent = correctCount;
         feedbackElement.textContent = 'Richtig! 🎉';
         feedbackElement.className = 'feedback correct';
-    } else {
+        canAnswer = false;
+        answerInput.disabled = true;
+        checkButton.disabled = true;
+        nextButton.disabled = false;
+        characterImage.classList.remove('blur-2', 'blur-1', 'blur-0');
+    } else if (attemptsLeft === 0) {
         wrongCount++;
         wrongCountElement.textContent = wrongCount;
         feedbackElement.textContent = `Falsch! Die richtige Antwort war: ${questions[currentQuestion].character}`;
         feedbackElement.className = 'feedback wrong';
-    }
-    
+        canAnswer = false;
+        answerInput.disabled = true;
+        checkButton.disabled = true;
     nextButton.disabled = false;
+        isLastAttempt = true;
+        characterImage.classList.remove('blur-2', 'blur-1', 'blur-0');
+    } else {
+        feedbackElement.textContent = 'Falsch! Versuche es noch einmal.';
+        feedbackElement.className = 'feedback wrong';
+        updateBlur();
+    }
 }
 
 // Event Listener
@@ -272,3 +316,22 @@ nextButton.addEventListener('click', () => {
 
 // Start the game
 loadQuestion();
+
+// Modal Funktionalität
+const modal = document.getElementById('infoModal');
+const infoButton = document.getElementById('infoButton');
+const closeButton = document.querySelector('.close-btn');
+
+infoButton.addEventListener('click', () => {
+    modal.style.display = 'block';
+});
+
+closeButton.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
