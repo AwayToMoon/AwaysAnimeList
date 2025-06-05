@@ -3,153 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Wort-Quiz</title>
+    <title>Anime Charakter Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div id="tutorial" class="tutorial">
-        <div class="tutorial-content">
-            <h2><i class="fas fa-book"></i> Anime Quiz Anleitung</h2>
-            <div class="tutorial-section">
-                <h3><i class="fas fa-gamepad"></i> Spielziel</h3>
-                <p>Errate Anime-bezogene Wörter durch Buchstabenraten!</p>
-                <ul>
-                    <li>Du startest mit <span class="highlight">60 Sekunden</span> Zeit</li>
-                    <li>Rate so viele Wörter wie möglich</li>
-                    <li>Die Zeit läuft nur während des Wortratens</li>
-                    <li>Die Zeit stoppt, wenn ein Wort fertig ist</li>
-                    <li><span class="highlight">+3 Sekunden</span> für jeden richtigen Buchstaben</li>
-                    <li><span class="highlight">-2 Sekunden</span> für jeden falschen Buchstaben</li>
-                    <li>Du kannst unbegrenzt Zeit erspielen!</li>
-                </ul>
-            </div>
-            <div class="tutorial-section">
-                <h3><i class="fas fa-star"></i> Punkte</h3>
-                <ul>
-                    <li><span class="highlight">Richtige Buchstaben:</span> +10/20/30 Punkte (je nach Schwierigkeit)</li>
-                    <li><span class="highlight">Falsche Buchstaben:</span> -5/10/15 Punkte (je nach Schwierigkeit)</li>
-                    <li><span class="highlight">Bonus:</span> Japanische Namen geben mehr Punkte</li>
-                    <li><span class="highlight">Zeitbonus:</span> Schnelles Raten gibt Extra-Punkte</li>
-                </ul>
-            </div>
-            <div class="tutorial-section">
-                <h3><i class="fas fa-keyboard"></i> Steuerung</h3>
-                <ul>
-                    <li>Klicke auf die Buchstaben oder nutze deine Tastatur</li>
-                    <li>Jeder Buchstabe kann nur einmal verwendet werden</li>
-                    <li>Rate das Wort, bevor die Zeit abläuft!</li>
-                    <li>Die Zeit stoppt zwischen den Wörtern</li>
-                    <li>Wenn ein Buchstabe mehrmals im Wort vorkommt, wird er automatisch an allen Stellen eingefügt</li>
-                </ul>
-            </div>
-            <div class="tutorial-section">
-                <h3><i class="fas fa-lightbulb"></i> Tipps</h3>
-                <ul>
-                    <li>Nutze die Hinweise, um das Wort zu erraten</li>
-                    <li>Schwierigere Wörter geben mehr Punkte</li>
-                    <li>Die Wörter sind auf Englisch, die Hinweise auf Deutsch</li>
-                    <li>Bei ≤ 10 Sekunden wird die Zeit rot angezeigt</li>
-                    <li>Richtige Buchstaben verlängern deine Zeit!</li>
-                </ul>
-            </div>
-            <button id="tutorial-close" class="btn">
-                <i class="fas fa-check"></i> Verstanden!
-            </button>
-        </div>
-    </div>
     <div class="container">
-        <h1><i class="fas fa-tv"></i> Anime Quiz</h1>
-        <div id="quiz-container">
-            <div id="stats-container">
-                <div class="stat-item">
-                    <i class="fas fa-diamond"></i>
-                    <span>Punkte: <span id="points">0</span></span>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Zeit: <span id="timer">00:00</span></span>
+        <h1>Errate die Anime Serie!</h1>
+        <div class="game-area">
+            <div class="character-info">
+                <div class="image-container">
+                    <img id="characterImage" src="" alt="Anime Charakter">
                 </div>
             </div>
-            <div id="word-container">
-                <div id="hint">
-                    <i class="fas fa-lightbulb"></i>
-                    Tipp: <span id="hint-text"></span>
-                </div>
-                <div id="word-display"></div>
-                <div id="letters-left">
-                    <i class="fas fa-keyboard"></i>
-                    Verbleibende Buchstaben: <span id="letters-count">0</span>
-                </div>
-                <div id="points-info" class="points-popup"></div>
+            <div class="input-container">
+                <input type="text" id="answerInput" placeholder="Name des Charakters eingeben..." autocomplete="off">
+                <button id="checkAnswer" class="check-btn">Prüfen</button>
             </div>
-            <div id="keyboard">
-                <div class="keyboard-row">
-                    <button class="key">Q</button>
-                    <button class="key">W</button>
-                    <button class="key">E</button>
-                    <button class="key">R</button>
-                    <button class="key">T</button>
-                    <button class="key">Z</button>
-                    <button class="key">U</button>
-                    <button class="key">I</button>
-                    <button class="key">O</button>
-                    <button class="key">P</button>
+            <div class="feedback" id="feedback"></div>
+            <div class="score-container">
+                <div class="score-item">
+                    <span class="score-label">Richtig</span>
+                    <span id="correctCount" class="score-value correct-count">0</span>
                 </div>
-                <div class="keyboard-row">
-                    <button class="key">A</button>
-                    <button class="key">S</button>
-                    <button class="key">D</button>
-                    <button class="key">F</button>
-                    <button class="key">G</button>
-                    <button class="key">H</button>
-                    <button class="key">J</button>
-                    <button class="key">K</button>
-                    <button class="key">L</button>
-                </div>
-                <div class="keyboard-row">
-                    <button class="key">Y</button>
-                    <button class="key">X</button>
-                    <button class="key">C</button>
-                    <button class="key">V</button>
-                    <button class="key">B</button>
-                    <button class="key">N</button>
-                    <button class="key">M</button>
+                <div class="score-item">
+                    <span class="score-label">Falsch</span>
+                    <span id="wrongCount" class="score-value wrong-count">0</span>
                 </div>
             </div>
-            <div class="controls">
-                <button id="start-btn" class="start-btn btn">
-                    <i class="fas fa-play"></i> Spiel starten
-                </button>
-                <button id="next-btn" class="next-btn btn hide">
-                    <i class="fas fa-forward"></i> Nächstes Wort
-                </button>
-            </div>
-            <div id="score-container" class="hide">
-                <div class="container">
-                    <h2>
-                        <i class="fas fa-trophy"></i>
-                        Spiel beendet!
-                    </h2>
-                    <div class="final-stats">
-                        <div class="stat-row">
-                            <i class="fas fa-check-circle"></i>
-                            <p>Richtige Wörter: <span id="score">0</span> von <span id="total">0</span></p>
-                        </div>
-                        <div class="stat-row">
-                            <i class="fas fa-diamond"></i>
-                            <p>Gesamtpunkte: <span id="final-points">0</span></p>
-                        </div>
-                        <div class="stat-row">
-                            <i class="fas fa-percentage"></i>
-                            <p>Erfolgsrate: <span id="success-rate">0</span>%</p>
-                        </div>
-                    </div>
-                    <button id="restart-btn" class="btn">
-                        <i class="fas fa-redo"></i> Neu starten
-                    </button>
-                </div>
-            </div>
+            <button id="nextQuestion" class="next-btn">Nächste Frage</button>
         </div>
     </div>
     <script src="script.js"></script>
