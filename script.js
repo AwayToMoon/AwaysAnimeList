@@ -247,6 +247,10 @@ function loadQuestion() {
     attemptsLeft = 3;
     isLastAttempt = false;
     updateAttempts();
+    const characterImage = document.getElementById('characterImage');
+    
+    // Zuerst alle Blur-Klassen entfernen
+    characterImage.classList.remove('blur-2', 'blur-1', 'blur-0');
     
     // Lade das Bild
     characterImage.src = question.imageUrl;
@@ -276,13 +280,18 @@ function checkAnswer() {
     if (userAnswer === correctAnswer) {
         correctCount++;
         correctCountElement.textContent = correctCount;
-        feedbackElement.textContent = 'Richtig! 🎉';
+        
+        // Blur-Effekt entfernen bei richtiger Antwort
+        characterImage.classList.remove('blur-2', 'blur-1', 'blur-0');
+        characterImage.classList.add('blur-0'); // Setze auf keinen Blur
+        
         feedbackElement.className = 'feedback correct';
+        feedbackElement.textContent = 'Richtig! 🎉';
+        
         canAnswer = false;
         answerInput.disabled = true;
         checkButton.disabled = true;
         nextButton.disabled = false;
-        characterImage.classList.remove('blur-2', 'blur-1', 'blur-0');
     } else if (attemptsLeft === 0) {
         wrongCount++;
         wrongCountElement.textContent = wrongCount;
@@ -291,9 +300,8 @@ function checkAnswer() {
         canAnswer = false;
         answerInput.disabled = true;
         checkButton.disabled = true;
-    nextButton.disabled = false;
+        nextButton.disabled = false;
         isLastAttempt = true;
-        characterImage.classList.remove('blur-2', 'blur-1', 'blur-0');
     } else {
         feedbackElement.textContent = 'Falsch! Versuche es noch einmal.';
         feedbackElement.className = 'feedback wrong';
