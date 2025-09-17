@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aways Anime List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Aways Anime List</h1>
+      <div class="header-actions">
+        <button id="theme-toggle" class="btn theme" aria-label="Theme wechseln" title="Theme wechseln">🌙</button>
+        <button id="admin-toggle" class="btn admin" aria-label="Admin anmelden" title="Admin anmelden">🔒 Admin</button>
+      </div>
+    </header>
+
+    <section class="add-form">
+      <form id="anime-form" autocomplete="off">
+        <div class="field-group">
+          <input id="anime-input" type="text" placeholder="Anime-Name eingeben..." required>
+          <select id="anime-list-select" aria-label="Liste wählen">
+            <option value="plan">Noch am anschauen</option>
+            <option value="watched">Fertig Geschaut</option>
+            <option value="waiting">Warten auf Fortsetzung</option>
+          </select>
+          <button type="submit" class="btn primary">Hinzufügen</button>
+        </div>
+        <small class="hint">Nur Admins können hinzufügen.</small>
+      </form>
+      <div id="message" role="status" aria-live="polite"></div>
+    </section>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Noch am anschauen</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="watched">Fertig Geschaut</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="waiting">Warten auf Fortsetzung</button>
+    </nav>
+
+    <main class="content">
+      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Noch am anschauen">
+        <div id="grid-plan" class="grid"></div>
+      </section>
+      <section id="tab-watched" class="tab-panel" role="tabpanel" aria-label="Fertig Geschaut">
+        <div id="grid-watched" class="grid"></div>
+      </section>
+      <section id="tab-waiting" class="tab-panel" role="tabpanel" aria-label="Warten auf Fortsetzung">
+        <div id="grid-waiting" class="grid"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Powered by <a href="https://docs.api.jikan.moe" target="_blank" rel="noreferrer">Jikan API</a></span>
+    </footer>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="edit-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Titel bearbeiten</h3>
+        <button class="modal-close" aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-cover">
+          <img id="modal-cover-img" src="" alt="" class="modal-cover-image">
+        </div>
+        <div class="modal-form">
+          <label for="modal-title-input">Neuer Titel:</label>
+          <input type="text" id="modal-title-input" placeholder="Titel eingeben...">
+          <div class="modal-actions">
+            <button type="button" class="btn secondary" id="modal-cancel">Abbrechen</button>
+            <button type="button" class="btn primary" id="modal-save">Speichern</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div id="admin-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Admin-Anmeldung</h3>
+        <button class="modal-close" data-close-admin aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-form" style="width:100%">
+          <label for="admin-password">Passwort:</label>
+          <input type="password" id="admin-password" placeholder="Admin-Passwort">
+          <div class="modal-actions">
+            <button type="button" class="btn secondary" id="admin-cancel">Abbrechen</button>
+            <button type="button" class="btn primary" id="admin-login">Anmelden</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
 
