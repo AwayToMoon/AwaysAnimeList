@@ -27,6 +27,12 @@ const waitingCount = document.getElementById('waiting-count');
 // The password is base64 encoded and reversed to make it harder to read
 const ADMIN_PASSWORD = btoa('9966').split('').reverse().join('');
 
+// Firebase Collections
+const COLLECTIONS = {
+  animes: 'animes',
+  settings: 'settings'
+};
+
 // Modal elements
 const editModal = document.getElementById('edit-modal');
 const modalCoverImg = document.getElementById('modal-cover-img');
@@ -755,7 +761,50 @@ function serializeList(listKey) {
   });
 }
 
-function saveAll() {
+// Firebase Functions
+async function saveToFirebase() {
+  if (!window.firebase) {
+    console.log('Firebase nicht verfügbar, verwende LocalStorage');
+    saveToLocalStorage();
+    return;
+  }
+  
+  try {
+    const { db, collection, addDoc, updateDoc, deleteDoc, getDocs, query, orderBy } = window.firebase;
+    
+    // Lösche alle bestehenden Animes
+    const existingAnimes = await getDocs(collection(db, COLLECTIONS.animes));
+    const deletePromises = existingAnimes.docs.map(docSnapshot => 
+      deleteDoc(docSnapshot.ref)
+    );
+    await Promise.all(deletePromises);
+    
+    // Füge alle aktuellen Animes hinzu
+    const addPromises = [];
+    ['plan', 'watched', 'waiting'].forEach(listKey => {
+      Array.from(grids[listKey].children).forEach(card => {
+        const animeData = {
+          id: Number(card.dataset.id) || 0,
+          title: card.querySelector('.title')?.textContent || '',
+          image: card.querySelector('img')?.src || '',
+          url: card.querySelector('a')?.href || '',
+          list: listKey,
+          createdAt: new Date().toISOString()
+        };
+        addPromises.push(addDoc(collection(db, COLLECTIONS.animes), animeData));
+      });
+    });
+    
+    await Promise.all(addPromises);
+    console.log('Daten erfolgreich in Firebase gespeichert');
+  } catch (error) {
+    console.error('Fehler beim Speichern in Firebase:', error);
+    // Fallback zu LocalStorage
+    saveToLocalStorage();
+  }
+}
+
+function saveToLocalStorage() {
   const data = {
     plan: serializeList('plan'),
     watched: serializeList('watched'),
@@ -768,7 +817,53 @@ function saveAll() {
   }
 }
 
-function loadAll() {
+function saveAll() {
+  saveToFirebase();
+}
+
+async function loadFromFirebase() {
+  if (!window.firebase) {
+    console.log('Firebase nicht verfügbar, lade aus LocalStorage');
+    loadFromLocalStorage();
+    return;
+  }
+  
+  try {
+    const { db, collection, getDocs, query, orderBy } = window.firebase;
+    
+    // Lade alle Animes aus Firebase
+    const animesSnapshot = await getDocs(collection(db, COLLECTIONS.animes));
+    const animes = animesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    // Sortiere und gruppiere nach Listen
+    const groupedAnimes = {
+      plan: animes.filter(anime => anime.list === 'plan').sort((a, b) => 
+        a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+      ),
+      watched: animes.filter(anime => anime.list === 'watched').sort((a, b) => 
+        a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+      ),
+      waiting: animes.filter(anime => anime.list === 'waiting').sort((a, b) => 
+        a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+      )
+    };
+    
+    // Füge Animes zu den entsprechenden Listen hinzu
+    ['plan', 'watched', 'waiting'].forEach(key => {
+      groupedAnimes[key].forEach(anime => {
+        addAnimeToList(anime, key);
+      });
+    });
+    
+    console.log('Daten erfolgreich aus Firebase geladen');
+  } catch (error) {
+    console.error('Fehler beim Laden aus Firebase:', error);
+    // Fallback zu LocalStorage
+    loadFromLocalStorage();
+  }
+}
+
+function loadFromLocalStorage() {
   try {
     const raw = localStorage.getItem('animes-app');
     if (!raw) return;
@@ -783,6 +878,10 @@ function loadAll() {
   } catch (_) {
     // ignore
   }
+}
+
+function loadAll() {
+  loadFromFirebase();
 }
 
 // THEME
@@ -906,10 +1005,53 @@ if (adminCancel) adminCancel.addEventListener('click', () => adminModal.style.di
 if (adminLogin) adminLogin.addEventListener('click', loginAdmin);
 adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginAdmin(); });
 
+// Echtzeit-Synchronisation
+function setupRealtimeSync() {
+  if (!window.firebase) {
+    console.log('Firebase nicht verfügbar, keine Echtzeit-Sync');
+    return;
+  }
+  
+  try {
+    const { db, collection, onSnapshot, query, orderBy } = window.firebase;
+    
+    // Lausche auf Änderungen in der Firebase-Datenbank
+    const unsubscribe = onSnapshot(
+      query(collection(db, COLLECTIONS.animes), orderBy('createdAt')),
+      (snapshot) => {
+        // Nur laden wenn nicht der aktuelle User die Änderung gemacht hat
+        if (!snapshot.metadata.fromCache) {
+          console.log('Echtzeit-Update empfangen');
+          // Leere alle Listen
+          ['plan', 'watched', 'waiting'].forEach(key => {
+            grids[key].innerHTML = '';
+          });
+          // Lade neue Daten
+          loadFromFirebase();
+          updateStats();
+        }
+      },
+      (error) => {
+        console.error('Echtzeit-Sync Fehler:', error);
+      }
+    );
+    
+    // Speichere unsubscribe-Funktion für später
+    window.firebaseUnsubscribe = unsubscribe;
+  } catch (error) {
+    console.error('Fehler beim Setup der Echtzeit-Sync:', error);
+  }
+}
+
 // Init
 switchTab('plan');
 loadAll();
 updateStats();
 applyTheme(getPreferredTheme());
 setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
+
+// Setup Echtzeit-Sync nach kurzer Verzögerung (wenn Firebase geladen ist)
+setTimeout(() => {
+  setupRealtimeSync();
+}, 1000);
 })();
