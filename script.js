@@ -19,7 +19,7 @@ const themeToggle = document.getElementById('theme-toggle');
 // Obfuscated password - not easily readable in source code
 // To change password: replace 'admin123' with your desired password
 // The password is base64 encoded and reversed to make it harder to read
-const ADMIN_PASSWORD = btoa('admin123').split('').reverse().join('');
+const ADMIN_PASSWORD = btoa('9966').split('').reverse().join('');
 
 // Modal elements
 const editModal = document.getElementById('edit-modal');
