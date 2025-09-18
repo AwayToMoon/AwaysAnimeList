@@ -1,5 +1,6 @@
 # Firebase-Konfiguration (sensible Daten)
 config.local.js
+config.vercel.js
 
 # Node.js
 node_modules/
