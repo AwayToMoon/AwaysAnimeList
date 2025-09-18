@@ -32,6 +32,8 @@
         </div>
       </div>
       <div class="header-actions">
+        <button id="backup-btn" class="btn backup" aria-label="Backup erstellen" title="Backup erstellen">💾 Backup</button>
+        <button id="restore-btn" class="btn restore" aria-label="Backup wiederherstellen" title="Backup wiederherstellen">📁 Wiederherstellen</button>
         <button id="theme-toggle" class="btn theme" aria-label="Theme wechseln" title="Theme wechseln">🌙</button>
         <button id="admin-toggle" class="btn admin" aria-label="Admin anmelden" title="Admin anmelden">🔒 Admin</button>
       </div>
@@ -118,6 +120,26 @@
           <div class="modal-actions">
             <button type="button" class="btn secondary" id="admin-cancel">Abbrechen</button>
             <button type="button" class="btn primary" id="admin-login">Anmelden</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Restore Modal -->
+  <div id="restore-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Backup wiederherstellen</h3>
+        <button class="modal-close" data-close-restore aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-form" style="width:100%">
+          <label for="backup-file">Backup-Datei auswählen:</label>
+          <input type="file" id="backup-file" accept=".json" style="margin-bottom: 16px;">
+          <div class="modal-actions">
+            <button type="button" class="btn secondary" id="restore-cancel">Abbrechen</button>
+            <button type="button" class="btn primary" id="restore-confirm">Wiederherstellen</button>
           </div>
         </div>
       </div>
