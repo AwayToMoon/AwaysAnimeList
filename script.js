@@ -40,7 +40,6 @@ const modalSave = document.getElementById('modal-save');
 const adminToggle = document.getElementById('admin-toggle');
 const adminModal = document.getElementById('admin-modal');
 const adminClose = document.querySelector('[data-close-admin]');
-const adminEmail = document.getElementById('admin-email');
 const adminPassword = document.getElementById('admin-password');
 const adminCancel = document.getElementById('admin-cancel');
 const adminLogin = document.getElementById('admin-login');
@@ -48,199 +47,6 @@ const adminLogin = document.getElementById('admin-login');
 const API_BASE = 'https://api.jikan.moe/v4';
 const ANILIST_API = 'https://graphql.anilist.co';
 const ANISEARCH_API = 'https://api.anisearch.com';
-
-// Firebase configuration
-let firebase = null;
-let isFirebaseReady = false;
-
-// Wait for Firebase to be loaded
-function waitForFirebase() {
-  return new Promise((resolve) => {
-    if (window.firebase) {
-      firebase = window.firebase;
-      isFirebaseReady = true;
-      resolve();
-    } else {
-      setTimeout(() => waitForFirebase().then(resolve), 100);
-    }
-  });
-}
-
-// Firebase Firestore functions
-async function saveAnimeToFirebase(anime, listKey) {
-  if (!isFirebaseReady) return;
-  
-  try {
-    const animeRef = firebase.doc(firebase.db, 'animes', `${anime.id}_${listKey}`);
-    await firebase.setDoc(animeRef, {
-      ...anime,
-      listKey,
-      timestamp: new Date().toISOString(),
-      addedBy: firebase.auth.currentUser?.uid || 'anonymous'
-    });
-  } catch (error) {
-    console.error('Fehler beim Speichern in Firebase:', error);
-  }
-}
-
-async function deleteAnimeFromFirebase(animeId, listKey) {
-  if (!isFirebaseReady) return;
-  
-  try {
-    const animeRef = firebase.doc(firebase.db, 'animes', `${animeId}_${listKey}`);
-    await firebase.deleteDoc(animeRef);
-  } catch (error) {
-    console.error('Fehler beim Löschen aus Firebase:', error);
-  }
-}
-
-async function loadAnimesFromFirebase() {
-  if (!isFirebaseReady) return;
-  
-  try {
-    const animesRef = firebase.collection(firebase.db, 'animes');
-    const q = firebase.query(animesRef, firebase.orderBy('timestamp', 'desc'));
-    const querySnapshot = await firebase.getDocs(q);
-    
-    // Clear existing data
-    ['plan', 'watched', 'waiting'].forEach(key => {
-      grids[key].innerHTML = '';
-    });
-    
-    // Group animes by list
-    const animesByList = { plan: [], watched: [], waiting: [] };
-    
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (animesByList[data.listKey]) {
-        animesByList[data.listKey].push(data);
-      }
-    });
-    
-    // Add animes to their respective lists
-    ['plan', 'watched', 'waiting'].forEach(key => {
-      const sortedAnimes = animesByList[key].sort((a, b) => 
-        a.title.toLowerCase().localeCompare(b.title.toLowerCase())
-      );
-      sortedAnimes.forEach(anime => {
-        addAnimeToList(anime, key, false); // false = don't save to Firebase again
-      });
-    });
-    
-    updateStats();
-  } catch (error) {
-    console.error('Fehler beim Laden aus Firebase:', error);
-    // Fallback to localStorage
-    loadAll();
-  }
-}
-
-// Setup real-time listener
-function setupRealtimeListener() {
-  if (!isFirebaseReady) return;
-  
-  const animesRef = firebase.collection(firebase.db, 'animes');
-  const q = firebase.query(animesRef, firebase.orderBy('timestamp', 'desc'));
-  
-  firebase.onSnapshot(q, (querySnapshot) => {
-    // Only update if we have data from Firebase
-    if (querySnapshot.empty) {
-      console.log('Keine Daten in Firebase gefunden');
-      return;
-    }
-    
-    // Clear existing data
-    ['plan', 'watched', 'waiting'].forEach(key => {
-      grids[key].innerHTML = '';
-    });
-    
-    // Group animes by list
-    const animesByList = { plan: [], watched: [], waiting: [] };
-    
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (animesByList[data.listKey]) {
-        animesByList[data.listKey].push(data);
-      }
-    });
-    
-    // Add animes to their respective lists
-    ['plan', 'watched', 'waiting'].forEach(key => {
-      const sortedAnimes = animesByList[key].sort((a, b) => 
-        a.title.toLowerCase().localeCompare(b.title.toLowerCase())
-      );
-      sortedAnimes.forEach(anime => {
-        addAnimeToList(anime, key, false); // false = don't save to Firebase again
-      });
-    });
-    
-    updateStats();
-  }, (error) => {
-    console.error('Fehler bei Echtzeit-Updates:', error);
-  });
-}
-
-// Migration function to move data from localStorage to Firebase
-async function migrateToFirebase() {
-  if (!isFirebaseReady) return;
-  
-  try {
-    const raw = localStorage.getItem('animes-app');
-    if (!raw) return;
-    
-    const data = JSON.parse(raw);
-    const migrationKey = 'animes-migrated-to-firebase';
-    
-    // Check if already migrated
-    if (localStorage.getItem(migrationKey)) {
-      console.log('Daten bereits migriert');
-      return;
-    }
-    
-    // Check if Firebase already has data
-    const animesRef = firebase.collection(firebase.db, 'animes');
-    const snapshot = await firebase.getDocs(animesRef);
-    if (!snapshot.empty) {
-      console.log('Firebase hat bereits Daten, überspringe Migration');
-      localStorage.setItem(migrationKey, 'true');
-      return;
-    }
-    
-    setMessage('Migriere Daten zu Firebase...', 'info');
-    console.log('Starte Migration mit Daten:', data);
-    
-    // Migrate each list
-    let migratedCount = 0;
-    for (const [listKey, animes] of Object.entries(data)) {
-      if (Array.isArray(animes) && animes.length > 0) {
-        console.log(`Migriere ${animes.length} Animes für Liste: ${listKey}`);
-        for (const anime of animes) {
-          try {
-            await saveAnimeToFirebase(anime, listKey);
-            migratedCount++;
-          } catch (error) {
-            console.error('Fehler beim Migrieren eines Animes:', error, anime);
-          }
-        }
-      }
-    }
-    
-    // Mark as migrated
-    localStorage.setItem(migrationKey, 'true');
-    setMessage(`Migration abgeschlossen! ${migratedCount} Animes migriert.`, 'success');
-    console.log(`Migration abgeschlossen: ${migratedCount} Animes migriert`);
-    
-    // Clear localStorage data after successful migration
-    setTimeout(() => {
-      localStorage.removeItem('animes-app');
-      console.log('localStorage-Daten gelöscht');
-    }, 3000);
-    
-  } catch (error) {
-    console.error('Migration-Fehler:', error);
-    setMessage('Migration fehlgeschlagen. Verwende lokale Daten.', 'error');
-  }
-}
 
 function setMessage(text, type = 'info') {
   message.textContent = text;
@@ -263,23 +69,6 @@ function setAdminUI(isAdmin) {
   });
 }
 
-// Firebase Auth State Listener
-function setupAuthStateListener() {
-  if (!isFirebaseReady) return;
-  
-  firebase.onAuthStateChanged(firebase.auth, (user) => {
-    if (user) {
-      // User is signed in
-      localStorage.setItem('animes-is-admin', 'true');
-      setAdminUI(true);
-    } else {
-      // User is signed out
-      localStorage.removeItem('animes-is-admin');
-      setAdminUI(false);
-    }
-  });
-}
-
 function openAdminModal() {
   adminModal.style.display = 'flex';
   adminPassword.value = '';
@@ -291,56 +80,22 @@ function closeAdminModal() {
   adminPassword.value = '';
 }
 
-async function loginAdmin() {
-  const email = adminEmail.value.trim();
-  const password = adminPassword.value.trim();
-  
-  if (!email || !password) {
-    setMessage('Bitte E-Mail und Passwort eingeben.', 'error');
-    return;
-  }
-  
-  if (!isFirebaseReady) {
-    setMessage('Firebase wird noch geladen...', 'error');
-    return;
-  }
-  
-  try {
-    setMessage('Anmeldung läuft...', 'info');
-    await firebase.signInWithEmailAndPassword(firebase.auth, email, password);
-    setMessage('Erfolgreich angemeldet!', 'success');
+function loginAdmin() {
+  const pwd = adminPassword.value.trim();
+  // Decode the obfuscated password for comparison
+  const decodedPassword = atob(ADMIN_PASSWORD.split('').reverse().join(''));
+  const ok = pwd === decodedPassword;
+  if (ok) {
+    localStorage.setItem('animes-is-admin', 'true');
+    setAdminUI(true);
     closeAdminModal();
-  } catch (error) {
-    console.error('Login-Fehler:', error);
-    let errorMessage = 'Anmeldung fehlgeschlagen.';
-    
-    switch (error.code) {
-      case 'auth/user-not-found':
-        errorMessage = 'Benutzer nicht gefunden.';
-        break;
-      case 'auth/wrong-password':
-        errorMessage = 'Falsches Passwort.';
-        break;
-      case 'auth/invalid-email':
-        errorMessage = 'Ungültige E-Mail-Adresse.';
-        break;
-      case 'auth/too-many-requests':
-        errorMessage = 'Zu viele Versuche. Bitte später erneut versuchen.';
-        break;
-    }
-    
-    setMessage(errorMessage, 'error');
+    setMessage('Als Admin angemeldet.', 'success');
+  } else {
+    setMessage('Falsches Passwort.', 'error');
   }
 }
 
-async function logoutAdmin() {
-  if (isFirebaseReady && firebase.auth.currentUser) {
-    try {
-      await firebase.signOut(firebase.auth);
-    } catch (error) {
-      console.error('Logout-Fehler:', error);
-    }
-  }
+function logoutAdmin() {
   localStorage.removeItem('animes-is-admin');
   setAdminUI(false);
   setMessage('Admin abgemeldet.', 'success');
@@ -891,7 +646,7 @@ function createCard(anime, listKey) {
   return card;
 }
 
-function addAnimeToList(anime, listKey, saveToFirebase = true) {
+function addAnimeToList(anime, listKey) {
   const card = createCard(anime, listKey);
   
   // Insert card in alphabetical order
@@ -902,11 +657,6 @@ function addAnimeToList(anime, listKey, saveToFirebase = true) {
   allCards.forEach((card, index) => {
     card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
   });
-  
-  // Save to Firebase if requested
-  if (saveToFirebase && isFirebaseReady) {
-    saveAnimeToFirebase(anime, listKey);
-  }
   
   updateStats();
 }
@@ -936,22 +686,11 @@ function insertCardAlphabetically(card, listKey) {
 function moveCard(card, targetList) {
   const current = card.dataset.list;
   if (current === targetList) return;
-  
-  const animeId = Number(card.dataset.id) || 0;
+  card.dataset.list = targetList;
   const title = card.querySelector('.title')?.textContent || '';
   const cover = card.querySelector('img')?.src || '';
   const url = card.querySelector('a')?.href || '';
-  const anime = { id: animeId, title, image: cover, url };
-  
-  // Update Firebase
-  if (isFirebaseReady) {
-    // Delete from old list
-    deleteAnimeFromFirebase(animeId, current);
-    // Add to new list
-    saveAnimeToFirebase(anime, targetList);
-  }
-  
-  card.dataset.list = targetList;
+  const anime = { id: Number(card.dataset.id) || 0, title, image: cover, url };
   
   // Remove from current list and insert alphabetically in target list
   card.remove();
@@ -975,14 +714,6 @@ function moveCard(card, targetList) {
 
 function deleteCard(card) {
   const title = card.querySelector('.title')?.textContent || '';
-  const animeId = Number(card.dataset.id) || 0;
-  const listKey = card.dataset.list;
-  
-  // Delete from Firebase
-  if (isFirebaseReady) {
-    deleteAnimeFromFirebase(animeId, listKey);
-  }
-  
   card.remove();
   setMessage(`Gelöscht: ${title}`, 'success');
   updateStats();
@@ -1147,15 +878,6 @@ function saveTitle() {
         });
       }
       
-      // Update Firebase if title or link changed
-      if (isFirebaseReady && (newTitle !== oldTitle || newLink !== currentLink)) {
-        const animeId = Number(card.dataset.id) || 0;
-        const listKey = card.dataset.list;
-        const cover = card.querySelector('img')?.src || '';
-        const updatedAnime = { id: animeId, title: newTitle, image: cover, url: newLink };
-        saveAnimeToFirebase(updatedAnime, listKey);
-      }
-      
       saveAll();
       setMessage('Anime bearbeitet.', 'success');
       break;
@@ -1183,118 +905,11 @@ if (adminClose) adminClose.addEventListener('click', () => adminModal.style.disp
 if (adminCancel) adminCancel.addEventListener('click', () => adminModal.style.display = 'none');
 if (adminLogin) adminLogin.addEventListener('click', loginAdmin);
 adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginAdmin(); });
-adminEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') adminPassword.focus(); });
 
 // Init
-async function initializeApp() {
-  // Initialize UI first
-  switchTab('plan');
-  updateStats();
-  applyTheme(getPreferredTheme());
-  setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
-  
-  // Load data from localStorage first (safety first!)
-  console.log('Lade Daten aus localStorage...');
-  loadAll();
-  
-  // Wait for Firebase to be ready
-  await waitForFirebase();
-  
-  // Setup Firebase listeners
-  setupAuthStateListener();
-  
-  // Handle data loading and migration
-  if (isFirebaseReady) {
-    console.log('Firebase ist bereit, prüfe Migration...');
-    
-    // Check if we have localStorage data to migrate
-    const hasLocalData = localStorage.getItem('animes-app');
-    const isMigrated = localStorage.getItem('animes-migrated-to-firebase');
-    
-    if (hasLocalData && !isMigrated) {
-      console.log('Starte Migration...');
-      await migrateToFirebase();
-    }
-    
-    // Load from Firebase
-    await loadAnimesFromFirebase();
-    
-    // Setup real-time listener after initial load
-    setupRealtimeListener();
-  } else {
-    console.log('Firebase nicht verfügbar, verwende localStorage');
-  }
-}
-
-// Debug function to check data
-function debugData() {
-  console.log('=== DEBUG INFO ===');
-  console.log('Firebase ready:', isFirebaseReady);
-  console.log('localStorage data:', localStorage.getItem('animes-app'));
-  console.log('Migration status:', localStorage.getItem('animes-migrated-to-firebase'));
-  console.log('Admin status:', localStorage.getItem('animes-is-admin'));
-  console.log('Plan animes:', grids.plan.children.length);
-  console.log('Watched animes:', grids.watched.children.length);
-  console.log('Waiting animes:', grids.waiting.children.length);
-  console.log('==================');
-}
-
-// NOTFALL: Daten aus localStorage wiederherstellen
-function emergencyRestore() {
-  console.log('🚨 NOTFALL-WIEDERHERSTELLUNG GESTARTET');
-  
-  // Migration-Status zurücksetzen
-  localStorage.removeItem('animes-migrated-to-firebase');
-  
-  // Firebase-Listener deaktivieren
-  if (window.firebaseUnsubscribe) {
-    window.firebaseUnsubscribe();
-  }
-  
-  // Daten aus localStorage laden
-  loadAll();
-  
-  console.log('✅ Daten wiederhergestellt!');
-  setMessage('NOTFALL: Daten aus localStorage wiederhergestellt!', 'success');
-}
-
-// NOTFALL: Alle Firebase-Daten löschen und neu starten
-async function emergencyReset() {
-  console.log('🚨 NOTFALL-RESET GESTARTET');
-  
-  if (!isFirebaseReady) {
-    console.log('Firebase nicht verfügbar');
-    return;
-  }
-  
-  try {
-    // Alle Firebase-Daten löschen
-    const animesRef = firebase.collection(firebase.db, 'animes');
-    const snapshot = await firebase.getDocs(animesRef);
-    
-    for (const doc of snapshot.docs) {
-      await firebase.deleteDoc(doc.ref);
-    }
-    
-    // Migration-Status zurücksetzen
-    localStorage.removeItem('animes-migrated-to-firebase');
-    
-    // Daten aus localStorage laden
-    loadAll();
-    
-    console.log('✅ Reset abgeschlossen!');
-    setMessage('NOTFALL: Reset abgeschlossen!', 'success');
-  } catch (error) {
-    console.error('Reset-Fehler:', error);
-    setMessage('Reset fehlgeschlagen!', 'error');
-  }
-}
-
-// Make debug and emergency functions available globally
-window.debugData = debugData;
-window.emergencyRestore = emergencyRestore;
-window.emergencyReset = emergencyReset;
-
-// Start the app
-initializeApp();
+switchTab('plan');
+loadAll();
+updateStats();
+applyTheme(getPreferredTheme());
+setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
 })();
