@@ -57,6 +57,16 @@ function setMessage(text, type = 'info') {
 function setAdminUI(isAdmin) {
   document.body.classList.toggle('is-admin', isAdmin);
   if (adminToggle) adminToggle.textContent = isAdmin ? '✅ Admin' : '🔒 Admin';
+  
+  // Update all link buttons based on admin status
+  const linkButtons = document.querySelectorAll('.btn.link');
+  linkButtons.forEach(link => {
+    if (isAdmin) {
+      link.textContent = '🔗';
+    } else {
+      link.innerHTML = '🔗 ZUM ANIME';
+    }
+  });
 }
 
 function openAdminModal() {
@@ -582,8 +592,15 @@ function createCard(anime, listKey) {
   link.target = '_blank';
   link.rel = 'noreferrer';
   link.className = 'btn link';
-  link.textContent = '🔗';
   link.title = 'Details anzeigen';
+  
+  // Add text for non-admin users
+  const isAdmin = localStorage.getItem('animes-is-admin') === 'true';
+  if (isAdmin) {
+    link.textContent = '🔗';
+  } else {
+    link.innerHTML = '🔗 ZUM ANIME';
+  }
 
   const moveBtn = document.createElement('button');
   moveBtn.type = 'button';
