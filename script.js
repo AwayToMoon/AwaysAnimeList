@@ -44,6 +44,15 @@ const adminPassword = document.getElementById('admin-password');
 const adminCancel = document.getElementById('admin-cancel');
 const adminLogin = document.getElementById('admin-login');
 
+// Backup elements
+const backupBtn = document.getElementById('backup-btn');
+const restoreBtn = document.getElementById('restore-btn');
+const restoreModal = document.getElementById('restore-modal');
+const restoreClose = document.querySelector('[data-close-restore]');
+const backupFile = document.getElementById('backup-file');
+const restoreCancel = document.getElementById('restore-cancel');
+const restoreConfirm = document.getElementById('restore-confirm');
+
 const API_BASE = 'https://api.jikan.moe/v4';
 const ANILIST_API = 'https://graphql.anilist.co';
 const ANISEARCH_API = 'https://api.anisearch.com';
@@ -759,13 +768,95 @@ function saveAll() {
   const data = {
     plan: serializeList('plan'),
     watched: serializeList('watched'),
-    waiting: serializeList('waiting')
+    waiting: serializeList('waiting'),
+    timestamp: new Date().toISOString(),
+    version: '1.0'
   };
   try {
     localStorage.setItem('animes-app', JSON.stringify(data));
   } catch (_) {
     // ignore
   }
+}
+
+// Backup functions
+function createBackup() {
+  console.log('createBackup function called');
+  const data = {
+    plan: serializeList('plan'),
+    watched: serializeList('watched'),
+    waiting: serializeList('waiting'),
+    timestamp: new Date().toISOString(),
+    version: '1.0'
+  };
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `anime-backup-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  setMessage('Backup erfolgreich erstellt!', 'success');
+}
+
+function openRestoreModal() {
+  console.log('openRestoreModal function called');
+  restoreModal.style.display = 'flex';
+  backupFile.value = '';
+}
+
+function closeRestoreModal() {
+  restoreModal.style.display = 'none';
+  backupFile.value = '';
+}
+
+function restoreFromBackup() {
+  const file = backupFile.files[0];
+  if (!file) {
+    setMessage('Bitte wähle eine Backup-Datei aus.', 'error');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      
+      // Validate backup data
+      if (!data.plan || !data.watched || !data.waiting) {
+        throw new Error('Ungültige Backup-Datei');
+      }
+      
+      // Clear current data
+      ['plan', 'watched', 'waiting'].forEach(key => {
+        grids[key].innerHTML = '';
+      });
+      
+      // Restore data
+      ['plan', 'watched', 'waiting'].forEach(key => {
+        if (data[key] && Array.isArray(data[key])) {
+          data[key].forEach(item => {
+            if (item.title) {
+              addAnimeToList(item, key);
+            }
+          });
+        }
+      });
+      
+      saveAll();
+      updateStats();
+      closeRestoreModal();
+      setMessage(`Backup erfolgreich wiederhergestellt! ${data.plan.length + data.watched.length + data.waiting.length} Animes geladen.`, 'success');
+      
+    } catch (error) {
+      setMessage('Fehler beim Laden der Backup-Datei: ' + error.message, 'error');
+    }
+  };
+  reader.readAsText(file);
 }
 
 function loadAll() {
@@ -894,9 +985,15 @@ editModal.addEventListener('click', (e) => {
 });
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && editModal.style.display === 'flex') closeModal();
+  if (e.key === 'Escape' && restoreModal.style.display === 'flex') closeRestoreModal();
 });
 modalTitleInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') { e.preventDefault(); saveTitle(); }
+});
+
+// Restore modal click outside to close
+restoreModal.addEventListener('click', (e) => {
+  if (e.target === restoreModal) closeRestoreModal();
 });
 
 // Admin handlers
@@ -904,7 +1001,26 @@ if (adminToggle) adminToggle.addEventListener('click', toggleAdmin);
 if (adminClose) adminClose.addEventListener('click', () => adminModal.style.display = 'none');
 if (adminCancel) adminCancel.addEventListener('click', () => adminModal.style.display = 'none');
 if (adminLogin) adminLogin.addEventListener('click', loginAdmin);
-adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginAdmin(); });
+if (adminPassword) adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginAdmin(); });
+
+// Backup handlers
+if (backupBtn) {
+  console.log('Backup button found, adding event listener');
+  backupBtn.addEventListener('click', createBackup);
+} else {
+  console.log('Backup button not found');
+}
+
+if (restoreBtn) {
+  console.log('Restore button found, adding event listener');
+  restoreBtn.addEventListener('click', openRestoreModal);
+} else {
+  console.log('Restore button not found');
+}
+
+if (restoreClose) restoreClose.addEventListener('click', closeRestoreModal);
+if (restoreCancel) restoreCancel.addEventListener('click', closeRestoreModal);
+if (restoreConfirm) restoreConfirm.addEventListener('click', restoreFromBackup);
 
 // Init
 switchTab('plan');
@@ -912,4 +1028,20 @@ loadAll();
 updateStats();
 applyTheme(getPreferredTheme());
 setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
+
+// Ensure backup buttons work - add event listeners after DOM is fully loaded
+setTimeout(() => {
+  const backupBtnRetry = document.getElementById('backup-btn');
+  const restoreBtnRetry = document.getElementById('restore-btn');
+  
+  if (backupBtnRetry && !backupBtnRetry.onclick) {
+    console.log('Adding backup button listener via setTimeout');
+    backupBtnRetry.addEventListener('click', createBackup);
+  }
+  
+  if (restoreBtnRetry && !restoreBtnRetry.onclick) {
+    console.log('Adding restore button listener via setTimeout');
+    restoreBtnRetry.addEventListener('click', openRestoreModal);
+  }
+}, 100);
 })();
