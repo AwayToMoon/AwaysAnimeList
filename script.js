@@ -1187,33 +1187,42 @@ adminEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') adminPass
 
 // Init
 async function initializeApp() {
-  // Wait for Firebase to be ready
-  await waitForFirebase();
-  
-  // Setup Firebase listeners
-  setupAuthStateListener();
-  
   // Initialize UI first
   switchTab('plan');
   updateStats();
   applyTheme(getPreferredTheme());
   setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
   
+  // Load data from localStorage first (safety first!)
+  console.log('Lade Daten aus localStorage...');
+  loadAll();
+  
+  // Wait for Firebase to be ready
+  await waitForFirebase();
+  
+  // Setup Firebase listeners
+  setupAuthStateListener();
+  
   // Handle data loading and migration
   if (isFirebaseReady) {
-    console.log('Firebase ist bereit, starte Migration...');
+    console.log('Firebase ist bereit, prüfe Migration...');
     
-    // First, try to migrate localStorage data to Firebase
-    await migrateToFirebase();
+    // Check if we have localStorage data to migrate
+    const hasLocalData = localStorage.getItem('animes-app');
+    const isMigrated = localStorage.getItem('animes-migrated-to-firebase');
     
-    // Then load from Firebase
+    if (hasLocalData && !isMigrated) {
+      console.log('Starte Migration...');
+      await migrateToFirebase();
+    }
+    
+    // Load from Firebase
     await loadAnimesFromFirebase();
     
     // Setup real-time listener after initial load
     setupRealtimeListener();
   } else {
     console.log('Firebase nicht verfügbar, verwende localStorage');
-    loadAll();
   }
 }
 
@@ -1230,8 +1239,61 @@ function debugData() {
   console.log('==================');
 }
 
-// Make debug function available globally
+// NOTFALL: Daten aus localStorage wiederherstellen
+function emergencyRestore() {
+  console.log('🚨 NOTFALL-WIEDERHERSTELLUNG GESTARTET');
+  
+  // Migration-Status zurücksetzen
+  localStorage.removeItem('animes-migrated-to-firebase');
+  
+  // Firebase-Listener deaktivieren
+  if (window.firebaseUnsubscribe) {
+    window.firebaseUnsubscribe();
+  }
+  
+  // Daten aus localStorage laden
+  loadAll();
+  
+  console.log('✅ Daten wiederhergestellt!');
+  setMessage('NOTFALL: Daten aus localStorage wiederhergestellt!', 'success');
+}
+
+// NOTFALL: Alle Firebase-Daten löschen und neu starten
+async function emergencyReset() {
+  console.log('🚨 NOTFALL-RESET GESTARTET');
+  
+  if (!isFirebaseReady) {
+    console.log('Firebase nicht verfügbar');
+    return;
+  }
+  
+  try {
+    // Alle Firebase-Daten löschen
+    const animesRef = firebase.collection(firebase.db, 'animes');
+    const snapshot = await firebase.getDocs(animesRef);
+    
+    for (const doc of snapshot.docs) {
+      await firebase.deleteDoc(doc.ref);
+    }
+    
+    // Migration-Status zurücksetzen
+    localStorage.removeItem('animes-migrated-to-firebase');
+    
+    // Daten aus localStorage laden
+    loadAll();
+    
+    console.log('✅ Reset abgeschlossen!');
+    setMessage('NOTFALL: Reset abgeschlossen!', 'success');
+  } catch (error) {
+    console.error('Reset-Fehler:', error);
+    setMessage('Reset fehlgeschlagen!', 'error');
+  }
+}
+
+// Make debug and emergency functions available globally
 window.debugData = debugData;
+window.emergencyRestore = emergencyRestore;
+window.emergencyReset = emergencyReset;
 
 // Start the app
 initializeApp();
