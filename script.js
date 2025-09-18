@@ -49,6 +49,7 @@ const adminClose = document.querySelector('[data-close-admin]');
 const adminPassword = document.getElementById('admin-password');
 const adminCancel = document.getElementById('admin-cancel');
 const adminLogin = document.getElementById('admin-login');
+const migrateBtn = document.getElementById('migrate-btn');
 
 const API_BASE = 'https://api.jikan.moe/v4';
 const ANILIST_API = 'https://graphql.anilist.co';
@@ -797,6 +798,12 @@ async function saveToFirebase() {
     
     await Promise.all(addPromises);
     console.log('Daten erfolgreich in Firebase gespeichert');
+    
+    // Aktiviere Echtzeit-Sync nach dem ersten Speichern
+    if (!window.firebaseSyncActive) {
+      window.firebaseSyncActive = true;
+      setupRealtimeSync();
+    }
   } catch (error) {
     console.error('Fehler beim Speichern in Firebase:', error);
     // Fallback zu LocalStorage
@@ -880,8 +887,51 @@ function loadFromLocalStorage() {
   }
 }
 
+async function migrateToFirebase() {
+  if (!window.firebase) {
+    console.log('Firebase nicht verfügbar, verwende LocalStorage');
+    loadFromLocalStorage();
+    return;
+  }
+  
+  try {
+    // Prüfe ob bereits Daten in Firebase sind
+    const { db, collection, getDocs } = window.firebase;
+    const existingAnimes = await getDocs(collection(db, COLLECTIONS.animes));
+    
+    if (existingAnimes.docs.length > 0) {
+      console.log('Firebase bereits mit Daten gefüllt, lade aus Firebase');
+      loadFromFirebase();
+      return;
+    }
+    
+    // Lade aus LocalStorage und migriere zu Firebase
+    console.log('Migriere LocalStorage-Daten zu Firebase...');
+    loadFromLocalStorage();
+    
+    // Zeige Migrations-Button
+    if (migrateBtn) {
+      migrateBtn.style.display = 'inline-flex';
+    }
+    
+    // Warte kurz, dann speichere in Firebase
+    setTimeout(() => {
+      saveToFirebase();
+      // Aktiviere Echtzeit-Sync nach der Migration
+      if (!window.firebaseSyncActive) {
+        window.firebaseSyncActive = true;
+        setupRealtimeSync();
+      }
+    }, 1000);
+    
+  } catch (error) {
+    console.error('Fehler bei Migration:', error);
+    loadFromLocalStorage();
+  }
+}
+
 function loadAll() {
-  loadFromFirebase();
+  migrateToFirebase();
 }
 
 // THEME
@@ -1003,6 +1053,10 @@ if (adminToggle) adminToggle.addEventListener('click', toggleAdmin);
 if (adminClose) adminClose.addEventListener('click', () => adminModal.style.display = 'none');
 if (adminCancel) adminCancel.addEventListener('click', () => adminModal.style.display = 'none');
 if (adminLogin) adminLogin.addEventListener('click', loginAdmin);
+if (migrateBtn) migrateBtn.addEventListener('click', () => {
+  saveToFirebase();
+  setMessage('Migration zu Firebase gestartet...', 'success');
+});
 adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginAdmin(); });
 
 // Echtzeit-Synchronisation
@@ -1019,8 +1073,8 @@ function setupRealtimeSync() {
     const unsubscribe = onSnapshot(
       query(collection(db, COLLECTIONS.animes), orderBy('createdAt')),
       (snapshot) => {
-        // Nur laden wenn nicht der aktuelle User die Änderung gemacht hat
-        if (!snapshot.metadata.fromCache) {
+        // Nur laden wenn es echte Änderungen gibt (nicht beim ersten Laden)
+        if (!snapshot.metadata.fromCache && snapshot.docs.length > 0) {
           console.log('Echtzeit-Update empfangen');
           // Leere alle Listen
           ['plan', 'watched', 'waiting'].forEach(key => {
@@ -1050,9 +1104,6 @@ updateStats();
 applyTheme(getPreferredTheme());
 setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
 
-// Setup Echtzeit-Sync nach kurzer Verzögerung (wenn Firebase geladen ist)
-setTimeout(() => {
-  setupRealtimeSync();
-}, 1000);
+// Echtzeit-Sync erst aktivieren wenn Daten in Firebase sind
+// setupRealtimeSync(); // Deaktiviert bis Firebase-Daten vorhanden sind
 })();
-
