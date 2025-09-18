@@ -774,9 +774,35 @@ function saveAll() {
   };
   try {
     localStorage.setItem('animes-app', JSON.stringify(data));
+    // Sync to Firebase if available
+    if (window.db) {
+      syncToFirebase(data);
+    }
   } catch (_) {
     // ignore
   }
+}
+
+// Firebase sync functions
+async function syncToFirebase(data) {
+  try {
+    await window.db.collection('animeList').doc('main').set(data);
+    console.log('Data synced to Firebase');
+  } catch (error) {
+    console.error('Firebase sync failed:', error);
+  }
+}
+
+async function loadFromFirebase() {
+  try {
+    const doc = await window.db.collection('animeList').doc('main').get();
+    if (doc.exists) {
+      return doc.data();
+    }
+  } catch (error) {
+    console.error('Firebase load failed:', error);
+  }
+  return null;
 }
 
 // Backup functions
@@ -859,8 +885,18 @@ function restoreFromBackup() {
   reader.readAsText(file);
 }
 
-function loadAll() {
+async function loadAll() {
   try {
+    // Try to load from Firebase first
+    if (window.db) {
+      const firebaseData = await loadFromFirebase();
+      if (firebaseData) {
+        loadFirebaseData(firebaseData);
+        return;
+      }
+    }
+    
+    // Fallback to local storage
     const raw = localStorage.getItem('animes-app');
     if (!raw) return;
     const data = JSON.parse(raw);
@@ -874,6 +910,29 @@ function loadAll() {
   } catch (_) {
     // ignore
   }
+}
+
+function loadFirebaseData(data) {
+  // Clear current data
+  ['plan', 'watched', 'waiting'].forEach(key => {
+    grids[key].innerHTML = '';
+  });
+  
+  // Load Firebase data
+  ['plan', 'watched', 'waiting'].forEach(key => {
+    if (data[key] && Array.isArray(data[key])) {
+      data[key].forEach(item => {
+        if (item.title) {
+          addAnimeToList(item, key);
+        }
+      });
+    }
+  });
+  
+  // Update local storage
+  localStorage.setItem('animes-app', JSON.stringify(data));
+  updateStats();
+  setMessage('Daten aus der Cloud geladen!', 'success');
 }
 
 // THEME
@@ -1024,8 +1083,9 @@ if (restoreConfirm) restoreConfirm.addEventListener('click', restoreFromBackup);
 
 // Init
 switchTab('plan');
-loadAll();
-updateStats();
+loadAll().then(() => {
+  updateStats();
+});
 applyTheme(getPreferredTheme());
 setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
 
