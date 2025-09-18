@@ -1,0 +1,19 @@
+# Firebase-Konfiguration (sensible Daten)
+# config.js - wird manuell auf GitHub hochgeladen
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Environment Variables
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
