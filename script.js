@@ -16,6 +16,12 @@ const grids = {
 };
 const themeToggle = document.getElementById('theme-toggle');
 
+// Stats elements
+const totalCount = document.getElementById('total-count');
+const watchedCount = document.getElementById('watched-count');
+const planCount = document.getElementById('plan-count');
+const waitingCount = document.getElementById('waiting-count');
+
 // Obfuscated password - not easily readable in source code
 // To change password: replace 'admin123' with your desired password
 // The password is base64 encoded and reversed to make it harder to read
@@ -627,6 +633,8 @@ function addAnimeToList(anime, listKey) {
   allCards.forEach((card, index) => {
     card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
   });
+  
+  updateStats();
 }
 
 function moveCard(card, targetList) {
@@ -651,6 +659,7 @@ function moveCard(card, targetList) {
     waiting: 'Warten auf Fortsetzung'
   };
   setMessage(`Verschoben nach "${listNames[targetList]}": ${title}`, 'success');
+  updateStats();
   saveAll();
 }
 
@@ -658,6 +667,7 @@ function deleteCard(card) {
   const title = card.querySelector('.title')?.textContent || '';
   card.remove();
   setMessage(`Gelöscht: ${title}`, 'success');
+  updateStats();
   saveAll();
 }
 
@@ -734,6 +744,18 @@ function applyTheme(theme) {
   }
 }
 
+function updateStats() {
+  const planItems = grids.plan.children.length;
+  const watchedItems = grids.watched.children.length;
+  const waitingItems = grids.waiting.children.length;
+  const totalItems = planItems + watchedItems + waitingItems;
+  
+  totalCount.textContent = totalItems;
+  planCount.textContent = planItems;
+  watchedCount.textContent = watchedItems;
+  waitingCount.textContent = waitingItems;
+}
+
 function getPreferredTheme() {
   const saved = localStorage.getItem('animes-theme');
   if (saved === 'light' || saved === 'dark') return saved;
@@ -801,6 +823,7 @@ adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginA
 // Init
 switchTab('plan');
 loadAll();
+updateStats();
 applyTheme(getPreferredTheme());
 setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
 })();
