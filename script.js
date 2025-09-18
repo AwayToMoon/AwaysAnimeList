@@ -143,6 +143,12 @@ function setupRealtimeListener() {
   const q = firebase.query(animesRef, firebase.orderBy('timestamp', 'desc'));
   
   firebase.onSnapshot(q, (querySnapshot) => {
+    // Only update if we have data from Firebase
+    if (querySnapshot.empty) {
+      console.log('Keine Daten in Firebase gefunden');
+      return;
+    }
+    
     // Clear existing data
     ['plan', 'watched', 'waiting'].forEach(key => {
       grids[key].innerHTML = '';
@@ -186,27 +192,49 @@ async function migrateToFirebase() {
     const migrationKey = 'animes-migrated-to-firebase';
     
     // Check if already migrated
-    if (localStorage.getItem(migrationKey)) return;
+    if (localStorage.getItem(migrationKey)) {
+      console.log('Daten bereits migriert');
+      return;
+    }
+    
+    // Check if Firebase already has data
+    const animesRef = firebase.collection(firebase.db, 'animes');
+    const snapshot = await firebase.getDocs(animesRef);
+    if (!snapshot.empty) {
+      console.log('Firebase hat bereits Daten, überspringe Migration');
+      localStorage.setItem(migrationKey, 'true');
+      return;
+    }
     
     setMessage('Migriere Daten zu Firebase...', 'info');
+    console.log('Starte Migration mit Daten:', data);
     
     // Migrate each list
+    let migratedCount = 0;
     for (const [listKey, animes] of Object.entries(data)) {
-      if (Array.isArray(animes)) {
+      if (Array.isArray(animes) && animes.length > 0) {
+        console.log(`Migriere ${animes.length} Animes für Liste: ${listKey}`);
         for (const anime of animes) {
-          await saveAnimeToFirebase(anime, listKey);
+          try {
+            await saveAnimeToFirebase(anime, listKey);
+            migratedCount++;
+          } catch (error) {
+            console.error('Fehler beim Migrieren eines Animes:', error, anime);
+          }
         }
       }
     }
     
     // Mark as migrated
     localStorage.setItem(migrationKey, 'true');
-    setMessage('Migration abgeschlossen!', 'success');
+    setMessage(`Migration abgeschlossen! ${migratedCount} Animes migriert.`, 'success');
+    console.log(`Migration abgeschlossen: ${migratedCount} Animes migriert`);
     
     // Clear localStorage data after successful migration
     setTimeout(() => {
       localStorage.removeItem('animes-app');
-    }, 2000);
+      console.log('localStorage-Daten gelöscht');
+    }, 3000);
     
   } catch (error) {
     console.error('Migration-Fehler:', error);
@@ -1164,22 +1192,46 @@ async function initializeApp() {
   
   // Setup Firebase listeners
   setupAuthStateListener();
-  setupRealtimeListener();
   
-  // Migrate localStorage data to Firebase if needed
-  if (isFirebaseReady) {
-    await migrateToFirebase();
-    await loadAnimesFromFirebase();
-  } else {
-    loadAll();
-  }
-  
-  // Initialize UI
+  // Initialize UI first
   switchTab('plan');
   updateStats();
   applyTheme(getPreferredTheme());
   setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
+  
+  // Handle data loading and migration
+  if (isFirebaseReady) {
+    console.log('Firebase ist bereit, starte Migration...');
+    
+    // First, try to migrate localStorage data to Firebase
+    await migrateToFirebase();
+    
+    // Then load from Firebase
+    await loadAnimesFromFirebase();
+    
+    // Setup real-time listener after initial load
+    setupRealtimeListener();
+  } else {
+    console.log('Firebase nicht verfügbar, verwende localStorage');
+    loadAll();
+  }
 }
+
+// Debug function to check data
+function debugData() {
+  console.log('=== DEBUG INFO ===');
+  console.log('Firebase ready:', isFirebaseReady);
+  console.log('localStorage data:', localStorage.getItem('animes-app'));
+  console.log('Migration status:', localStorage.getItem('animes-migrated-to-firebase'));
+  console.log('Admin status:', localStorage.getItem('animes-is-admin'));
+  console.log('Plan animes:', grids.plan.children.length);
+  console.log('Watched animes:', grids.watched.children.length);
+  console.log('Waiting animes:', grids.waiting.children.length);
+  console.log('==================');
+}
+
+// Make debug function available globally
+window.debugData = debugData;
 
 // Start the app
 initializeApp();
