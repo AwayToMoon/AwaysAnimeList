@@ -9,20 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   
-  <!-- Firebase SDK -->
+ <!-- Firebase SDK -->
+  <script src="config.js"></script>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
     
-    // Firebase-Konfiguration (wird später ausgefüllt)
-    const firebaseConfig = {
-      apiKey: "AIzaSyABddVmY4XpKA-PJ9dgexTRiufjRHBHVpc",
-      authDomain: "awaysanimelist.firebaseapp.com",
-      projectId: "awaysanimelist",
-      storageBucket: "awaysanimelist.firebasestorage.app",
-      messagingSenderId: "306455007306",
-      appId: "1:306455007306:web:f6fbe465c0b039127016b3"
-    };
+    // Firebase-Konfiguration wird aus config.js geladen
+    const firebaseConfig = window.firebaseConfig;
     
     // Firebase initialisieren
     const app = initializeApp(firebaseConfig);
@@ -161,3 +155,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
