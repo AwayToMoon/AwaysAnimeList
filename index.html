@@ -3,11 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aways Anime List</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <title>Aways Anime List</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    
+    // Firebase-Konfiguration (wird später ausgefüllt)
+    const firebaseConfig = {
+      apiKey: "AIzaSyABddVmY4XpKA-PJ9dgexTRiufjRHBHVpc",
+      authDomain: "awaysanimelist.firebaseapp.com",
+      projectId: "awaysanimelist",
+      storageBucket: "awaysanimelist.firebasestorage.app",
+      messagingSenderId: "306455007306",
+      appId: "1:306455007306:web:f6fbe465c0b039127016b3"
+    };
+    
+    // Firebase initialisieren
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    // Globale Firebase-Funktionen verfügbar machen
+    window.firebase = {
+      db,
+      collection,
+      doc,
+      getDocs,
+      addDoc,
+      updateDoc,
+      deleteDoc,
+      onSnapshot,
+      query,
+      orderBy
+    };
+  </script>
 </head>
 <body>
   <div class="app">
