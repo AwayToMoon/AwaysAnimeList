@@ -508,12 +508,12 @@ body:not(.is-admin) .cover-edit {
 }
 
 /* Hide all action buttons except details for non-admin users */
-body:not(.is-admin) .actions .btn:not(.primary) {
+body:not(.is-admin) .actions .btn:not(.link) {
   display: none;
 }
 
-/* Ensure details button (primary) is always visible for non-admin */
-body:not(.is-admin) .actions .btn.primary {
+/* Ensure details button (link) is always visible for non-admin */
+body:not(.is-admin) .actions .btn.link {
   display: inline-flex;
   pointer-events: auto;
   opacity: 1;
