@@ -557,6 +557,28 @@ body.is-admin .actions .btn.link {
 
 .btn.admin{border:1px solid var(--border);background:var(--card)}
 
+.btn.backup{
+  background:linear-gradient(135deg, #10b981, #059669);
+  color:#fff;
+  box-shadow:0 8px 26px rgba(16,185,129,0.35);
+}
+
+.btn.backup:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(16,185,129,0.5);
+}
+
+.btn.restore{
+  background:linear-gradient(135deg, #f59e0b, #d97706);
+  color:#fff;
+  box-shadow:0 8px 26px rgba(245,158,11,0.35);
+}
+
+.btn.restore:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(245,158,11,0.5);
+}
+
 @media (max-width:560px){
   .field-group{flex-direction:column;align-items:stretch}
   .actions{flex-direction:column}
