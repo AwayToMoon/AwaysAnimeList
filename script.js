@@ -22,10 +22,7 @@ const watchedCount = document.getElementById('watched-count');
 const planCount = document.getElementById('plan-count');
 const waitingCount = document.getElementById('waiting-count');
 
-// Obfuscated password - not easily readable in source code
-// To change password: replace 'admin123' with your desired password
-// The password is base64 encoded and reversed to make it harder to read
-const ADMIN_PASSWORD = btoa('9966').split('').reverse().join('');
+// Admin password is now stored securely in Firebase (hashed)
 
 // Modal elements
 const editModal = document.getElementById('edit-modal');
@@ -89,18 +86,42 @@ function closeAdminModal() {
   adminPassword.value = '';
 }
 
-function loginAdmin() {
+async function loginAdmin() {
   const pwd = adminPassword.value.trim();
-  // Decode the obfuscated password for comparison
-  const decodedPassword = atob(ADMIN_PASSWORD.split('').reverse().join(''));
-  const ok = pwd === decodedPassword;
-  if (ok) {
-    localStorage.setItem('animes-is-admin', 'true');
-    setAdminUI(true);
-    closeAdminModal();
-    setMessage('Als Admin angemeldet.', 'success');
-  } else {
-    setMessage('Falsches Passwort.', 'error');
+  
+  if (!pwd) {
+    setMessage('Bitte geben Sie ein Passwort ein', 'error');
+    return;
+  }
+  
+  try {
+    const isValid = await checkAdminPassword(pwd);
+    if (isValid) {
+      localStorage.setItem('animes-is-admin', 'true');
+      setAdminUI(true);
+      closeAdminModal();
+      setMessage('Als Admin angemeldet.', 'success');
+    } else {
+      setMessage('Falsches Passwort.', 'error');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    setMessage('Fehler beim Login', 'error');
+  }
+}
+
+async function checkAdminPassword(inputPassword) {
+  try {
+    const doc = await window.db.collection("settings").doc("admin").get();
+    if (doc.exists) {
+      const data = doc.data();
+      const hashedInput = CryptoJS.SHA256(inputPassword).toString();
+      return hashedInput === data.passwordHash;
+    }
+    return false;
+  } catch (error) {
+    console.error("Error checking password:", error);
+    return false;
   }
 }
 
