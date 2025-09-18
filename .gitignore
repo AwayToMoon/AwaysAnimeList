@@ -1,5 +1,5 @@
 # Firebase-Konfiguration (sensible Daten)
-# config.js - wird manuell auf GitHub hochgeladen
+config.local.js
 
 # Node.js
 node_modules/
