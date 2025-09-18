@@ -246,6 +246,7 @@ body::before {
   background:transparent;
   border-color:var(--border);
   color:var(--muted);
+  text-decoration:none;
 }
 
 .btn.link:hover{
@@ -473,6 +474,12 @@ body::before {
 .modal-form{
   flex:1;display:flex;flex-direction:column;gap:16px
 }
+
+.modal-field{
+  display:flex;
+  flex-direction:column;
+  gap:8px
+}
 .modal-form label{
   font-weight:600;color:var(--text);margin-bottom:4px
 }
@@ -524,6 +531,7 @@ body:not(.is-admin) .actions .btn.link {
   display: inline-flex;
   pointer-events: auto;
   opacity: 1;
+  text-decoration: none;
 }
 
 .btn.admin{border:1px solid var(--border);background:var(--card)}
