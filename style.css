@@ -502,6 +502,11 @@ body:not(.is-admin) .actions .btn.secondary {
   opacity:0.5;
 }
 
+/* Hide edit button (pencil) for non-admin users */
+body:not(.is-admin) .cover-edit {
+  display: none;
+}
+
 /* Hide all action buttons except details for non-admin users */
 body:not(.is-admin) .actions .btn:not(.primary) {
   display: none;
