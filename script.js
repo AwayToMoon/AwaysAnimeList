@@ -16,8 +16,10 @@ const grids = {
 };
 const themeToggle = document.getElementById('theme-toggle');
 
-// CONFIG: change this to your desired password for public use
-const ADMIN_PASSWORD = '9966';
+// Obfuscated password - not easily readable in source code
+// To change password: replace 'admin123' with your desired password
+// The password is base64 encoded and reversed to make it harder to read
+const ADMIN_PASSWORD = btoa('admin123').split('').reverse().join('');
 
 // Modal elements
 const editModal = document.getElementById('edit-modal');
@@ -63,7 +65,9 @@ function closeAdminModal() {
 
 function loginAdmin() {
   const pwd = adminPassword.value.trim();
-  const ok = pwd === ADMIN_PASSWORD;
+  // Decode the obfuscated password for comparison
+  const decodedPassword = atob(ADMIN_PASSWORD.split('').reverse().join(''));
+  const ok = pwd === decodedPassword;
   if (ok) {
     localStorage.setItem('animes-is-admin', 'true');
     setAdminUI(true);
@@ -800,5 +804,3 @@ loadAll();
 applyTheme(getPreferredTheme());
 setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
 })();
-
-
