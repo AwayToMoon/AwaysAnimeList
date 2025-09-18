@@ -502,6 +502,18 @@ body:not(.is-admin) .actions .btn.secondary {
   opacity:0.5;
 }
 
+/* Hide all action buttons except details for non-admin users */
+body:not(.is-admin) .actions .btn:not(.primary) {
+  display: none;
+}
+
+/* Ensure details button (primary) is always visible for non-admin */
+body:not(.is-admin) .actions .btn.primary {
+  display: inline-flex;
+  pointer-events: auto;
+  opacity: 1;
+}
+
 .btn.admin{border:1px solid var(--border);background:var(--card)}
 
 @media (max-width:560px){
@@ -511,5 +523,3 @@ body:not(.is-admin) .actions .btn.secondary {
   .modal-cover-image{width:100px;height:133px}
   .modal-actions{justify-content:center}
 }
-
-
