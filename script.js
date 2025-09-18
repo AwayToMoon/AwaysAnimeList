@@ -31,6 +31,7 @@ const ADMIN_PASSWORD = btoa('9966').split('').reverse().join('');
 const editModal = document.getElementById('edit-modal');
 const modalCoverImg = document.getElementById('modal-cover-img');
 const modalTitleInput = document.getElementById('modal-title-input');
+const modalLinkInput = document.getElementById('modal-link-input');
 const modalClose = document.querySelector('.modal-close');
 const modalCancel = document.getElementById('modal-cancel');
 const modalSave = document.getElementById('modal-save');
@@ -553,9 +554,13 @@ function createCard(anime, listKey) {
     const titleEl = card.querySelector('.title');
     const currentTitle = titleEl?.textContent || '';
     const coverSrc = img.src || '';
+    const linkEl = card.querySelector('a');
+    const currentLink = linkEl?.href || '';
+    
     modalCoverImg.src = coverSrc;
     modalCoverImg.alt = currentTitle;
     modalTitleInput.value = currentTitle;
+    modalLinkInput.value = currentLink;
     editModal.style.display = 'flex';
     modalTitleInput.focus();
     modalTitleInput.select();
@@ -778,22 +783,40 @@ if (themeToggle) {
 function closeModal() {
   editModal.style.display = 'none';
   modalTitleInput.value = '';
+  modalLinkInput.value = '';
   editModal.dataset.cardId = '';
 }
 
 function saveTitle() {
   const cardId = editModal.dataset.cardId;
   const newTitle = modalTitleInput.value.trim();
+  const newLink = modalLinkInput.value.trim();
   if (!newTitle) return;
+  
   const allCards = document.querySelectorAll('.card');
   for (const card of allCards) {
     if (card.dataset.id === cardId) {
+      // Update title
       const titleEl = card.querySelector('.title');
       if (titleEl && newTitle !== titleEl.textContent) {
         titleEl.textContent = newTitle;
-        saveAll();
-        setMessage('Titel geändert.', 'success');
       }
+      
+      // Update link
+      const linkEl = card.querySelector('a');
+      if (linkEl) {
+        if (newLink) {
+          linkEl.href = newLink;
+          linkEl.onclick = null; // Remove any preventDefault
+        } else {
+          // If no link provided, disable the link
+          linkEl.href = '#';
+          linkEl.onclick = (e) => e.preventDefault();
+        }
+      }
+      
+      saveAll();
+      setMessage('Anime bearbeitet.', 'success');
       break;
     }
   }
