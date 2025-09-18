@@ -113,8 +113,14 @@
       </div>
       <div class="modal-body">
         <div class="modal-form" style="width:100%">
-          <label for="admin-password">Passwort:</label>
-          <input type="password" id="admin-password" placeholder="Admin-Passwort">
+          <div class="modal-field">
+            <label for="admin-email">E-Mail:</label>
+            <input type="email" id="admin-email" placeholder="admin@example.com">
+          </div>
+          <div class="modal-field">
+            <label for="admin-password">Passwort:</label>
+            <input type="password" id="admin-password" placeholder="Admin-Passwort">
+          </div>
           <div class="modal-actions">
             <button type="button" class="btn secondary" id="admin-cancel">Abbrechen</button>
             <button type="button" class="btn primary" id="admin-login">Anmelden</button>
@@ -124,6 +130,31 @@
     </div>
   </div>
 
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, doc, setDoc, getDocs, onSnapshot, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+  apiKey: "AIzaSyABddVmY4XpKA-PJ9dgexTRiufjRHBHVpc",
+  authDomain: "awaysanimelist.firebaseapp.com",
+  projectId: "awaysanimelist",
+  storageBucket: "awaysanimelist.firebasestorage.app",
+  messagingSenderId: "306455007306",
+  appId: "1:306455007306:web:f6fbe465c0b039127016b3",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Make Firebase available globally
+    window.firebase = { db, auth, collection, doc, setDoc, getDocs, onSnapshot, deleteDoc, query, orderBy, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
