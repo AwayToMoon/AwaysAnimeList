@@ -648,15 +648,39 @@ function createCard(anime, listKey) {
 
 function addAnimeToList(anime, listKey) {
   const card = createCard(anime, listKey);
-  grids[listKey].prepend(card);
   
-  // Animate the new card
+  // Insert card in alphabetical order
+  insertCardAlphabetically(card, listKey);
+  
+  // Re-animate all cards
   const allCards = grids[listKey].querySelectorAll('.card');
   allCards.forEach((card, index) => {
     card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
   });
   
   updateStats();
+}
+
+function insertCardAlphabetically(card, listKey) {
+  const title = card.querySelector('.title')?.textContent || '';
+  const existingCards = Array.from(grids[listKey].children);
+  
+  // Find the correct position
+  let insertIndex = existingCards.length;
+  for (let i = 0; i < existingCards.length; i++) {
+    const existingTitle = existingCards[i].querySelector('.title')?.textContent || '';
+    if (title.toLowerCase() < existingTitle.toLowerCase()) {
+      insertIndex = i;
+      break;
+    }
+  }
+  
+  // Insert at the correct position
+  if (insertIndex === existingCards.length) {
+    grids[listKey].appendChild(card);
+  } else {
+    grids[listKey].insertBefore(card, existingCards[insertIndex]);
+  }
 }
 
 function moveCard(card, targetList) {
@@ -667,7 +691,10 @@ function moveCard(card, targetList) {
   const cover = card.querySelector('img')?.src || '';
   const url = card.querySelector('a')?.href || '';
   const anime = { id: Number(card.dataset.id) || 0, title, image: cover, url };
-  grids[targetList].prepend(card);
+  
+  // Remove from current list and insert alphabetically in target list
+  card.remove();
+  insertCardAlphabetically(card, targetList);
   
   // Re-animate all cards in the target list
   const allCards = grids[targetList].querySelectorAll('.card');
@@ -747,7 +774,11 @@ function loadAll() {
     if (!raw) return;
     const data = JSON.parse(raw);
     ['plan', 'watched', 'waiting'].forEach(key => {
-      (data[key] || []).forEach(item => addAnimeToList(item, key));
+      // Sort animes alphabetically before adding them
+      const sortedAnimes = (data[key] || []).sort((a, b) => 
+        a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+      );
+      sortedAnimes.forEach(item => addAnimeToList(item, key));
     });
   } catch (_) {
     // ignore
@@ -813,6 +844,8 @@ function saveTitle() {
   const allCards = document.querySelectorAll('.card');
   for (const card of allCards) {
     if (card.dataset.id === cardId) {
+      const oldTitle = card.querySelector('.title')?.textContent || '';
+      
       // Update title
       const titleEl = card.querySelector('.title');
       if (titleEl && newTitle !== titleEl.textContent) {
@@ -830,6 +863,19 @@ function saveTitle() {
           linkEl.href = '#';
           linkEl.onclick = (e) => e.preventDefault();
         }
+      }
+      
+      // Re-sort if title changed
+      if (newTitle !== oldTitle) {
+        const listKey = card.dataset.list;
+        card.remove();
+        insertCardAlphabetically(card, listKey);
+        
+        // Re-animate all cards in the list
+        const allCardsInList = grids[listKey].querySelectorAll('.card');
+        allCardsInList.forEach((card, index) => {
+          card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
+        });
       }
       
       saveAll();
