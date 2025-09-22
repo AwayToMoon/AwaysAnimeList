@@ -597,7 +597,7 @@ body:not(.is-admin) .move-dropdown-container {
   display: none;
 }
 
-/* Live Status Section */
+/* Live Status Section - Visible for all users */
 .live-status {
   position: fixed;
   top: 20px;
