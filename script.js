@@ -81,8 +81,14 @@ function setLiveAnime(anime) {
   console.log('Live anime set:', anime.title);
 }
 
-function getCurrentLiveAnime() {
-  // Look for anime with data-live="true" attribute in any list
+async function getCurrentLiveAnime() {
+  // First try to get from Firebase
+  const firebaseLive = await getFirebaseLiveStatus();
+  if (firebaseLive) {
+    return firebaseLive;
+  }
+  
+  // Fallback: Look for anime with data-live="true" attribute in any list
   const allCards = document.querySelectorAll('.card[data-live="true"]');
   
   if (allCards.length > 0) {
@@ -97,8 +103,8 @@ function getCurrentLiveAnime() {
   return null;
 }
 
-function updateLiveStatus() {
-  const liveAnime = getCurrentLiveAnime();
+async function updateLiveStatus() {
+  const liveAnime = await getCurrentLiveAnime();
   setLiveAnime(liveAnime);
   
   // Ensure live status is visible for all users
@@ -107,11 +113,12 @@ function updateLiveStatus() {
   }
 }
 
-function toggleLiveStatus(card) {
+async function toggleLiveStatus(card) {
   const isLive = card.dataset.live === 'true';
   
   if (isLive) {
     // Remove live status
+    await setFirebaseLiveStatus(null);
     card.dataset.live = 'false';
     card.classList.remove('live-card');
     const liveBtn = card.querySelector('.cover-live');
@@ -133,6 +140,14 @@ function toggleLiveStatus(card) {
     });
     
     // Set this card as live
+    const liveAnime = {
+      id: Number(card.dataset.id) || 0,
+      title: card.querySelector('.title')?.textContent || '',
+      image: card.querySelector('img')?.src || '',
+      url: card.querySelector('a')?.href || ''
+    };
+    
+    await setFirebaseLiveStatus(liveAnime);
     card.dataset.live = 'true';
     card.classList.add('live-card');
     const liveBtn = card.querySelector('.cover-live');
@@ -144,7 +159,6 @@ function toggleLiveStatus(card) {
   }
   
   updateLiveStatus();
-  saveAll();
 }
 
 function setAdminUI(isAdmin) {
@@ -223,7 +237,7 @@ function toggleAdmin() {
   if (isAdmin) logoutAdmin(); else openAdminModal();
 }
 
-function switchTab(key) {
+async function switchTab(key) {
   tabs.forEach(btn => {
     const active = btn.dataset.tab === key;
     btn.classList.toggle('active', active);
@@ -248,7 +262,7 @@ function switchTab(key) {
   });
   
   // Update live status when switching tabs
-  updateLiveStatus();
+  await updateLiveStatus();
 }
 
 tabs.forEach(btn => {
@@ -761,7 +775,7 @@ function createCard(anime, listKey) {
   });
   
   // Add change event listener
-  moveSelect.addEventListener('change', (e) => {
+  moveSelect.addEventListener('change', async (e) => {
     if (localStorage.getItem('animes-is-admin') !== 'true') {
       setMessage('Nur Admins können verschieben.', 'error');
       moveSelect.value = ''; // Reset selection
@@ -769,7 +783,7 @@ function createCard(anime, listKey) {
     }
     const targetList = e.target.value;
     if (targetList && targetList !== listKey) {
-      moveCard(card, targetList);
+      await moveCard(card, targetList);
       // Reset dropdown after move
       moveSelect.value = '';
     }
@@ -782,12 +796,12 @@ function createCard(anime, listKey) {
   delBtn.className = 'btn danger';
   delBtn.textContent = '🗑️';
   delBtn.title = 'Löschen';
-  delBtn.addEventListener('click', () => {
+  delBtn.addEventListener('click', async () => {
     if (localStorage.getItem('animes-is-admin') !== 'true') {
       setMessage('Nur Admins können löschen.', 'error');
       return;
     }
-    deleteCard(card);
+    await deleteCard(card);
   });
 
   actions.appendChild(link);
@@ -838,7 +852,7 @@ function insertCardAlphabetically(card, listKey) {
   }
 }
 
-function moveCard(card, targetList) {
+async function moveCard(card, targetList) {
   const current = card.dataset.list;
   if (current === targetList) return;
   
@@ -872,7 +886,7 @@ function moveCard(card, targetList) {
   };
   setMessage(`Verschoben nach "${listNames[targetList]}": ${title}`, 'success');
   updateStats();
-  updateLiveStatus();
+  await updateLiveStatus();
   saveAll();
 }
 
@@ -900,12 +914,12 @@ function updateCardDropdown(card, currentList) {
   });
 }
 
-function deleteCard(card) {
+async function deleteCard(card) {
   const title = card.querySelector('.title')?.textContent || '';
   card.remove();
   setMessage(`Gelöscht: ${title}`, 'success');
   updateStats();
-  updateLiveStatus();
+  await updateLiveStatus();
   saveAll();
 }
 
@@ -971,6 +985,36 @@ async function syncToFirebase(data) {
   } catch (error) {
     console.error('Firebase sync failed:', error);
   }
+}
+
+// Firebase Live Status functions
+async function setFirebaseLiveStatus(liveAnime) {
+  try {
+    if (window.db) {
+      await window.db.collection('liveStatus').doc('current').set({
+        liveAnime: liveAnime,
+        timestamp: new Date().toISOString()
+      });
+      console.log('Live status saved to Firebase:', liveAnime?.title || 'null');
+    }
+  } catch (error) {
+    console.error('Firebase live status save failed:', error);
+  }
+}
+
+async function getFirebaseLiveStatus() {
+  try {
+    if (window.db) {
+      const doc = await window.db.collection('liveStatus').doc('current').get();
+      if (doc.exists) {
+        const data = doc.data();
+        return data.liveAnime || null;
+      }
+    }
+  } catch (error) {
+    console.error('Firebase live status load failed:', error);
+  }
+  return null;
 }
 
 async function loadFromFirebase() {
@@ -1072,6 +1116,8 @@ async function loadAll() {
       const firebaseData = await loadFromFirebase();
       if (firebaseData) {
         loadFirebaseData(firebaseData);
+        // Load live status from Firebase
+        await loadFirebaseLiveStatus();
         return;
       }
     }
@@ -1087,8 +1133,37 @@ async function loadAll() {
       );
       sortedAnimes.forEach(item => addAnimeToList(item, key));
     });
+    
+    // Load live status from Firebase even if using local storage
+    await loadFirebaseLiveStatus();
   } catch (_) {
     // ignore
+  }
+}
+
+async function loadFirebaseLiveStatus() {
+  try {
+    const liveAnime = await getFirebaseLiveStatus();
+    if (liveAnime) {
+      // Find the corresponding card and mark it as live
+      const allCards = document.querySelectorAll('.card');
+      for (const card of allCards) {
+        const cardTitle = card.querySelector('.title')?.textContent || '';
+        if (cardTitle === liveAnime.title) {
+          card.dataset.live = 'true';
+          card.classList.add('live-card');
+          const liveBtn = card.querySelector('.cover-live');
+          if (liveBtn) {
+            liveBtn.textContent = '⏸️';
+            liveBtn.title = 'Live-Status entfernen';
+          }
+          break;
+        }
+      }
+      setLiveAnime(liveAnime);
+    }
+  } catch (error) {
+    console.error('Error loading Firebase live status:', error);
   }
 }
 
@@ -1262,10 +1337,10 @@ if (restoreCancel) restoreCancel.addEventListener('click', closeRestoreModal);
 if (restoreConfirm) restoreConfirm.addEventListener('click', restoreFromBackup);
 
 // Init
-switchTab('plan');
-loadAll().then(() => {
+loadAll().then(async () => {
   updateStats();
-  updateLiveStatus(); // Always update live status for all users
+  await updateLiveStatus(); // Always update live status for all users
+  await switchTab('plan');
 });
 applyTheme(getPreferredTheme());
 setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
