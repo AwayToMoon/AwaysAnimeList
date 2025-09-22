@@ -22,6 +22,11 @@ const watchedCount = document.getElementById('watched-count');
 const planCount = document.getElementById('plan-count');
 const waitingCount = document.getElementById('waiting-count');
 
+// Live status elements
+const liveStatus = document.getElementById('live-status');
+const liveCover = document.getElementById('live-cover');
+const liveTitle = document.getElementById('live-title');
+
 // Admin password is now stored securely in Firebase (hashed)
 
 // Modal elements
@@ -58,6 +63,80 @@ function setMessage(text, type = 'info') {
   message.textContent = text;
   message.className = type;
   if (!text) message.removeAttribute('class');
+}
+
+// Live status functions
+function setLiveAnime(anime) {
+  if (!anime) {
+    liveStatus.style.display = 'none';
+    return;
+  }
+  
+  liveCover.src = anime.image || '';
+  liveCover.alt = anime.title || '';
+  liveTitle.textContent = anime.title || '';
+  liveStatus.style.display = 'flex';
+}
+
+function getCurrentLiveAnime() {
+  // Look for anime with data-live="true" attribute in any list
+  const allCards = document.querySelectorAll('.card[data-live="true"]');
+  
+  if (allCards.length > 0) {
+    const card = allCards[0];
+    return {
+      title: card.querySelector('.title')?.textContent || '',
+      image: card.querySelector('img')?.src || '',
+      url: card.querySelector('a')?.href || ''
+    };
+  }
+  
+  return null;
+}
+
+function updateLiveStatus() {
+  const liveAnime = getCurrentLiveAnime();
+  setLiveAnime(liveAnime);
+}
+
+function toggleLiveStatus(card) {
+  const isLive = card.dataset.live === 'true';
+  
+  if (isLive) {
+    // Remove live status
+    card.dataset.live = 'false';
+    card.classList.remove('live-card');
+    const liveBtn = card.querySelector('.cover-live');
+    if (liveBtn) {
+      liveBtn.textContent = '▶️';
+      liveBtn.title = 'Als Live markieren';
+    }
+    setMessage('Live-Status entfernt', 'success');
+  } else {
+    // Remove live status from all other cards first
+    document.querySelectorAll('.card[data-live="true"]').forEach(otherCard => {
+      otherCard.dataset.live = 'false';
+      otherCard.classList.remove('live-card');
+      const otherLiveBtn = otherCard.querySelector('.cover-live');
+      if (otherLiveBtn) {
+        otherLiveBtn.textContent = '▶️';
+        otherLiveBtn.title = 'Als Live markieren';
+      }
+    });
+    
+    // Set this card as live
+    card.dataset.live = 'true';
+    card.classList.add('live-card');
+    const liveBtn = card.querySelector('.cover-live');
+    if (liveBtn) {
+      liveBtn.textContent = '⏸️';
+      liveBtn.title = 'Live-Status entfernen';
+    }
+    setMessage('Als Live markiert', 'success');
+  }
+  
+  updateLiveStatus();
+  saveAll();
 }
 
 function setAdminUI(isAdmin) {
@@ -607,8 +686,22 @@ function createCard(anime, listKey) {
     editModal.dataset.cardId = card.dataset.id;
   });
 
+  const liveBtn = document.createElement('button');
+  liveBtn.type = 'button';
+  liveBtn.className = 'cover-live';
+  liveBtn.title = 'Als Live markieren';
+  liveBtn.textContent = '▶️';
+  liveBtn.addEventListener('click', () => {
+    if (localStorage.getItem('animes-is-admin') !== 'true') {
+      setMessage('Nur Admins können Live-Status ändern.', 'error');
+      return;
+    }
+    toggleLiveStatus(card);
+  });
+
   coverWrap.appendChild(img);
   coverWrap.appendChild(editBtn);
+  coverWrap.appendChild(liveBtn);
 
   const titleEl = document.createElement('h3');
   titleEl.className = 'title';
@@ -632,25 +725,46 @@ function createCard(anime, listKey) {
     link.innerHTML = '🔗 ZUM ANIME';
   }
 
-  const moveBtn = document.createElement('button');
-  moveBtn.type = 'button';
-  moveBtn.className = 'btn secondary';
-  moveBtn.textContent = listKey === 'plan' ? '✅' : listKey === 'watched' ? '⏳' : '📋';
-  moveBtn.title = listKey === 'plan' ? 'Als gesehen markieren' : listKey === 'watched' ? 'Warten auf Fortsetzung' : 'Zur Liste hinzufügen';
-  moveBtn.addEventListener('click', () => {
+  // Create dropdown container
+  const moveContainer = document.createElement('div');
+  moveContainer.className = 'move-dropdown-container';
+  
+  const moveSelect = document.createElement('select');
+  moveSelect.className = 'move-dropdown';
+  moveSelect.title = 'Anime in andere Liste verschieben';
+  
+  // Add options for all lists except current one
+  const listOptions = [
+    { value: 'plan', text: '📋 Noch anschauen', icon: '📋' },
+    { value: 'watched', text: '✅ Fertig geschaut', icon: '✅' },
+    { value: 'waiting', text: '⏳ Warten auf Fortsetzung', icon: '⏳' }
+  ];
+  
+  listOptions.forEach(option => {
+    if (option.value !== listKey) {
+      const optionEl = document.createElement('option');
+      optionEl.value = option.value;
+      optionEl.textContent = option.text;
+      moveSelect.appendChild(optionEl);
+    }
+  });
+  
+  // Add change event listener
+  moveSelect.addEventListener('change', (e) => {
     if (localStorage.getItem('animes-is-admin') !== 'true') {
       setMessage('Nur Admins können verschieben.', 'error');
+      moveSelect.value = ''; // Reset selection
       return;
     }
-    const current = card.dataset.list;
-    let target;
-    if (current === 'plan') target = 'watched';
-    else if (current === 'watched') target = 'waiting';
-    else target = 'plan';
-    moveCard(card, target);
-    moveBtn.textContent = target === 'plan' ? '✅' : target === 'watched' ? '⏳' : '📋';
-    moveBtn.title = target === 'plan' ? 'Als gesehen markieren' : target === 'watched' ? 'Warten auf Fortsetzung' : 'Zur Liste hinzufügen';
+    const targetList = e.target.value;
+    if (targetList && targetList !== listKey) {
+      moveCard(card, targetList);
+      // Reset dropdown after move
+      moveSelect.value = '';
+    }
   });
+  
+  moveContainer.appendChild(moveSelect);
 
   const delBtn = document.createElement('button');
   delBtn.type = 'button';
@@ -666,7 +780,7 @@ function createCard(anime, listKey) {
   });
 
   actions.appendChild(link);
-  actions.appendChild(moveBtn);
+  actions.appendChild(moveContainer);
   actions.appendChild(delBtn);
 
   card.appendChild(coverWrap);
@@ -716,14 +830,22 @@ function insertCardAlphabetically(card, listKey) {
 function moveCard(card, targetList) {
   const current = card.dataset.list;
   if (current === targetList) return;
-  card.dataset.list = targetList;
+  
   const title = card.querySelector('.title')?.textContent || '';
   const cover = card.querySelector('img')?.src || '';
   const url = card.querySelector('a')?.href || '';
   const anime = { id: Number(card.dataset.id) || 0, title, image: cover, url };
   
-  // Remove from current list and insert alphabetically in target list
+  // Remove from current list
   card.remove();
+  
+  // Update the card's list attribute
+  card.dataset.list = targetList;
+  
+  // Update the dropdown options for the new list
+  updateCardDropdown(card, targetList);
+  
+  // Insert alphabetically in target list
   insertCardAlphabetically(card, targetList);
   
   // Re-animate all cards in the target list
@@ -739,7 +861,32 @@ function moveCard(card, targetList) {
   };
   setMessage(`Verschoben nach "${listNames[targetList]}": ${title}`, 'success');
   updateStats();
+  updateLiveStatus();
   saveAll();
+}
+
+function updateCardDropdown(card, currentList) {
+  const dropdown = card.querySelector('.move-dropdown');
+  if (!dropdown) return;
+  
+  // Clear existing options
+  dropdown.innerHTML = '';
+  
+  // Add options for all lists except current one
+  const listOptions = [
+    { value: 'plan', text: '📋 Noch anschauen' },
+    { value: 'watched', text: '✅ Fertig geschaut' },
+    { value: 'waiting', text: '⏳ Warten auf Fortsetzung' }
+  ];
+  
+  listOptions.forEach(option => {
+    if (option.value !== currentList) {
+      const optionEl = document.createElement('option');
+      optionEl.value = option.value;
+      optionEl.textContent = option.text;
+      dropdown.appendChild(optionEl);
+    }
+  });
 }
 
 function deleteCard(card) {
@@ -747,6 +894,7 @@ function deleteCard(card) {
   card.remove();
   setMessage(`Gelöscht: ${title}`, 'success');
   updateStats();
+  updateLiveStatus();
   saveAll();
 }
 
@@ -1106,6 +1254,7 @@ if (restoreConfirm) restoreConfirm.addEventListener('click', restoreFromBackup);
 switchTab('plan');
 loadAll().then(() => {
   updateStats();
+  updateLiveStatus();
 });
 applyTheme(getPreferredTheme());
 setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
