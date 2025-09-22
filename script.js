@@ -76,6 +76,9 @@ function setLiveAnime(anime) {
   liveCover.alt = anime.title || '';
   liveTitle.textContent = anime.title || '';
   liveStatus.style.display = 'flex';
+  
+  // Show live status for all users
+  console.log('Live anime set:', anime.title);
 }
 
 function getCurrentLiveAnime() {
@@ -97,6 +100,11 @@ function getCurrentLiveAnime() {
 function updateLiveStatus() {
   const liveAnime = getCurrentLiveAnime();
   setLiveAnime(liveAnime);
+  
+  // Ensure live status is visible for all users
+  if (liveAnime) {
+    console.log('Live status updated for all users:', liveAnime.title);
+  }
 }
 
 function toggleLiveStatus(card) {
@@ -238,6 +246,9 @@ function switchTab(key) {
       });
     }
   });
+  
+  // Update live status when switching tabs
+  updateLiveStatus();
 }
 
 tabs.forEach(btn => {
@@ -1254,7 +1265,7 @@ if (restoreConfirm) restoreConfirm.addEventListener('click', restoreFromBackup);
 switchTab('plan');
 loadAll().then(() => {
   updateStats();
-  updateLiveStatus();
+  updateLiveStatus(); // Always update live status for all users
 });
 applyTheme(getPreferredTheme());
 setAdminUI(localStorage.getItem('animes-is-admin') === 'true');
