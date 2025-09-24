@@ -55,6 +55,19 @@ const backupFile = document.getElementById('backup-file');
 const restoreCancel = document.getElementById('restore-cancel');
 const restoreConfirm = document.getElementById('restore-confirm');
 
+// Termin elements
+const terminModal = document.getElementById('termin-modal');
+const terminClose = document.querySelector('[data-close-termin]');
+const terminType = document.getElementById('termin-type');
+const terminDate = document.getElementById('termin-date');
+const terminTime = document.getElementById('termin-time');
+const terminNote = document.getElementById('termin-note');
+const terminCancel = document.getElementById('termin-cancel');
+const terminSave = document.getElementById('termin-save');
+const terminRemove = document.getElementById('termin-remove');
+const dateFields = document.getElementById('date-fields');
+const timeField = document.getElementById('time-field');
+
 const API_BASE = 'https://api.jikan.moe/v4';
 const ANILIST_API = 'https://graphql.anilist.co';
 const ANISEARCH_API = 'https://api.anisearch.com';
@@ -724,13 +737,74 @@ function createCard(anime, listKey) {
     toggleLiveStatus(card);
   });
 
+  // Termin Button - nur für "waiting" Liste
+  const terminBtn = document.createElement('button');
+  terminBtn.type = 'button';
+  terminBtn.className = 'cover-termin';
+  terminBtn.title = 'Termin für Fortsetzung setzen';
+  terminBtn.textContent = '📅';
+  terminBtn.addEventListener('click', () => {
+    if (localStorage.getItem('animes-is-admin') !== 'true') {
+      setMessage('Nur Admins können Termine setzen.', 'error');
+      return;
+    }
+    openTerminModal(card);
+  });
+
   coverWrap.appendChild(img);
   coverWrap.appendChild(editBtn);
   coverWrap.appendChild(liveBtn);
+  if (listKey === 'waiting') {
+    coverWrap.appendChild(terminBtn);
+  }
 
   const titleEl = document.createElement('h3');
   titleEl.className = 'title';
   titleEl.textContent = anime.title;
+
+  // Termin Display - nur für "waiting" Liste
+  if (listKey === 'waiting' && anime.termin) {
+    const terminDisplay = document.createElement('div');
+    terminDisplay.className = 'termin-display';
+    
+    const terminDateEl = document.createElement('div');
+    terminDateEl.className = 'termin-date';
+    terminDateEl.textContent = formatTerminDate(anime.termin.date, anime.termin.type === 'tba');
+    
+    terminDisplay.appendChild(terminDateEl);
+    
+    if (anime.termin.time && anime.termin.type === 'date') {
+      const terminTimeEl = document.createElement('div');
+      terminTimeEl.className = 'termin-time';
+      terminTimeEl.textContent = `⏰ ${anime.termin.time}`;
+      terminDisplay.appendChild(terminTimeEl);
+    }
+    
+    if (anime.termin.note) {
+      const terminNoteEl = document.createElement('div');
+      terminNoteEl.className = 'termin-note';
+      terminNoteEl.textContent = anime.termin.note;
+      terminDisplay.appendChild(terminNoteEl);
+    }
+    
+    // Set status class based on type and date
+    if (anime.termin.type === 'tba') {
+      terminDisplay.classList.add('tba');
+    } else {
+      const today = new Date().toDateString();
+      const terminDate = new Date(anime.termin.date).toDateString();
+      
+      if (terminDate === today) {
+        terminDisplay.classList.add('today');
+      } else if (new Date(anime.termin.date) < new Date()) {
+        terminDisplay.classList.add('overdue');
+      } else {
+        terminDisplay.classList.add('upcoming');
+      }
+    }
+    
+    card.appendChild(terminDisplay);
+  }
 
   const actions = document.createElement('div');
   actions.className = 'actions';
@@ -817,6 +891,12 @@ function createCard(anime, listKey) {
 
 function addAnimeToList(anime, listKey) {
   const card = createCard(anime, listKey);
+  
+  // Load termin data if it exists
+  if (anime.termin) {
+    card.dataset.termin = JSON.stringify(anime.termin);
+    updateTerminDisplay(card, anime.termin);
+  }
   
   // Insert card in alphabetical order
   insertCardAlphabetically(card, listKey);
@@ -914,6 +994,197 @@ function updateCardDropdown(card, currentList) {
   });
 }
 
+// Termin Functions
+function formatTerminDate(dateString, isTBA = false) {
+  if (isTBA) {
+    return 'TBA (To Be Announced)';
+  }
+  
+  const date = new Date(dateString);
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  const dateStr = date.toDateString();
+  const todayStr = today.toDateString();
+  const tomorrowStr = tomorrow.toDateString();
+  
+  if (dateStr === todayStr) {
+    return 'Heute';
+  } else if (dateStr === tomorrowStr) {
+    return 'Morgen';
+  } else {
+    return date.toLocaleDateString('de-DE', { 
+      weekday: 'short', 
+      day: '2-digit', 
+      month: '2-digit',
+      year: '2-digit'
+    });
+  }
+}
+
+function openTerminModal(card) {
+  const currentTermin = card.dataset.termin ? JSON.parse(card.dataset.termin) : null;
+  
+  if (currentTermin) {
+    terminType.value = currentTermin.type || 'date';
+    terminDate.value = currentTermin.date || '';
+    terminTime.value = currentTermin.time || '';
+    terminNote.value = currentTermin.note || '';
+    terminRemove.style.display = 'inline-block';
+  } else {
+    terminType.value = 'date';
+    terminDate.value = '';
+    terminTime.value = '';
+    terminNote.value = '';
+    terminRemove.style.display = 'none';
+  }
+  
+  // Update field visibility based on type
+  updateTerminFieldsVisibility();
+  
+  terminModal.style.display = 'flex';
+  terminModal.dataset.cardId = card.dataset.id;
+  terminDate.focus();
+}
+
+function closeTerminModal() {
+  terminModal.style.display = 'none';
+  terminType.value = 'date';
+  terminDate.value = '';
+  terminTime.value = '';
+  terminNote.value = '';
+  terminModal.dataset.cardId = '';
+  terminRemove.style.display = 'none';
+  updateTerminFieldsVisibility();
+}
+
+function saveTermin() {
+  const cardId = terminModal.dataset.cardId;
+  const type = terminType.value;
+  const date = terminDate.value.trim();
+  const time = terminTime.value.trim();
+  const note = terminNote.value.trim();
+  
+  if (type === 'date' && !date) {
+    setMessage('Bitte wähle ein Datum aus.', 'error');
+    return;
+  }
+  
+  const termin = {
+    type: type,
+    date: type === 'date' ? date : null,
+    time: type === 'date' ? (time || null) : null,
+    note: note || null
+  };
+  
+  // Find the card and update it
+  const allCards = document.querySelectorAll('.card');
+  for (const card of allCards) {
+    if (card.dataset.id === cardId) {
+      card.dataset.termin = JSON.stringify(termin);
+      
+      // Update or create termin display
+      updateTerminDisplay(card, termin);
+      
+      setMessage('Termin gespeichert!', 'success');
+      break;
+    }
+  }
+  
+  closeTerminModal();
+  saveAll();
+}
+
+function removeTermin() {
+  const cardId = terminModal.dataset.cardId;
+  
+  // Find the card and remove termin
+  const allCards = document.querySelectorAll('.card');
+  for (const card of allCards) {
+    if (card.dataset.id === cardId) {
+      delete card.dataset.termin;
+      
+      // Remove termin display
+      const terminDisplay = card.querySelector('.termin-display');
+      if (terminDisplay) {
+        terminDisplay.remove();
+      }
+      
+      setMessage('Termin entfernt!', 'success');
+      break;
+    }
+  }
+  
+  closeTerminModal();
+  saveAll();
+}
+
+function updateTerminDisplay(card, termin) {
+  // Remove existing termin display
+  const existingDisplay = card.querySelector('.termin-display');
+  if (existingDisplay) {
+    existingDisplay.remove();
+  }
+  
+  // Only show for waiting list
+  if (card.dataset.list !== 'waiting') return;
+  
+  const terminDisplay = document.createElement('div');
+  terminDisplay.className = 'termin-display';
+  
+  const terminDateEl = document.createElement('div');
+  terminDateEl.className = 'termin-date';
+  terminDateEl.textContent = formatTerminDate(termin.date, termin.type === 'tba');
+  terminDisplay.appendChild(terminDateEl);
+  
+  if (termin.time && termin.type === 'date') {
+    const terminTimeEl = document.createElement('div');
+    terminTimeEl.className = 'termin-time';
+    terminTimeEl.textContent = `⏰ ${termin.time}`;
+    terminDisplay.appendChild(terminTimeEl);
+  }
+  
+  if (termin.note) {
+    const terminNoteEl = document.createElement('div');
+    terminNoteEl.className = 'termin-note';
+    terminNoteEl.textContent = termin.note;
+    terminDisplay.appendChild(terminNoteEl);
+  }
+  
+  // Set status class based on type and date
+  if (termin.type === 'tba') {
+    terminDisplay.classList.add('tba');
+  } else {
+    const today = new Date().toDateString();
+    const terminDate = new Date(termin.date).toDateString();
+    
+    if (terminDate === today) {
+      terminDisplay.classList.add('today');
+    } else if (new Date(termin.date) < new Date()) {
+      terminDisplay.classList.add('overdue');
+    } else {
+      terminDisplay.classList.add('upcoming');
+    }
+  }
+  
+  // Insert after title, before actions
+  const titleEl = card.querySelector('.title');
+  titleEl.parentNode.insertBefore(terminDisplay, titleEl.nextSibling);
+}
+
+function updateTerminFieldsVisibility() {
+  const type = terminType.value;
+  
+  if (type === 'tba') {
+    dateFields.classList.add('hidden');
+    timeField.classList.add('hidden');
+  } else {
+    dateFields.classList.remove('hidden');
+    timeField.classList.remove('hidden');
+  }
+}
+
 async function deleteCard(card) {
   const title = card.querySelector('.title')?.textContent || '';
   card.remove();
@@ -954,7 +1225,8 @@ function serializeList(listKey) {
     const cover = card.querySelector('img')?.src || '';
     const url = card.querySelector('a')?.href || '';
     const id = Number(card.dataset.id) || 0;
-    return { id, title, image: cover, url };
+    const termin = card.dataset.termin ? JSON.parse(card.dataset.termin) : null;
+    return { id, title, image: cover, url, termin };
   });
 }
 
@@ -1300,9 +1572,21 @@ editModal.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && editModal.style.display === 'flex') closeModal();
   if (e.key === 'Escape' && restoreModal.style.display === 'flex') closeRestoreModal();
+  if (e.key === 'Escape' && terminModal.style.display === 'flex') closeTerminModal();
 });
 modalTitleInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') { e.preventDefault(); saveTitle(); }
+});
+
+// Termin modal enter key support
+if (terminDate) terminDate.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); saveTermin(); }
+});
+if (terminTime) terminTime.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); saveTermin(); }
+});
+if (terminNote) terminNote.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); saveTermin(); }
 });
 
 // Restore modal click outside to close
@@ -1335,6 +1619,16 @@ if (restoreBtn) {
 if (restoreClose) restoreClose.addEventListener('click', closeRestoreModal);
 if (restoreCancel) restoreCancel.addEventListener('click', closeRestoreModal);
 if (restoreConfirm) restoreConfirm.addEventListener('click', restoreFromBackup);
+
+// Termin handlers
+if (terminClose) terminClose.addEventListener('click', closeTerminModal);
+if (terminCancel) terminCancel.addEventListener('click', closeTerminModal);
+if (terminSave) terminSave.addEventListener('click', saveTermin);
+if (terminRemove) terminRemove.addEventListener('click', removeTermin);
+if (terminType) terminType.addEventListener('change', updateTerminFieldsVisibility);
+if (terminModal) terminModal.addEventListener('click', (e) => {
+  if (e.target === terminModal) closeTerminModal();
+});
 
 // Init
 loadAll().then(async () => {
