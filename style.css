@@ -768,6 +768,41 @@ body:not(.is-admin) .cover-termin {
   box-shadow: 0 0 0 4px var(--ring);
 }
 
+/* FSK Tab Styling */
+.tab[data-tab="fsk"] {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: #ffffff;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.tab[data-tab="fsk"]:hover:not(.active) {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.tab[data-tab="fsk"].active {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+  transform: scale(1.05);
+}
+
+/* FSK Cards have a subtle red tint */
+#grid-fsk .card {
+  background: linear-gradient(180deg, rgba(220, 38, 38, 0.08), transparent 40%), var(--card);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+#grid-fsk .card:hover {
+  border-color: rgba(220, 38, 38, 0.4);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(220, 38, 38, 0.3);
+}
+
+#grid-fsk .card::before {
+  background: linear-gradient(45deg, transparent, rgba(220, 38, 38, 0.1), transparent);
+}
+
 /* Mobile Responsive for Termin */
 @media (max-width:560px){
   .termin-display {
