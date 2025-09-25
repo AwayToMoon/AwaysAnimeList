@@ -7,12 +7,14 @@ const tabs = Array.from(document.querySelectorAll('.tab'));
 const panels = {
   plan: document.getElementById('tab-plan'),
   watched: document.getElementById('tab-watched'),
-  waiting: document.getElementById('tab-waiting')
+  waiting: document.getElementById('tab-waiting'),
+  fsk: document.getElementById('tab-fsk')
 };
 const grids = {
   plan: document.getElementById('grid-plan'),
   watched: document.getElementById('grid-watched'),
-  waiting: document.getElementById('grid-waiting')
+  waiting: document.getElementById('grid-waiting'),
+  fsk: document.getElementById('grid-fsk')
 };
 const themeToggle = document.getElementById('theme-toggle');
 
@@ -21,6 +23,7 @@ const totalCount = document.getElementById('total-count');
 const watchedCount = document.getElementById('watched-count');
 const planCount = document.getElementById('plan-count');
 const waitingCount = document.getElementById('waiting-count');
+const fskCount = document.getElementById('fsk-count');
 
 // Live status elements
 const liveStatus = document.getElementById('live-status');
@@ -836,7 +839,8 @@ function createCard(anime, listKey) {
   const listOptions = [
     { value: 'plan', text: '📋 Noch anschauen', icon: '📋' },
     { value: 'watched', text: '✅ Fertig geschaut', icon: '✅' },
-    { value: 'waiting', text: '⏳ Warten auf Fortsetzung', icon: '⏳' }
+    { value: 'waiting', text: '⏳ Warten auf Fortsetzung', icon: '⏳' },
+    { value: 'fsk', text: '🔞 FSK16/18+', icon: '🔞' }
   ];
   
   listOptions.forEach(option => {
@@ -962,7 +966,8 @@ async function moveCard(card, targetList) {
   const listNames = {
     plan: 'Noch anschauen',
     watched: 'Schon angeschaut', 
-    waiting: 'Warten auf Fortsetzung'
+    waiting: 'Warten auf Fortsetzung',
+    fsk: 'FSK16/18+'
   };
   setMessage(`Verschoben nach "${listNames[targetList]}": ${title}`, 'success');
   updateStats();
@@ -981,7 +986,8 @@ function updateCardDropdown(card, currentList) {
   const listOptions = [
     { value: 'plan', text: '📋 Noch anschauen' },
     { value: 'watched', text: '✅ Fertig geschaut' },
-    { value: 'waiting', text: '⏳ Warten auf Fortsetzung' }
+    { value: 'waiting', text: '⏳ Warten auf Fortsetzung' },
+    { value: 'fsk', text: '🔞 FSK16/18+' }
   ];
   
   listOptions.forEach(option => {
@@ -1235,6 +1241,7 @@ function saveAll() {
     plan: serializeList('plan'),
     watched: serializeList('watched'),
     waiting: serializeList('waiting'),
+    fsk: serializeList('fsk'),
     timestamp: new Date().toISOString(),
     version: '1.0'
   };
@@ -1308,6 +1315,7 @@ function createBackup() {
     plan: serializeList('plan'),
     watched: serializeList('watched'),
     waiting: serializeList('waiting'),
+    fsk: serializeList('fsk'),
     timestamp: new Date().toISOString(),
     version: '1.0'
   };
@@ -1354,12 +1362,12 @@ function restoreFromBackup() {
       }
       
       // Clear current data
-      ['plan', 'watched', 'waiting'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
         grids[key].innerHTML = '';
       });
       
       // Restore data
-      ['plan', 'watched', 'waiting'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
         if (data[key] && Array.isArray(data[key])) {
           data[key].forEach(item => {
             if (item.title) {
@@ -1372,7 +1380,8 @@ function restoreFromBackup() {
       saveAll();
       updateStats();
       closeRestoreModal();
-      setMessage(`Backup erfolgreich wiederhergestellt! ${data.plan.length + data.watched.length + data.waiting.length} Animes geladen.`, 'success');
+      const totalAnimes = (data.plan?.length || 0) + (data.watched?.length || 0) + (data.waiting?.length || 0) + (data.fsk?.length || 0);
+      setMessage(`Backup erfolgreich wiederhergestellt! ${totalAnimes} Animes geladen.`, 'success');
       
     } catch (error) {
       setMessage('Fehler beim Laden der Backup-Datei: ' + error.message, 'error');
@@ -1398,7 +1407,7 @@ async function loadAll() {
     const raw = localStorage.getItem('animes-app');
     if (!raw) return;
     const data = JSON.parse(raw);
-    ['plan', 'watched', 'waiting'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
       // Sort animes alphabetically before adding them
       const sortedAnimes = (data[key] || []).sort((a, b) => 
         a.title.toLowerCase().localeCompare(b.title.toLowerCase())
@@ -1441,12 +1450,12 @@ async function loadFirebaseLiveStatus() {
 
 function loadFirebaseData(data) {
   // Clear current data
-  ['plan', 'watched', 'waiting'].forEach(key => {
+  ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
     grids[key].innerHTML = '';
   });
   
   // Load Firebase data
-  ['plan', 'watched', 'waiting'].forEach(key => {
+  ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
     if (data[key] && Array.isArray(data[key])) {
       data[key].forEach(item => {
         if (item.title) {
@@ -1478,12 +1487,14 @@ function updateStats() {
   const planItems = grids.plan.children.length;
   const watchedItems = grids.watched.children.length;
   const waitingItems = grids.waiting.children.length;
-  const totalItems = planItems + watchedItems + waitingItems;
+  const fskItems = grids.fsk.children.length;
+  const totalItems = planItems + watchedItems + waitingItems + fskItems;
   
   totalCount.textContent = totalItems;
   planCount.textContent = planItems;
   watchedCount.textContent = watchedItems;
   waitingCount.textContent = waitingItems;
+  fskCount.textContent = fskItems;
 }
 
 function getPreferredTheme() {
