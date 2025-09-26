@@ -752,13 +752,17 @@ function createCard(anime, listKey) {
     toggleLiveStatus(card);
   });
 
-  // Rating Button
+  // Rating Button - für alle Nutzer sichtbar
   const ratingBtn = document.createElement('button');
   ratingBtn.type = 'button';
   ratingBtn.className = 'cover-rating';
   ratingBtn.title = 'Bewerten';
   ratingBtn.textContent = '⭐';
   ratingBtn.addEventListener('click', () => {
+    if (localStorage.getItem('animes-is-admin') !== 'true') {
+      setMessage('Nur Admins können bewerten.', 'error');
+      return;
+    }
     openRatingModal(card);
   });
 
@@ -913,7 +917,7 @@ function createCard(anime, listKey) {
   card.appendChild(titleEl);
   card.appendChild(actions);
 
-  // Add rating display if exists
+  // Add rating display if exists - für alle Nutzer sichtbar
   if (anime.rating && anime.rating > 0) {
     const ratingDisplay = document.createElement('div');
     ratingDisplay.className = 'rating-display';
