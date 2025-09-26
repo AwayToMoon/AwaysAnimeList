@@ -449,37 +449,53 @@ body::before {
 .cover-wrap:hover .cover-rating{opacity:1}
 .cover-rating:active{transform:translateY(1px)}
 
-/* Rating Button immer sichtbar für alle Nutzer */
+/* Rating Button nur für Admins sichtbar */
 body:not(.is-admin) .cover-rating {
-  opacity: 0.7;
-  background: linear-gradient(135deg, rgba(245,158,11,0.9), rgba(245,158,11,0.7));
-  color: #fff;
-  border-color: rgba(245,158,11,0.5);
-}
-
-body:not(.is-admin) .cover-wrap:hover .cover-rating {
-  opacity: 1;
-  transform: scale(1.1);
+  display: none;
 }
 
 
 .title{font-size:16px;font-weight:700;margin:12px 14px 4px 14px}
 
-/* Rating Display - für alle Nutzer sichtbar */
+/* Rating Display - für alle Nutzer sichtbar, wie TBA-Termin */
 .rating-display {
   background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
   border: 1px solid rgba(245,158,11,0.3);
   border-radius: 8px;
-  padding: 6px 10px;
+  padding: 8px 12px;
   margin: 8px 12px 0 12px;
   font-size: 12px;
-  color: #f59e0b;
-  font-weight: 600;
-  text-align: center;
+  color: var(--text);
+  position: relative;
+  overflow: hidden;
   animation: ratingSlideIn 0.4s ease-out;
   /* Immer sichtbar für alle Nutzer */
   display: block !important;
   opacity: 1 !important;
+}
+
+.rating-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(245,158,11,0.1), transparent);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.rating-display .rating-text {
+  font-weight: 600;
+  color: #f59e0b;
+  margin-bottom: 2px;
+}
+
+.rating-display .rating-review {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 11px;
 }
 
 @keyframes ratingSlideIn {
