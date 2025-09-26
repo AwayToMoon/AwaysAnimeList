@@ -64,7 +64,7 @@
         <div class="field-group">
           <input id="anime-input" type="text" placeholder="Anime-Name eingeben..." required>
           <select id="anime-list-select" aria-label="Liste wählen">
-            <option value="plan">Gerade am schauen</option>
+            <option value="plan">Noch am anschauen</option>
             <option value="watched">Fertig Geschaut</option>
             <option value="waiting">Warten auf Fortsetzung</option>
             <option value="fsk">FSK16/18+</option>
@@ -77,14 +77,14 @@
     </section>
 
     <nav class="tabs" role="tablist">
-      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Gerade am schauen</button>
+      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Noch am anschauen</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="watched">Fertig Geschaut</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="waiting">Warten auf Fortsetzung</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="fsk">FSK16/18+</button>
     </nav>
 
     <main class="content">
-      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Gerade am schauen">
+      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Noch am anschauen">
         <div id="grid-plan" class="grid"></div>
       </section>
       <section id="tab-watched" class="tab-panel" role="tabpanel" aria-label="Fertig Geschaut">
@@ -243,6 +243,53 @@
             <button type="button" class="btn secondary" id="termin-cancel">Abbrechen</button>
             <button type="button" class="btn danger" id="termin-remove" style="display: none;">Termin entfernen</button>
             <button type="button" class="btn primary" id="termin-save">Speichern</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Anime Details Modal -->
+  <div id="anime-details-modal" class="modal" style="display: none;">
+    <div class="modal-content anime-details-modal">
+      <div class="modal-header">
+        <h3 id="anime-details-title">Anime Details</h3>
+        <button class="modal-close" data-close-details aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body anime-details-body">
+        <div class="anime-details-cover">
+          <img id="anime-details-image" src="" alt="" class="anime-details-image">
+          <div class="anime-details-actions">
+            <a id="anime-details-external-link" href="#" target="_blank" class="btn primary">
+              🔗 Zum Anime
+            </a>
+          </div>
+        </div>
+        <div class="anime-details-content">
+          <div class="anime-details-info">
+            <h2 id="anime-details-name" class="anime-details-name"></h2>
+            <div class="anime-details-meta">
+              <div class="meta-item">
+                <span class="meta-label">📺 Episoden:</span>
+                <span id="anime-details-episodes" class="meta-value">-</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">📅 Status:</span>
+                <span id="anime-details-status" class="meta-value">-</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">⭐ Aways Bewertung:</span>
+                <span id="anime-details-rating" class="meta-value">-</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">📅 Jahr:</span>
+                <span id="anime-details-year" class="meta-value">-</span>
+              </div>
+            </div>
+            <div class="anime-details-genres">
+              <span class="genres-label">🏷️ Genres:</span>
+              <div id="anime-details-genres-list" class="genres-list"></div>
+            </div>
           </div>
         </div>
       </div>
