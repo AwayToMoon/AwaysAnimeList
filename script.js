@@ -58,6 +58,17 @@ const backupFile = document.getElementById('backup-file');
 const restoreCancel = document.getElementById('restore-cancel');
 const restoreConfirm = document.getElementById('restore-confirm');
 
+// Rating elements
+const ratingModal = document.getElementById('rating-modal');
+const ratingClose = document.querySelector('[data-close-rating]');
+const ratingStars = document.getElementById('rating-stars');
+const ratingText = document.getElementById('rating-text');
+const ratingReview = document.getElementById('rating-review');
+const ratingCancel = document.getElementById('rating-cancel');
+const ratingSave = document.getElementById('rating-save');
+const ratingRemove = document.getElementById('rating-remove');
+
+
 // Termin elements
 const terminModal = document.getElementById('termin-modal');
 const terminClose = document.querySelector('[data-close-termin]');
@@ -691,6 +702,7 @@ function createCard(anime, listKey) {
   card.className = 'card';
   card.dataset.id = String(anime.id || '0');
   card.dataset.list = listKey;
+  card.dataset.rating = anime.rating || '0';
 
   const coverWrap = document.createElement('div');
   coverWrap.className = 'cover-wrap';
@@ -740,6 +752,16 @@ function createCard(anime, listKey) {
     toggleLiveStatus(card);
   });
 
+  // Rating Button
+  const ratingBtn = document.createElement('button');
+  ratingBtn.type = 'button';
+  ratingBtn.className = 'cover-rating';
+  ratingBtn.title = 'Bewerten';
+  ratingBtn.textContent = '⭐';
+  ratingBtn.addEventListener('click', () => {
+    openRatingModal(card);
+  });
+
   // Termin Button - nur für "waiting" Liste
   const terminBtn = document.createElement('button');
   terminBtn.type = 'button';
@@ -757,6 +779,7 @@ function createCard(anime, listKey) {
   coverWrap.appendChild(img);
   coverWrap.appendChild(editBtn);
   coverWrap.appendChild(liveBtn);
+  coverWrap.appendChild(ratingBtn);
   if (listKey === 'waiting') {
     coverWrap.appendChild(terminBtn);
   }
@@ -889,6 +912,14 @@ function createCard(anime, listKey) {
   card.appendChild(coverWrap);
   card.appendChild(titleEl);
   card.appendChild(actions);
+
+  // Add rating display if exists
+  if (anime.rating && anime.rating > 0) {
+    const ratingDisplay = document.createElement('div');
+    ratingDisplay.className = 'rating-display';
+    ratingDisplay.innerHTML = `⭐ ${anime.rating}/10`;
+    card.appendChild(ratingDisplay);
+  }
 
   return card;
 }
@@ -1190,6 +1221,109 @@ function updateTerminFieldsVisibility() {
     timeField.classList.remove('hidden');
   }
 }
+
+// Rating Functions
+function openRatingModal(card) {
+  const currentRating = card.dataset.rating || '0';
+  const currentReview = card.dataset.review || '';
+  
+  // Set current rating
+  ratingStars.querySelectorAll('.star').forEach((star, index) => {
+    if (index < parseInt(currentRating)) {
+      star.classList.add('active');
+    } else {
+      star.classList.remove('active');
+    }
+  });
+  
+  ratingReview.value = currentReview;
+  ratingText.textContent = currentRating > 0 ? `${currentRating}/10` : 'Bewertung auswählen';
+  ratingRemove.style.display = currentRating > 0 ? 'inline-block' : 'none';
+  
+  ratingModal.style.display = 'flex';
+  ratingModal.dataset.cardId = card.dataset.id;
+}
+
+function closeRatingModal() {
+  ratingModal.style.display = 'none';
+  ratingStars.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+  ratingReview.value = '';
+  ratingText.textContent = 'Bewertung auswählen';
+  ratingModal.dataset.cardId = '';
+  ratingRemove.style.display = 'none';
+}
+
+function saveRating() {
+  const cardId = ratingModal.dataset.cardId;
+  const rating = ratingStars.querySelectorAll('.star.active').length;
+  const review = ratingReview.value.trim();
+  
+  if (rating === 0) {
+    setMessage('Bitte wähle eine Bewertung aus.', 'error');
+    return;
+  }
+  
+  // Find the card and update it
+  const allCards = document.querySelectorAll('.card');
+  for (const card of allCards) {
+    if (card.dataset.id === cardId) {
+      card.dataset.rating = rating;
+      card.dataset.review = review;
+      
+      // Update or create rating display
+      updateRatingDisplay(card, rating);
+      
+      setMessage('Bewertung gespeichert!', 'success');
+      break;
+    }
+  }
+  
+  closeRatingModal();
+  saveAll();
+  updateStats();
+}
+
+function removeRating() {
+  const cardId = ratingModal.dataset.cardId;
+  
+  // Find the card and remove rating
+  const allCards = document.querySelectorAll('.card');
+  for (const card of allCards) {
+    if (card.dataset.id === cardId) {
+      delete card.dataset.rating;
+      delete card.dataset.review;
+      
+      // Remove rating display
+      const ratingDisplay = card.querySelector('.rating-display');
+      if (ratingDisplay) {
+        ratingDisplay.remove();
+      }
+      
+      setMessage('Bewertung entfernt!', 'success');
+      break;
+    }
+  }
+  
+  closeRatingModal();
+  saveAll();
+  updateStats();
+}
+
+function updateRatingDisplay(card, rating) {
+  // Remove existing rating display
+  const existingDisplay = card.querySelector('.rating-display');
+  if (existingDisplay) {
+    existingDisplay.remove();
+  }
+  
+  if (rating > 0) {
+    const ratingDisplay = document.createElement('div');
+    ratingDisplay.className = 'rating-display';
+    ratingDisplay.innerHTML = `⭐ ${rating}/10`;
+    card.appendChild(ratingDisplay);
+  }
+}
+
 
 async function deleteCard(card) {
   const title = card.querySelector('.title')?.textContent || '';
@@ -1630,6 +1764,52 @@ if (restoreBtn) {
 if (restoreClose) restoreClose.addEventListener('click', closeRestoreModal);
 if (restoreCancel) restoreCancel.addEventListener('click', closeRestoreModal);
 if (restoreConfirm) restoreConfirm.addEventListener('click', restoreFromBackup);
+
+// Rating handlers
+if (ratingClose) ratingClose.addEventListener('click', closeRatingModal);
+if (ratingCancel) ratingCancel.addEventListener('click', closeRatingModal);
+if (ratingSave) ratingSave.addEventListener('click', saveRating);
+if (ratingRemove) ratingRemove.addEventListener('click', removeRating);
+if (ratingModal) ratingModal.addEventListener('click', (e) => {
+  if (e.target === ratingModal) closeRatingModal();
+});
+
+// Rating stars interaction
+if (ratingStars) {
+  ratingStars.addEventListener('click', (e) => {
+    if (e.target.classList.contains('star')) {
+      const rating = parseInt(e.target.dataset.rating);
+      ratingStars.querySelectorAll('.star').forEach((star, index) => {
+        if (index < rating) {
+          star.classList.add('active');
+        } else {
+          star.classList.remove('active');
+        }
+      });
+      ratingText.textContent = `${rating}/10`;
+    }
+  });
+  
+  ratingStars.addEventListener('mouseover', (e) => {
+    if (e.target.classList.contains('star')) {
+      const rating = parseInt(e.target.dataset.rating);
+      ratingStars.querySelectorAll('.star').forEach((star, index) => {
+        if (index < rating) {
+          star.classList.add('hover');
+        } else {
+          star.classList.remove('hover');
+        }
+      });
+    }
+  });
+  
+  ratingStars.addEventListener('mouseout', () => {
+    ratingStars.querySelectorAll('.star').forEach(star => {
+      star.classList.remove('hover');
+    });
+  });
+}
+
 
 // Termin handlers
 if (terminClose) terminClose.addEventListener('click', closeTerminModal);
