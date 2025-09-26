@@ -921,7 +921,14 @@ function createCard(anime, listKey) {
   if (anime.rating && anime.rating > 0) {
     const ratingDisplay = document.createElement('div');
     ratingDisplay.className = 'rating-display';
-    ratingDisplay.innerHTML = `⭐ ${anime.rating}/10`;
+    
+    const review = anime.review || '';
+    
+    ratingDisplay.innerHTML = `
+      <div class="rating-text">⭐ ${anime.rating}/10</div>
+      ${review ? `<div class="rating-review">"${review}"</div>` : ''}
+    `;
+    
     card.appendChild(ratingDisplay);
   }
 
@@ -935,6 +942,13 @@ function addAnimeToList(anime, listKey) {
   if (anime.termin) {
     card.dataset.termin = JSON.stringify(anime.termin);
     updateTerminDisplay(card, anime.termin);
+  }
+  
+  // Load rating data if it exists
+  if (anime.rating && anime.rating > 0) {
+    card.dataset.rating = anime.rating;
+    card.dataset.review = anime.review || '';
+    updateRatingDisplay(card, anime.rating);
   }
   
   // Insert card in alphabetical order
@@ -1323,7 +1337,14 @@ function updateRatingDisplay(card, rating) {
   if (rating > 0) {
     const ratingDisplay = document.createElement('div');
     ratingDisplay.className = 'rating-display';
-    ratingDisplay.innerHTML = `⭐ ${rating}/10`;
+    
+    const review = card.dataset.review || '';
+    
+    ratingDisplay.innerHTML = `
+      <div class="rating-text">⭐ ${rating}/10</div>
+      ${review ? `<div class="rating-review">"${review}"</div>` : ''}
+    `;
+    
     card.appendChild(ratingDisplay);
   }
 }
@@ -1370,7 +1391,9 @@ function serializeList(listKey) {
     const url = card.querySelector('a')?.href || '';
     const id = Number(card.dataset.id) || 0;
     const termin = card.dataset.termin ? JSON.parse(card.dataset.termin) : null;
-    return { id, title, image: cover, url, termin };
+    const rating = card.dataset.rating ? parseInt(card.dataset.rating) : null;
+    const review = card.dataset.review || null;
+    return { id, title, image: cover, url, termin, rating, review };
   });
 }
 
