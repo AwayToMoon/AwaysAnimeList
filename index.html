@@ -58,12 +58,13 @@
       </div>
     </header>
 
+
     <section class="add-form">
       <form id="anime-form" autocomplete="off">
         <div class="field-group">
           <input id="anime-input" type="text" placeholder="Anime-Name eingeben..." required>
           <select id="anime-list-select" aria-label="Liste wählen">
-            <option value="plan">Gerade am schauen</option>
+            <option value="plan">Noch am anschauen</option>
             <option value="watched">Fertig Geschaut</option>
             <option value="waiting">Warten auf Fortsetzung</option>
             <option value="fsk">FSK16/18+</option>
@@ -76,14 +77,14 @@
     </section>
 
     <nav class="tabs" role="tablist">
-      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Gerade am schauen</button>
+      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Noch am anschauen</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="watched">Fertig Geschaut</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="waiting">Warten auf Fortsetzung</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="fsk">FSK16/18+</button>
     </nav>
 
     <main class="content">
-      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Gerade am schauen">
+      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Noch am anschauen">
         <div id="grid-plan" class="grid"></div>
       </section>
       <section id="tab-watched" class="tab-panel" role="tabpanel" aria-label="Fertig Geschaut">
@@ -170,6 +171,46 @@
     </div>
   </div>
 
+  <!-- Rating Modal -->
+  <div id="rating-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Anime bewerten</h3>
+        <button class="modal-close" data-close-rating aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-form" style="width:100%">
+          <div class="rating-container">
+            <div class="stars" id="rating-stars">
+              <span class="star" data-rating="1">⭐</span>
+              <span class="star" data-rating="2">⭐</span>
+              <span class="star" data-rating="3">⭐</span>
+              <span class="star" data-rating="4">⭐</span>
+              <span class="star" data-rating="5">⭐</span>
+              <span class="star" data-rating="6">⭐</span>
+              <span class="star" data-rating="7">⭐</span>
+              <span class="star" data-rating="8">⭐</span>
+              <span class="star" data-rating="9">⭐</span>
+              <span class="star" data-rating="10">⭐</span>
+            </div>
+            <div class="rating-text" id="rating-text">Bewertung auswählen</div>
+          </div>
+          <div class="modal-field">
+            <label for="rating-review">Review (optional):</label>
+            <textarea id="rating-review" placeholder="Deine Meinung zu diesem Anime..." rows="3"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn secondary" id="rating-cancel">Abbrechen</button>
+            <button type="button" class="btn danger" id="rating-remove" style="display: none;">Bewertung entfernen</button>
+            <button type="button" class="btn primary" id="rating-save">Speichern</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
   <!-- Termin Modal -->
   <div id="termin-modal" class="modal" style="display: none;">
     <div class="modal-content">
@@ -232,4 +273,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
