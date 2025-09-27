@@ -64,7 +64,7 @@
         <div class="field-group">
           <input id="anime-input" type="text" placeholder="Anime-Name eingeben..." required>
           <select id="anime-list-select" aria-label="Liste wählen">
-            <option value="plan">Noch am anschauen</option>
+            <option value="plan">Gerade am schauen</option>
             <option value="watched">Fertig Geschaut</option>
             <option value="waiting">Warten auf Fortsetzung</option>
             <option value="fsk">FSK16/18+</option>
@@ -77,7 +77,7 @@
     </section>
 
     <nav class="tabs" role="tablist">
-      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Noch am anschauen</button>
+      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Gerade am schauen</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="watched">Fertig Geschaut</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="waiting">Warten auf Fortsetzung</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="fsk">FSK16/18+</button>
@@ -85,7 +85,7 @@
     </nav>
 
     <main class="content">
-      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Noch am anschauen">
+      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Gerade am schauen">
         <div id="grid-plan" class="grid"></div>
       </section>
       <section id="tab-watched" class="tab-panel" role="tabpanel" aria-label="Fertig Geschaut">
@@ -368,4 +368,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
