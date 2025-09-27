@@ -64,7 +64,7 @@
         <div class="field-group">
           <input id="anime-input" type="text" placeholder="Anime-Name eingeben..." required>
           <select id="anime-list-select" aria-label="Liste wählen">
-            <option value="plan">Gerade am schauen</option>
+            <option value="plan">Noch am anschauen</option>
             <option value="watched">Fertig Geschaut</option>
             <option value="waiting">Warten auf Fortsetzung</option>
             <option value="fsk">FSK16/18+</option>
@@ -77,14 +77,15 @@
     </section>
 
     <nav class="tabs" role="tablist">
-      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Gerade am schauen</button>
+      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Noch am anschauen</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="watched">Fertig Geschaut</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="waiting">Warten auf Fortsetzung</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="fsk">FSK16/18+</button>
+      <button id="help-btn" class="help-btn" title="Hilfe & Support">❓</button>
     </nav>
 
     <main class="content">
-      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Gerade am schauen">
+      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Noch am anschauen">
         <div id="grid-plan" class="grid"></div>
       </section>
       <section id="tab-watched" class="tab-panel" role="tabpanel" aria-label="Fertig Geschaut">
@@ -260,7 +261,10 @@
         <div class="anime-details-cover">
           <img id="anime-details-image" src="" alt="" class="anime-details-image">
           <div class="anime-details-actions">
-            <a id="anime-details-external-link" href="#" target="_blank" class="btn primary">
+            <button id="anime-details-trailer-btn" class="btn primary trailer-btn" style="display: none;">
+              ▶️ Trailer ansehen
+            </button>
+            <a id="anime-details-external-link" href="#" target="_blank" class="btn secondary">
               🔗 Zum Anime
             </a>
           </div>
@@ -268,29 +272,73 @@
         <div class="anime-details-content">
           <div class="anime-details-info">
             <h2 id="anime-details-name" class="anime-details-name"></h2>
-            <div class="anime-details-meta">
-              <div class="meta-item">
-                <span class="meta-label">📺 Episoden:</span>
-                <span id="anime-details-episodes" class="meta-value">-</span>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">📅 Status:</span>
-                <span id="anime-details-status" class="meta-value">-</span>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">⭐ Aways Bewertung:</span>
-                <span id="anime-details-rating" class="meta-value">-</span>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">📅 Jahr:</span>
-                <span id="anime-details-year" class="meta-value">-</span>
-              </div>
-            </div>
             <div class="anime-details-genres">
               <span class="genres-label">🏷️ Genres:</span>
               <div id="anime-details-genres-list" class="genres-list"></div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Anime Trailer Modal -->
+  <div id="anime-trailer-modal" class="modal" style="display: none;">
+    <div class="modal-content trailer-modal">
+      <div class="modal-header">
+        <h3 id="trailer-modal-title">Anime Trailer</h3>
+        <button class="modal-close" data-close-trailer aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body trailer-modal-body">
+        <div class="trailer-container">
+          <div id="trailer-player" class="trailer-player">
+            <div class="trailer-loading">
+              <div class="loading"></div>
+              <p>Lade Trailer...</p>
+            </div>
+          </div>
+          <div class="trailer-info">
+            <h4 id="trailer-anime-title"></h4>
+            <p id="trailer-anime-description"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="help-modal" class="modal" style="display: none;">
+    <div class="modal-content help-modal">
+      <div class="modal-header">
+        <h3>❓ Hilfe & Support</h3>
+        <button class="modal-close" data-close-help aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="help-content">
+          <div class="help-section">
+            <h4>🚨 Probleme melden</h4>
+            <p>Falls ein Anime keinen Trailer hat oder sonstige Probleme auftreten, meldet euch hier:</p>
+            <div class="help-contacts">
+              <div class="contact-item">
+                <strong>💬 Discord:</strong>
+                <a href="https://discord.com/users/933524419882676254" target="_blank" class="contact-link">Privat schreiben</a>
+              </div>
+              <div class="contact-item">
+                <strong>📧 Email:</strong>
+                <a href="mailto:away73027@gmail.com" class="contact-link">support@aways-anime.de</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="help-section">
+            <h4>🔧 Häufige Probleme</h4>
+            <ul class="help-list">
+              <li><strong>Kein Trailer:</strong> Manche Animes haben keinen offiziellen Trailer</li>
+              <li><strong>YouTube-Fehler:</strong> Trailer könnte blockiert oder nicht verfügbar sein</li>
+              <li><strong>Langsame Ladezeiten:</strong> API-Antworten können manchmal verzögert sein</li>
+            </ul>
+          </div>
+
         </div>
       </div>
     </div>
@@ -320,4 +368,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
