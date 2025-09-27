@@ -41,6 +41,11 @@ const modalClose = document.querySelector('.modal-close');
 const modalCancel = document.getElementById('modal-cancel');
 const modalSave = document.getElementById('modal-save');
 
+// Help elements
+const helpBtn = document.getElementById('help-btn');
+const helpModal = document.getElementById('help-modal');
+const helpClose = document.querySelector('[data-close-help]');
+
 // Admin elements
 const adminToggle = document.getElementById('admin-toggle');
 const adminModal = document.getElementById('admin-modal');
@@ -88,12 +93,17 @@ const animeDetailsClose = document.querySelector('[data-close-details]');
 const animeDetailsTitle = document.getElementById('anime-details-title');
 const animeDetailsName = document.getElementById('anime-details-name');
 const animeDetailsImage = document.getElementById('anime-details-image');
-const animeDetailsEpisodes = document.getElementById('anime-details-episodes');
-const animeDetailsStatus = document.getElementById('anime-details-status');
-const animeDetailsRating = document.getElementById('anime-details-rating');
-const animeDetailsYear = document.getElementById('anime-details-year');
 const animeDetailsGenresList = document.getElementById('anime-details-genres-list');
 const animeDetailsExternalLink = document.getElementById('anime-details-external-link');
+const animeDetailsTrailerBtn = document.getElementById('anime-details-trailer-btn');
+
+// Anime Trailer Modal elements
+const animeTrailerModal = document.getElementById('anime-trailer-modal');
+const trailerClose = document.querySelector('[data-close-trailer]');
+const trailerModalTitle = document.getElementById('trailer-modal-title');
+const trailerPlayer = document.getElementById('trailer-player');
+const trailerAnimeTitle = document.getElementById('trailer-anime-title');
+const trailerAnimeDescription = document.getElementById('trailer-anime-description');
 
 const API_BASE = 'https://api.jikan.moe/v4';
 const ANILIST_API = 'https://graphql.anilist.co';
@@ -1440,11 +1450,10 @@ async function openAnimeDetailsModal(anime) {
   animeDetailsExternalLink.href = anime.url || '#';
   
   // Show loading state
-  animeDetailsEpisodes.textContent = 'Lade...';
-  animeDetailsStatus.textContent = 'Lade...';
-  animeDetailsRating.textContent = 'Lade...';
-  animeDetailsYear.textContent = 'Lade...';
   animeDetailsGenresList.innerHTML = '<span class="loading">Lade...</span>';
+  
+  // Hide trailer button initially
+  animeDetailsTrailerBtn.style.display = 'none';
   
   // Show modal
   animeDetailsModal.style.display = 'flex';
@@ -1458,6 +1467,10 @@ async function openAnimeDetailsModal(anime) {
       // Fallback to basic info if detailed fetch fails
       populateBasicAnimeDetails(anime);
     }
+    
+    // Always show trailer button - let the modal handle "no trailer" case
+    animeDetailsTrailerBtn.style.display = 'inline-flex';
+    animeDetailsTrailerBtn.onclick = () => openAnimeTrailerModal(anime);
   } catch (error) {
     console.warn('Failed to fetch detailed anime data:', error);
     populateBasicAnimeDetails(anime);
@@ -1544,31 +1557,6 @@ function populateAnimeDetails(anime) {
   // Keep the name from the card (don't change it)
   // animeDetailsName.textContent is already set from the card
   
-  // Episodes
-  animeDetailsEpisodes.textContent = anime.episodes || anime.episodes_count || '-';
-  
-  // Status
-  const statusMap = {
-    'FINISHED': 'Abgeschlossen',
-    'RELEASING': 'Laufend',
-    'NOT_YET_RELEASED': 'Noch nicht veröffentlicht',
-    'CANCELLED': 'Abgebrochen',
-    'HIATUS': 'Pausiert'
-  };
-  animeDetailsStatus.textContent = statusMap[anime.status] || anime.status || '-';
-  
-  // Rating - get from card data
-  const cardRating = document.querySelector(`[data-id="${anime.id}"]`)?.dataset.rating;
-  if (cardRating && cardRating !== '0') {
-    animeDetailsRating.textContent = `${cardRating}/10`;
-  } else {
-    animeDetailsRating.textContent = 'Noch nicht bewertet';
-  }
-  
-  // Year
-  const year = anime.startDate?.year || anime.year;
-  animeDetailsYear.textContent = year || '-';
-  
   // Genres
   if (anime.genres && anime.genres.length > 0) {
     animeDetailsGenresList.innerHTML = anime.genres.map(genre => 
@@ -1577,30 +1565,418 @@ function populateAnimeDetails(anime) {
   } else {
     animeDetailsGenresList.innerHTML = '<span class="meta-value">Keine Genres verfügbar</span>';
   }
-  
 }
 
 function populateBasicAnimeDetails(anime) {
   // Fallback to basic info if detailed fetch fails
   animeDetailsName.textContent = anime.title || 'Unbekannt';
-  animeDetailsEpisodes.textContent = '-';
-  animeDetailsStatus.textContent = '-';
-  
-  // Rating - get from card data
-  const cardRating = document.querySelector(`[data-id="${anime.id}"]`)?.dataset.rating;
-  if (cardRating && cardRating !== '0') {
-    animeDetailsRating.textContent = `${cardRating}/10`;
-  } else {
-    animeDetailsRating.textContent = 'Noch nicht bewertet';
-  }
-  
-  animeDetailsYear.textContent = '-';
   animeDetailsGenresList.innerHTML = '<span class="meta-value">Keine Genres verfügbar</span>';
 }
 
 function closeAnimeDetailsModal() {
   animeDetailsModal.style.display = 'none';
 }
+
+// Anime Trailer Modal Functions
+async function openAnimeTrailerModal(anime) {
+  // Set basic info
+  trailerAnimeTitle.textContent = anime.title;
+  trailerModalTitle.textContent = `${anime.title} - Trailer`;
+  
+  // Show loading state
+  trailerPlayer.innerHTML = `
+    <div class="trailer-loading">
+      <div class="loading"></div>
+      <p>Lade Trailer...</p>
+    </div>
+  `;
+  
+  // Show modal
+  animeTrailerModal.style.display = 'flex';
+  
+  // Fetch trailer data
+  try {
+    const trailerData = await fetchAnimeTrailer(anime.id, anime.title);
+    if (trailerData && trailerData.trailerUrl) {
+      embedTrailer(trailerData.trailerUrl, trailerData.title);
+      if (trailerData.description) {
+        trailerAnimeDescription.textContent = trailerData.description;
+  } else {
+        trailerAnimeDescription.textContent = `Trailer für ${anime.title}`;
+      }
+    } else {
+      showNoTrailerMessage(anime.title);
+    }
+  } catch (error) {
+    console.warn('Failed to fetch trailer:', error);
+    showNoTrailerMessage(anime.title);
+  }
+}
+
+async function fetchAnimeTrailer(animeId, animeTitle) {
+  // Try with ID first if available
+  if (animeId && animeId !== '0') {
+    try {
+      const trailerData = await fetchTrailerById(animeId);
+      if (trailerData) return trailerData;
+    } catch (error) {
+      console.warn('Trailer fetch by ID failed:', error);
+    }
+  }
+  
+  // If no trailer found by ID, try with title variations
+  if (animeTitle) {
+    try {
+      return await searchTrailerByTitleVariations(animeTitle);
+    } catch (error) {
+      console.warn('Trailer search by title failed:', error);
+    }
+  }
+  
+  return null;
+}
+
+async function fetchTrailerById(animeId) {
+  try {
+    // Try AniList first for trailer data
+    const anilistQuery = `
+      query ($id: Int) {
+        Media(id: $id) {
+          id
+          title {
+            romaji
+            english
+            native
+          }
+          description
+          trailer {
+            id
+            site
+            thumbnail
+          }
+        }
+      }
+    `;
+    
+    const response = await fetch(ANILIST_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: anilistQuery,
+        variables: { id: parseInt(animeId) }
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.Media && data.data.Media.trailer) {
+        const trailer = data.data.Media.trailer;
+        const media = data.data.Media;
+        
+        // Generate YouTube embed URL with better parameters
+        if (trailer.site === 'youtube' && trailer.id) {
+          return {
+            trailerUrl: `https://www.youtube.com/embed/${trailer.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1`,
+            title: media.title.english || media.title.romaji || media.title.native,
+            description: media.description ? media.description.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : null
+          };
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('AniList trailer fetch failed:', error);
+  }
+  
+  // Fallback to Jikan API
+  try {
+    const response = await fetch(`${API_BASE}/anime/${animeId}`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.trailer && data.data.trailer.youtube_id) {
+        return {
+          trailerUrl: `https://www.youtube.com/embed/${data.data.trailer.youtube_id}?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1`,
+          title: data.data.title,
+          description: data.data.synopsis ? data.data.synopsis.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : null
+        };
+      }
+    }
+  } catch (error) {
+    console.warn('Jikan trailer fetch failed:', error);
+  }
+  
+  return null;
+}
+
+// Enhanced trailer search with title variations for popular animes
+async function searchTrailerByTitleVariations(animeTitle) {
+  if (!animeTitle) return null;
+  
+  // Create title variations for better matching
+  const titleVariations = createTitleVariations(animeTitle);
+  
+  for (const variation of titleVariations) {
+    try {
+      const trailerData = await searchTrailerByTitle(variation);
+      if (trailerData) return trailerData;
+    } catch (error) {
+      console.warn(`Trailer search failed for variation "${variation}":`, error);
+      continue;
+    }
+  }
+  
+  return null;
+}
+
+function createTitleVariations(originalTitle) {
+  const variations = [originalTitle];
+  
+  // Special cases for popular animes
+  const specialCases = {
+    'Boruto: Naruto Next Generations': [
+      'Boruto',
+      'Boruto Naruto Next Generations',
+      'Boruto: Naruto Next Generation',
+      'Boruto Naruto'
+    ],
+    'One Piece': [
+      'One Piece',
+      'One Piece Anime'
+    ],
+    'Attack on Titan': [
+      'Attack on Titan',
+      'Shingeki no Kyojin',
+      'AOT'
+    ],
+    'Demon Slayer': [
+      'Demon Slayer',
+      'Kimetsu no Yaiba',
+      'Demon Slayer: Kimetsu no Yaiba'
+    ],
+    'My Hero Academia': [
+      'My Hero Academia',
+      'Boku no Hero Academia',
+      'MHA'
+    ]
+  };
+  
+  // Check for special cases
+  for (const [key, variants] of Object.entries(specialCases)) {
+    if (originalTitle.toLowerCase().includes(key.toLowerCase()) || 
+        key.toLowerCase().includes(originalTitle.toLowerCase())) {
+      variations.push(...variants);
+    }
+  }
+  
+  // Add common variations
+  variations.push(
+    originalTitle.replace(/:/g, ''),
+    originalTitle.replace(/:/g, ' -'),
+    originalTitle.split(':')[0],
+    originalTitle.split(' -')[0]
+  );
+  
+  // Remove duplicates and empty strings
+  return [...new Set(variations)].filter(v => v && v.trim());
+}
+
+async function searchTrailerByTitle(searchTitle) {
+  if (!searchTitle) return null;
+  
+  try {
+    const searchQuery = `
+      query ($search: String) {
+        Page(page: 1, perPage: 10) {
+          media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
+            id
+            title {
+              romaji
+              english
+              native
+            }
+            description
+            trailer {
+              id
+              site
+              thumbnail
+            }
+          }
+        }
+      }
+    `;
+    
+    const response = await fetch(ANILIST_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: searchQuery,
+        variables: { search: searchTitle }
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.Page && data.data.Page.media) {
+        for (const media of data.data.Page.media) {
+          if (media.trailer && media.trailer.id && media.trailer.site === 'youtube') {
+            return {
+              trailerUrl: `https://www.youtube.com/embed/${media.trailer.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1`,
+              title: media.title.english || media.title.romaji || media.title.native,
+              description: media.description ? media.description.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : null
+            };
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Title-based trailer search failed:', error);
+  }
+  
+  return null;
+}
+
+function embedTrailer(trailerUrl, title) {
+  trailerPlayer.innerHTML = `
+    <iframe 
+      src="${trailerUrl}" 
+      title="${title} Trailer"
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen
+      onerror="handleTrailerError('${title}')"
+      onload="handleTrailerLoad()">
+    </iframe>
+  `;
+}
+
+function handleTrailerError(animeTitle) {
+  console.warn('YouTube trailer failed to load:', animeTitle);
+  showTrailerError('YouTube-Fehler beim Laden des Trailers');
+}
+
+function handleTrailerLoad() {
+  console.log('Trailer loaded successfully');
+}
+
+function showTrailerError(message) {
+  trailerPlayer.innerHTML = `
+    <div class="trailer-loading">
+      <div style="font-size: 48px; color: var(--muted); margin-bottom: 16px;">⚠️</div>
+      <h3 style="color: var(--text); font-weight: 600; margin-bottom: 12px;">Trailer-Fehler</h3>
+      <p style="color: var(--danger); font-size: 16px; line-height: 1.5; margin-bottom: 16px;">
+        ${message}
+      </p>
+      <div style="padding: 16px; background: var(--card); border-radius: 12px; border: 1px solid var(--border);">
+        <p style="color: var(--text); font-size: 14px; margin: 0;">
+          🔧 <strong>Mögliche Ursachen:</strong><br>
+          • YouTube hat die Einbettung blockiert<br>
+          • Trailer ist nicht mehr verfügbar<br>
+          • Netzwerk- oder Browser-Problem
+        </p>
+      </div>
+    </div>
+  `;
+  trailerAnimeDescription.textContent = 'Trailer konnte nicht geladen werden - bitte manuell suchen.';
+}
+
+function showNoTrailerMessage(animeTitle) {
+  trailerPlayer.innerHTML = `
+    <div class="trailer-loading">
+      <div style="font-size: 64px; color: var(--muted); margin-bottom: 20px;">😔</div>
+      <h3 style="color: var(--text); font-weight: 600; margin-bottom: 12px;">Wir finden keinen Trailer</h3>
+      <p style="color: var(--muted); font-size: 16px; line-height: 1.5;">
+        Für <strong>${animeTitle}</strong> konnten wir leider keinen offiziellen Trailer in unserer Datenbank finden.
+      </p>
+      <div style="margin-top: 20px; padding: 16px; background: var(--card); border-radius: 12px; border: 1px solid var(--border);">
+        <p style="color: var(--text); font-size: 14px; margin: 0;">
+          🔍 <strong>Sorry!</strong> Suche ihn selbst, falls es einen gibt! Versuche es auf YouTube oder anderen Plattformen.
+        </p>
+      </div>
+    </div>
+  `;
+  trailerAnimeDescription.textContent = `Kein Trailer für ${animeTitle} gefunden - bitte selbst suchen!`;
+}
+
+function closeAnimeTrailerModal() {
+  animeTrailerModal.style.display = 'none';
+  // Clear the iframe to stop video playback
+  trailerPlayer.innerHTML = '';
+}
+
+async function checkTrailerAvailability(animeId) {
+  if (!animeId || animeId === '0') return false;
+  
+  try {
+    // Quick check with AniList
+    const anilistQuery = `
+      query ($id: Int) {
+        Media(id: $id) {
+          trailer {
+            id
+            site
+          }
+        }
+      }
+    `;
+    
+    const response = await fetch(ANILIST_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: anilistQuery,
+        variables: { id: parseInt(animeId) }
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.Media && data.data.Media.trailer && data.data.Media.trailer.id) {
+        return true;
+      }
+    }
+  } catch (error) {
+    // Continue to Jikan check
+  }
+  
+  // Fallback to Jikan API
+  try {
+    const response = await fetch(`${API_BASE}/anime/${animeId}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.data && data.data.trailer && data.data.trailer.youtube_id;
+    }
+  } catch (error) {
+    // Ignore errors
+  }
+  
+  return false;
+}
+
+// Simplified trailer check - only check by ID to reduce API calls and errors
+async function checkTrailerAvailabilityWithFallback(animeId, animeTitle) {
+  // Only check if we have a valid ID to avoid excessive API calls
+  if (animeId && animeId !== '0') {
+    try {
+      return await checkTrailerAvailability(animeId);
+    } catch (error) {
+      console.warn('Trailer availability check failed:', error);
+      return false;
+    }
+  }
+  
+  // For animes without ID, don't check to avoid errors
+  return false;
+}
+
+// Removed searchTrailerByTitle function to reduce API calls and potential errors
 
 // Rating Functions
 function openRatingModal(card) {
@@ -1709,11 +2085,20 @@ function updateRatingDisplay(card, rating) {
       `<span class="rating-star" style="animation-delay: ${index * 0.1}s">${star}</span>`
     ).join('');
     
+    // Create 10 stars in 2 rows of 5 stars each
+    const filledStars = '⭐'.repeat(Math.min(rating, 10));
+    const emptyStars = '☆'.repeat(Math.max(0, 10 - rating));
+    const allStars = filledStars + emptyStars;
+    
+    // Split into two rows of 5 stars each
+    const firstRow = allStars.substring(0, 5);
+    const secondRow = allStars.substring(5, 10);
+    
     ratingDisplay.innerHTML = `
       <div class="rating-text">${rating}/10</div>
-      <div class="rating-stars">${starElements}</div>
-      <div class="rating-progress">
-        <div class="rating-progress-bar" style="width: ${progress}%"></div>
+      <div class="rating-stars-10">
+        <div class="star-row">${firstRow}</div>
+        <div class="star-row">${secondRow}</div>
       </div>
       ${review ? `<div class="rating-review">"${review}"</div>` : ''}
     `;
@@ -1726,13 +2111,7 @@ function updateRatingDisplay(card, rating) {
       card.appendChild(ratingDisplay);
     }
     
-    // Animate progress bar after a short delay
-    setTimeout(() => {
-      const progressBar = ratingDisplay.querySelector('.rating-progress-bar');
-      if (progressBar) {
-        progressBar.style.width = `${progress}%`;
-      }
-    }, 100);
+    // No progress bar animation needed for 10-star system
   }
 }
 
@@ -2151,6 +2530,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && restoreModal.style.display === 'flex') closeRestoreModal();
   if (e.key === 'Escape' && terminModal.style.display === 'flex') closeTerminModal();
   if (e.key === 'Escape' && animeDetailsModal.style.display === 'flex') closeAnimeDetailsModal();
+  if (e.key === 'Escape' && animeTrailerModal.style.display === 'flex') closeAnimeTrailerModal();
 });
 modalTitleInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') { e.preventDefault(); saveTitle(); }
@@ -2178,6 +2558,13 @@ if (adminClose) adminClose.addEventListener('click', () => adminModal.style.disp
 if (adminCancel) adminCancel.addEventListener('click', () => adminModal.style.display = 'none');
 if (adminLogin) adminLogin.addEventListener('click', loginAdmin);
 if (adminPassword) adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginAdmin(); });
+
+// Help handlers
+if (helpBtn) helpBtn.addEventListener('click', () => helpModal.style.display = 'flex');
+if (helpClose) helpClose.addEventListener('click', () => helpModal.style.display = 'none');
+if (helpModal) helpModal.addEventListener('click', (e) => {
+  if (e.target === helpModal) helpModal.style.display = 'none';
+});
 
 // Backup handlers
 if (backupBtn) {
@@ -2258,6 +2645,12 @@ if (terminModal) terminModal.addEventListener('click', (e) => {
 if (animeDetailsClose) animeDetailsClose.addEventListener('click', closeAnimeDetailsModal);
 if (animeDetailsModal) animeDetailsModal.addEventListener('click', (e) => {
   if (e.target === animeDetailsModal) closeAnimeDetailsModal();
+});
+
+// Anime Trailer Modal handlers
+if (trailerClose) trailerClose.addEventListener('click', closeAnimeTrailerModal);
+if (animeTrailerModal) animeTrailerModal.addEventListener('click', (e) => {
+  if (e.target === animeTrailerModal) closeAnimeTrailerModal();
 });
 
 // Init
