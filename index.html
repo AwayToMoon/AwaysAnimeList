@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aways Anime List</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAKvSURBVFiFtZc9aBRBFMd/s7vJJQQSCxsrwcJKG1sLwcJCG1sLBQsLG1sLBQsLG1sLBQsLG1sLBQsLG1sLBQsLG1sLBQsLG1sLBQsLG1sLBQsLG1sLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsLBQsLGxsL">
+<link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -66,7 +65,7 @@
         <div class="field-group">
           <input id="anime-input" type="text" placeholder="Anime-Name eingeben..." required>
           <select id="anime-list-select" aria-label="Liste wählen">
-            <option value="plan">Gerade am schauen</option>
+            <option value="plan">Noch am anschauen</option>
             <option value="watched">Fertig Geschaut</option>
             <option value="waiting">Warten auf Fortsetzung</option>
             <option value="fsk">FSK16/18+</option>
@@ -79,7 +78,7 @@
     </section>
 
     <nav class="tabs" role="tablist">
-      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Gerade am schauen</button>
+      <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Noch am anschauen</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="watched">Fertig Geschaut</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="waiting">Warten auf Fortsetzung</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="fsk">FSK16/18+</button>
@@ -87,7 +86,7 @@
     </nav>
 
     <main class="content">
-      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Gerade am schauen">
+      <section id="tab-plan" class="tab-panel active" role="tabpanel" aria-label="Noch am anschauen">
         <div id="grid-plan" class="grid"></div>
       </section>
       <section id="tab-watched" class="tab-panel" role="tabpanel" aria-label="Fertig Geschaut">
@@ -327,7 +326,7 @@
               </div>
               <div class="contact-item">
                 <strong>📧 Email:</strong>
-                <a href="mailto:away73027@gmail.com" class="contact-link">away73027@gmail.com</a>
+                <a href="mailto:away73027@gmail.com" class="contact-link">support@aways-anime.de</a>
               </div>
             </div>
           </div>
@@ -370,7 +369,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
