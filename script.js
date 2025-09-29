@@ -7,14 +7,12 @@ const tabs = Array.from(document.querySelectorAll('.tab'));
 const panels = {
   plan: document.getElementById('tab-plan'),
   watched: document.getElementById('tab-watched'),
-  waiting: document.getElementById('tab-waiting'),
-  fsk: document.getElementById('tab-fsk')
+  waiting: document.getElementById('tab-waiting')
 };
 const grids = {
   plan: document.getElementById('grid-plan'),
   watched: document.getElementById('grid-watched'),
-  waiting: document.getElementById('grid-waiting'),
-  fsk: document.getElementById('grid-fsk')
+  waiting: document.getElementById('grid-waiting')
 };
 const themeToggle = document.getElementById('theme-toggle');
 
@@ -23,7 +21,6 @@ const totalCount = document.getElementById('total-count');
 const watchedCount = document.getElementById('watched-count');
 const planCount = document.getElementById('plan-count');
 const waitingCount = document.getElementById('waiting-count');
-const fskCount = document.getElementById('fsk-count');
 
 // Live status elements
 const liveStatus = document.getElementById('live-status');
@@ -58,17 +55,6 @@ const backupFile = document.getElementById('backup-file');
 const restoreCancel = document.getElementById('restore-cancel');
 const restoreConfirm = document.getElementById('restore-confirm');
 
-// Rating elements
-const ratingModal = document.getElementById('rating-modal');
-const ratingClose = document.querySelector('[data-close-rating]');
-const ratingStars = document.getElementById('rating-stars');
-const ratingText = document.getElementById('rating-text');
-const ratingReview = document.getElementById('rating-review');
-const ratingCancel = document.getElementById('rating-cancel');
-const ratingSave = document.getElementById('rating-save');
-const ratingRemove = document.getElementById('rating-remove');
-
-
 // Termin elements
 const terminModal = document.getElementById('termin-modal');
 const terminClose = document.querySelector('[data-close-termin]');
@@ -81,19 +67,6 @@ const terminSave = document.getElementById('termin-save');
 const terminRemove = document.getElementById('termin-remove');
 const dateFields = document.getElementById('date-fields');
 const timeField = document.getElementById('time-field');
-
-// Anime Details Modal elements
-const animeDetailsModal = document.getElementById('anime-details-modal');
-const animeDetailsClose = document.querySelector('[data-close-details]');
-const animeDetailsTitle = document.getElementById('anime-details-title');
-const animeDetailsName = document.getElementById('anime-details-name');
-const animeDetailsImage = document.getElementById('anime-details-image');
-const animeDetailsEpisodes = document.getElementById('anime-details-episodes');
-const animeDetailsStatus = document.getElementById('anime-details-status');
-const animeDetailsRating = document.getElementById('anime-details-rating');
-const animeDetailsYear = document.getElementById('anime-details-year');
-const animeDetailsGenresList = document.getElementById('anime-details-genres-list');
-const animeDetailsExternalLink = document.getElementById('anime-details-external-link');
 
 const API_BASE = 'https://api.jikan.moe/v4';
 const ANILIST_API = 'https://graphql.anilist.co';
@@ -295,15 +268,8 @@ async function switchTab(key) {
         card.style.animation = 'none';
         // Force reflow
         card.offsetHeight;
-        
-        // Choose animation type based on position for variety
-        const animationType = index % 3 === 0 ? 'cardBounceIn' : 
-                             index % 3 === 1 ? 'cardStaggerIn' : 'cardSlideIn';
-        const delay = index * 0.08; // Slightly faster stagger
-        const duration = index % 3 === 0 ? '0.8s' : '0.6s';
-        
-        // Re-add animation with proper delay and type
-        card.style.animation = `${animationType} ${duration} cubic-bezier(0.4, 0, 0.2, 1) ${delay}s both`;
+        // Re-add animation with proper delay
+        card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
       });
     }
   });
@@ -531,135 +497,6 @@ async function searchAniSearch(query) {
   }
 }
 
-// Anime tag mapping for better categorization
-const ANIME_TAG_MAPPING = {
-  'Isekai': 'isekai',
-  'Action': 'action',
-  'Romance': 'romance',
-  'Comedy': 'comedy',
-  'Drama': 'drama',
-  'Fantasy': 'fantasy',
-  'Sports': 'sports',
-  'Mystery': 'mystery',
-  'Horror': 'horror',
-  'Slice of Life': 'slice-of-life',
-  'Mecha': 'mecha',
-  'Supernatural': 'supernatural',
-  'Adventure': 'action',
-  'Sci-Fi': 'fantasy',
-  'Thriller': 'mystery',
-  'Psychological': 'drama',
-  'School': 'slice-of-life',
-  'Music': 'slice-of-life',
-  'Historical': 'drama',
-  'Military': 'action',
-  'Parody': 'comedy',
-  'Samurai': 'action',
-  'Demons': 'supernatural',
-  'Magic': 'fantasy',
-  'Vampire': 'supernatural',
-  'Martial Arts': 'action',
-  'Police': 'action',
-  'Space': 'fantasy',
-  'Game': 'fantasy',
-  'Cars': 'sports',
-  'Josei': 'drama',
-  'Seinen': 'drama',
-  'Shoujo': 'romance',
-  'Shounen': 'action'
-};
-
-async function fetchAnimeTags(animeId) {
-  try {
-    // Try AniList first for better tag data
-    const anilistQuery = `
-      query ($id: Int) {
-        Media(id: $id) {
-          genres
-          tags {
-            name
-            rank
-          }
-        }
-      }
-    `;
-    
-    const response = await fetch(ANILIST_API, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query: anilistQuery,
-        variables: { id: animeId }
-      })
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      if (data.data && data.data.Media) {
-        const media = data.data.Media;
-        const tags = [];
-        
-        // Add genres as primary tags
-        if (media.genres && media.genres.length > 0) {
-          tags.push(...media.genres.slice(0, 3));
-        }
-        
-        // Add top-ranked tags
-        if (media.tags && media.tags.length > 0) {
-          const topTags = media.tags
-            .filter(tag => tag.rank > 50) // Only high-ranked tags
-            .sort((a, b) => b.rank - a.rank)
-            .slice(0, 2)
-            .map(tag => tag.name);
-          tags.push(...topTags);
-        }
-        
-        return [...new Set(tags)].slice(0, 4); // Remove duplicates and limit to 4 tags
-      }
-    }
-  } catch (error) {
-    console.warn('AniList tags fetch failed:', error);
-  }
-  
-  // Fallback to Jikan API
-  try {
-    const response = await fetch(`${API_BASE}/anime/${animeId}`);
-    if (response.ok) {
-      const data = await response.json();
-      if (data.data && data.data.genres) {
-        return data.data.genres
-          .filter(genre => genre.name)
-          .slice(0, 4)
-          .map(genre => genre.name);
-      }
-    }
-  } catch (error) {
-    console.warn('Jikan tags fetch failed:', error);
-  }
-  
-  return [];
-}
-
-function createAnimeTags(tags) {
-  if (!tags || tags.length === 0) return '';
-  
-  const tagElements = tags.map(tag => {
-    const normalizedTag = tag.toLowerCase();
-    const tagClass = ANIME_TAG_MAPPING[tag] || 
-                    Object.keys(ANIME_TAG_MAPPING).find(key => 
-                      key.toLowerCase() === normalizedTag
-                    )?.toLowerCase() || 
-                    'action'; // Default fallback
-    
-    return `<span class="anime-tag ${tagClass}">${tag}</span>`;
-  }).join('');
-  
-  return `<div class="anime-tags">${tagElements}</div>`;
-}
-
 async function fetchAnimeByTitle(title) {
   const originalTitle = title.trim();
   
@@ -728,15 +565,11 @@ async function fetchAnimeByTitle(title) {
         if (chosen) {
           const matchQuality = calculateMatchQuality(chosen, originalTitle);
           if (matchQuality > 0.2) {
-            // Fetch tags for the anime
-            const tags = await fetchAnimeTags(chosen.id);
-            
             return {
               id: chosen.id,
               title: chosen.title || chosen.title_english || originalTitle,
               image: getBestImageUrl(chosen),
-              url: chosen.url,
-              tags: tags
+              url: chosen.url
             };
           }
         }
@@ -758,15 +591,11 @@ async function fetchAnimeByTitle(title) {
         if (chosen) {
           const matchQuality = calculateMatchQuality(chosen, originalTitle);
           if (matchQuality > 0.2) {
-            // Fetch tags for the anime
-            const tags = await fetchAnimeTags(chosen.id);
-            
             return {
               id: chosen.id,
               title: chosen.title || chosen.title_english || originalTitle,
               image: getBestImageUrl(chosen),
-              url: chosen.url,
-              tags: tags
+              url: chosen.url
             };
           }
         }
@@ -800,15 +629,11 @@ async function fetchAnimeByTitle(title) {
             // Double-check: if the match is very poor, don't return it
             const matchQuality = calculateMatchQuality(chosen, originalTitle);
             if (matchQuality > 0.2) { // Lowered threshold for better results
-              // Fetch tags for the anime
-              const tags = await fetchAnimeTags(chosen.mal_id);
-              
               return {
                 id: chosen.mal_id,
                 title: chosen.title || chosen.title_english || originalTitle,
                 image: getBestImageUrl(chosen),
-                url: chosen.url,
-                tags: tags
+                url: chosen.url
               };
             }
           }
@@ -863,7 +688,6 @@ function createCard(anime, listKey) {
   card.className = 'card';
   card.dataset.id = String(anime.id || '0');
   card.dataset.list = listKey;
-  card.dataset.rating = anime.rating || '0';
 
   const coverWrap = document.createElement('div');
   coverWrap.className = 'cover-wrap';
@@ -913,20 +737,6 @@ function createCard(anime, listKey) {
     toggleLiveStatus(card);
   });
 
-  // Rating Button - für alle Nutzer sichtbar
-  const ratingBtn = document.createElement('button');
-  ratingBtn.type = 'button';
-  ratingBtn.className = 'cover-rating';
-  ratingBtn.title = 'Bewerten';
-  ratingBtn.textContent = '⭐';
-  ratingBtn.addEventListener('click', () => {
-    if (localStorage.getItem('animes-is-admin') !== 'true') {
-      setMessage('Nur Admins können bewerten.', 'error');
-      return;
-    }
-    openRatingModal(card);
-  });
-
   // Termin Button - nur für "waiting" Liste
   const terminBtn = document.createElement('button');
   terminBtn.type = 'button';
@@ -944,7 +754,6 @@ function createCard(anime, listKey) {
   coverWrap.appendChild(img);
   coverWrap.appendChild(editBtn);
   coverWrap.appendChild(liveBtn);
-  coverWrap.appendChild(ratingBtn);
   if (listKey === 'waiting') {
     coverWrap.appendChild(terminBtn);
   }
@@ -952,14 +761,6 @@ function createCard(anime, listKey) {
   const titleEl = document.createElement('h3');
   titleEl.className = 'title';
   titleEl.textContent = anime.title;
-  titleEl.title = anime.title; // Add tooltip for full title
-
-  // Add anime tags if available
-  if (anime.tags && anime.tags.length > 0) {
-    const tagsContainer = document.createElement('div');
-    tagsContainer.innerHTML = createAnimeTags(anime.tags);
-    card.appendChild(tagsContainer);
-  }
 
   // Termin Display - nur für "waiting" Liste
   if (listKey === 'waiting' && anime.termin) {
@@ -1005,9 +806,23 @@ function createCard(anime, listKey) {
     card.appendChild(terminDisplay);
   }
 
-  // Create admin actions container (only for admins)
-  const adminActions = document.createElement('div');
-  adminActions.className = 'actions';
+  const actions = document.createElement('div');
+  actions.className = 'actions';
+
+  const link = document.createElement('a');
+  link.href = anime.url || '#';
+  link.target = '_blank';
+  link.rel = 'noreferrer';
+  link.className = 'btn link';
+  link.title = 'Details anzeigen';
+  
+  // Add text for non-admin users
+  const isAdmin = localStorage.getItem('animes-is-admin') === 'true';
+  if (isAdmin) {
+    link.textContent = '🔗';
+  } else {
+    link.innerHTML = '🔗 ZUM ANIME';
+  }
 
   // Create dropdown container
   const moveContainer = document.createElement('div');
@@ -1021,8 +836,7 @@ function createCard(anime, listKey) {
   const listOptions = [
     { value: 'plan', text: '📋 Noch anschauen', icon: '📋' },
     { value: 'watched', text: '✅ Fertig geschaut', icon: '✅' },
-    { value: 'waiting', text: '⏳ Warten auf Fortsetzung', icon: '⏳' },
-    { value: 'fsk', text: '🔞 FSK16/18+', icon: '🔞' }
+    { value: 'waiting', text: '⏳ Warten auf Fortsetzung', icon: '⏳' }
   ];
   
   listOptions.forEach(option => {
@@ -1064,46 +878,13 @@ function createCard(anime, listKey) {
     await deleteCard(card);
   });
 
-  adminActions.appendChild(moveContainer);
-  adminActions.appendChild(delBtn);
-
-  // Create link button container (always at the bottom)
-  const linkContainer = document.createElement('div');
-  linkContainer.className = 'link-container';
-
-  const link = document.createElement('button');
-  link.type = 'button';
-  link.className = 'btn link';
-  link.title = 'Details anzeigen';
-  link.textContent = '📋 DETAILS';
-  
-  // Add click handler to open details modal
-  link.addEventListener('click', () => {
-    openAnimeDetailsModal(anime);
-  });
-
-  linkContainer.appendChild(link);
+  actions.appendChild(link);
+  actions.appendChild(moveContainer);
+  actions.appendChild(delBtn);
 
   card.appendChild(coverWrap);
   card.appendChild(titleEl);
-  card.appendChild(adminActions);
-  card.appendChild(linkContainer);
-
-  // Add rating display if exists - für alle Nutzer sichtbar
-  if (anime.rating && anime.rating > 0) {
-    const ratingDisplay = document.createElement('div');
-    ratingDisplay.className = 'rating-display';
-    
-    const review = anime.review || '';
-    
-    ratingDisplay.innerHTML = `
-      <div class="rating-text">⭐ ${anime.rating}/10</div>
-      ${review ? `<div class="rating-review">"${review}"</div>` : ''}
-    `;
-    
-    // Insert before link container
-    card.insertBefore(ratingDisplay, linkContainer);
-  }
+  card.appendChild(actions);
 
   return card;
 }
@@ -1117,33 +898,13 @@ function addAnimeToList(anime, listKey) {
     updateTerminDisplay(card, anime.termin);
   }
   
-  // Load rating data if it exists
-  if (anime.rating && anime.rating > 0) {
-    card.dataset.rating = anime.rating;
-    card.dataset.review = anime.review || '';
-    updateRatingDisplay(card, anime.rating);
-  }
-  
   // Insert card in alphabetical order
   insertCardAlphabetically(card, listKey);
   
-  // Re-animate all cards with enhanced staggered effect
+  // Re-animate all cards
   const allCards = grids[listKey].querySelectorAll('.card');
   allCards.forEach((card, index) => {
-    // Remove existing animation
-    card.style.animation = 'none';
-    // Force reflow
-    card.offsetHeight;
-    
-    // Choose animation type for variety
-    const animationType = index % 4 === 0 ? 'cardBounceIn' : 
-                         index % 4 === 1 ? 'cardStaggerIn' : 
-                         index % 4 === 2 ? 'cardSlideIn' : 'cardBounceIn';
-    const delay = index * 0.06; // Faster stagger for new additions
-    const duration = index % 4 === 0 ? '0.9s' : '0.7s';
-    
-    // Apply enhanced animation
-    card.style.animation = `${animationType} ${duration} cubic-bezier(0.4, 0, 0.2, 1) ${delay}s both`;
+    card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
   });
   
   updateStats();
@@ -1201,8 +962,7 @@ async function moveCard(card, targetList) {
   const listNames = {
     plan: 'Noch anschauen',
     watched: 'Schon angeschaut', 
-    waiting: 'Warten auf Fortsetzung',
-    fsk: 'FSK16/18+'
+    waiting: 'Warten auf Fortsetzung'
   };
   setMessage(`Verschoben nach "${listNames[targetList]}": ${title}`, 'success');
   updateStats();
@@ -1221,8 +981,7 @@ function updateCardDropdown(card, currentList) {
   const listOptions = [
     { value: 'plan', text: '📋 Noch anschauen' },
     { value: 'watched', text: '✅ Fertig geschaut' },
-    { value: 'waiting', text: '⏳ Warten auf Fortsetzung' },
-    { value: 'fsk', text: '🔞 FSK16/18+' }
+    { value: 'waiting', text: '⏳ Warten auf Fortsetzung' }
   ];
   
   listOptions.forEach(option => {
@@ -1409,14 +1168,9 @@ function updateTerminDisplay(card, termin) {
     }
   }
   
-  // Insert after title, before admin actions
+  // Insert after title, before actions
   const titleEl = card.querySelector('.title');
-  const adminActions = card.querySelector('.actions');
-  if (adminActions) {
-    titleEl.parentNode.insertBefore(terminDisplay, adminActions);
-  } else {
-    titleEl.parentNode.appendChild(terminDisplay);
-  }
+  titleEl.parentNode.insertBefore(terminDisplay, titleEl.nextSibling);
 }
 
 function updateTerminFieldsVisibility() {
@@ -1430,312 +1184,6 @@ function updateTerminFieldsVisibility() {
     timeField.classList.remove('hidden');
   }
 }
-
-// Anime Details Modal Functions
-async function openAnimeDetailsModal(anime) {
-  // Set basic info
-  animeDetailsName.textContent = anime.title;
-  animeDetailsImage.src = anime.image || '';
-  animeDetailsImage.alt = anime.title;
-  animeDetailsExternalLink.href = anime.url || '#';
-  
-  // Show loading state
-  animeDetailsEpisodes.textContent = 'Lade...';
-  animeDetailsStatus.textContent = 'Lade...';
-  animeDetailsRating.textContent = 'Lade...';
-  animeDetailsYear.textContent = 'Lade...';
-  animeDetailsGenresList.innerHTML = '<span class="loading">Lade...</span>';
-  
-  // Show modal
-  animeDetailsModal.style.display = 'flex';
-  
-  // Fetch detailed anime data
-  try {
-    const detailedAnime = await fetchDetailedAnimeData(anime.id);
-    if (detailedAnime) {
-      populateAnimeDetails(detailedAnime);
-    } else {
-      // Fallback to basic info if detailed fetch fails
-      populateBasicAnimeDetails(anime);
-    }
-  } catch (error) {
-    console.warn('Failed to fetch detailed anime data:', error);
-    populateBasicAnimeDetails(anime);
-  }
-}
-
-async function fetchDetailedAnimeData(animeId) {
-  if (!animeId || animeId === '0') return null;
-  
-  try {
-    // Try AniList first for better data
-    const anilistQuery = `
-      query ($id: Int) {
-        Media(id: $id) {
-          id
-          title {
-            romaji
-            english
-            native
-          }
-          description
-          episodes
-          status
-          format
-          startDate {
-            year
-            month
-            day
-          }
-          endDate {
-            year
-            month
-            day
-          }
-          averageScore
-          popularity
-          genres
-          coverImage {
-            large
-            extraLarge
-          }
-          siteUrl
-        }
-      }
-    `;
-    
-    const response = await fetch(ANILIST_API, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query: anilistQuery,
-        variables: { id: parseInt(animeId) }
-      })
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      if (data.data && data.data.Media) {
-        return data.data.Media;
-      }
-    }
-  } catch (error) {
-    console.warn('AniList detailed fetch failed:', error);
-  }
-  
-  // Fallback to Jikan API
-  try {
-    const response = await fetch(`${API_BASE}/anime/${animeId}`);
-    if (response.ok) {
-      const data = await response.json();
-      return data.data;
-    }
-  } catch (error) {
-    console.warn('Jikan detailed fetch failed:', error);
-  }
-  
-  return null;
-}
-
-function populateAnimeDetails(anime) {
-  // Keep the name from the card (don't change it)
-  // animeDetailsName.textContent is already set from the card
-  
-  // Episodes
-  animeDetailsEpisodes.textContent = anime.episodes || anime.episodes_count || '-';
-  
-  // Status
-  const statusMap = {
-    'FINISHED': 'Abgeschlossen',
-    'RELEASING': 'Laufend',
-    'NOT_YET_RELEASED': 'Noch nicht veröffentlicht',
-    'CANCELLED': 'Abgebrochen',
-    'HIATUS': 'Pausiert'
-  };
-  animeDetailsStatus.textContent = statusMap[anime.status] || anime.status || '-';
-  
-  // Rating - get from card data
-  const cardRating = document.querySelector(`[data-id="${anime.id}"]`)?.dataset.rating;
-  if (cardRating && cardRating !== '0') {
-    animeDetailsRating.textContent = `${cardRating}/10`;
-  } else {
-    animeDetailsRating.textContent = 'Noch nicht bewertet';
-  }
-  
-  // Year
-  const year = anime.startDate?.year || anime.year;
-  animeDetailsYear.textContent = year || '-';
-  
-  // Genres
-  if (anime.genres && anime.genres.length > 0) {
-    animeDetailsGenresList.innerHTML = anime.genres.map(genre => 
-      `<span class="genre-tag">${genre}</span>`
-    ).join('');
-  } else {
-    animeDetailsGenresList.innerHTML = '<span class="meta-value">Keine Genres verfügbar</span>';
-  }
-  
-}
-
-function populateBasicAnimeDetails(anime) {
-  // Fallback to basic info if detailed fetch fails
-  animeDetailsName.textContent = anime.title || 'Unbekannt';
-  animeDetailsEpisodes.textContent = '-';
-  animeDetailsStatus.textContent = '-';
-  
-  // Rating - get from card data
-  const cardRating = document.querySelector(`[data-id="${anime.id}"]`)?.dataset.rating;
-  if (cardRating && cardRating !== '0') {
-    animeDetailsRating.textContent = `${cardRating}/10`;
-  } else {
-    animeDetailsRating.textContent = 'Noch nicht bewertet';
-  }
-  
-  animeDetailsYear.textContent = '-';
-  animeDetailsGenresList.innerHTML = '<span class="meta-value">Keine Genres verfügbar</span>';
-}
-
-function closeAnimeDetailsModal() {
-  animeDetailsModal.style.display = 'none';
-}
-
-// Rating Functions
-function openRatingModal(card) {
-  const currentRating = card.dataset.rating || '0';
-  const currentReview = card.dataset.review || '';
-  
-  // Set current rating
-  ratingStars.querySelectorAll('.star').forEach((star, index) => {
-    if (index < parseInt(currentRating)) {
-      star.classList.add('active');
-    } else {
-      star.classList.remove('active');
-    }
-  });
-  
-  ratingReview.value = currentReview;
-  ratingText.textContent = currentRating > 0 ? `${currentRating}/10` : 'Bewertung auswählen';
-  ratingRemove.style.display = currentRating > 0 ? 'inline-block' : 'none';
-  
-  ratingModal.style.display = 'flex';
-  ratingModal.dataset.cardId = card.dataset.id;
-}
-
-function closeRatingModal() {
-  ratingModal.style.display = 'none';
-  ratingStars.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
-  ratingReview.value = '';
-  ratingText.textContent = 'Bewertung auswählen';
-  ratingModal.dataset.cardId = '';
-  ratingRemove.style.display = 'none';
-}
-
-function saveRating() {
-  const cardId = ratingModal.dataset.cardId;
-  const rating = ratingStars.querySelectorAll('.star.active').length;
-  const review = ratingReview.value.trim();
-  
-  if (rating === 0) {
-    setMessage('Bitte wähle eine Bewertung aus.', 'error');
-    return;
-  }
-  
-  // Find the card and update it
-  const allCards = document.querySelectorAll('.card');
-  for (const card of allCards) {
-    if (card.dataset.id === cardId) {
-      card.dataset.rating = rating;
-      card.dataset.review = review;
-      
-      // Update or create rating display
-      updateRatingDisplay(card, rating);
-      
-      setMessage('Bewertung gespeichert!', 'success');
-      break;
-    }
-  }
-  
-  closeRatingModal();
-  saveAll();
-  updateStats();
-}
-
-function removeRating() {
-  const cardId = ratingModal.dataset.cardId;
-  
-  // Find the card and remove rating
-  const allCards = document.querySelectorAll('.card');
-  for (const card of allCards) {
-    if (card.dataset.id === cardId) {
-      delete card.dataset.rating;
-      delete card.dataset.review;
-      
-      // Remove rating display
-      const ratingDisplay = card.querySelector('.rating-display');
-      if (ratingDisplay) {
-        ratingDisplay.remove();
-      }
-      
-      setMessage('Bewertung entfernt!', 'success');
-      break;
-    }
-  }
-  
-  closeRatingModal();
-  saveAll();
-  updateStats();
-}
-
-function updateRatingDisplay(card, rating) {
-  // Remove existing rating display
-  const existingDisplay = card.querySelector('.rating-display');
-  if (existingDisplay) {
-    existingDisplay.remove();
-  }
-  
-  if (rating > 0) {
-    const ratingDisplay = document.createElement('div');
-    ratingDisplay.className = 'rating-display';
-    
-    const review = card.dataset.review || '';
-    const progress = (rating / 10) * 100;
-    
-    // Create star display
-    const stars = '⭐'.repeat(Math.min(rating, 5));
-    const starElements = stars.split('').map((star, index) => 
-      `<span class="rating-star" style="animation-delay: ${index * 0.1}s">${star}</span>`
-    ).join('');
-    
-    ratingDisplay.innerHTML = `
-      <div class="rating-text">${rating}/10</div>
-      <div class="rating-stars">${starElements}</div>
-      <div class="rating-progress">
-        <div class="rating-progress-bar" style="width: ${progress}%"></div>
-      </div>
-      ${review ? `<div class="rating-review">"${review}"</div>` : ''}
-    `;
-    
-    // Insert before link container
-    const linkContainer = card.querySelector('.link-container');
-    if (linkContainer) {
-      card.insertBefore(ratingDisplay, linkContainer);
-    } else {
-      card.appendChild(ratingDisplay);
-    }
-    
-    // Animate progress bar after a short delay
-    setTimeout(() => {
-      const progressBar = ratingDisplay.querySelector('.rating-progress-bar');
-      if (progressBar) {
-        progressBar.style.width = `${progress}%`;
-      }
-    }, 100);
-  }
-}
-
 
 async function deleteCard(card) {
   const title = card.querySelector('.title')?.textContent || '';
@@ -1778,9 +1226,7 @@ function serializeList(listKey) {
     const url = card.querySelector('a')?.href || '';
     const id = Number(card.dataset.id) || 0;
     const termin = card.dataset.termin ? JSON.parse(card.dataset.termin) : null;
-    const rating = card.dataset.rating ? parseInt(card.dataset.rating) : null;
-    const review = card.dataset.review || null;
-    return { id, title, image: cover, url, termin, rating, review };
+    return { id, title, image: cover, url, termin };
   });
 }
 
@@ -1789,7 +1235,6 @@ function saveAll() {
     plan: serializeList('plan'),
     watched: serializeList('watched'),
     waiting: serializeList('waiting'),
-    fsk: serializeList('fsk'),
     timestamp: new Date().toISOString(),
     version: '1.0'
   };
@@ -1863,7 +1308,6 @@ function createBackup() {
     plan: serializeList('plan'),
     watched: serializeList('watched'),
     waiting: serializeList('waiting'),
-    fsk: serializeList('fsk'),
     timestamp: new Date().toISOString(),
     version: '1.0'
   };
@@ -1910,12 +1354,12 @@ function restoreFromBackup() {
       }
       
       // Clear current data
-      ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+      ['plan', 'watched', 'waiting'].forEach(key => {
         grids[key].innerHTML = '';
       });
       
       // Restore data
-      ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+      ['plan', 'watched', 'waiting'].forEach(key => {
         if (data[key] && Array.isArray(data[key])) {
           data[key].forEach(item => {
             if (item.title) {
@@ -1928,8 +1372,7 @@ function restoreFromBackup() {
       saveAll();
       updateStats();
       closeRestoreModal();
-      const totalAnimes = (data.plan?.length || 0) + (data.watched?.length || 0) + (data.waiting?.length || 0) + (data.fsk?.length || 0);
-      setMessage(`Backup erfolgreich wiederhergestellt! ${totalAnimes} Animes geladen.`, 'success');
+      setMessage(`Backup erfolgreich wiederhergestellt! ${data.plan.length + data.watched.length + data.waiting.length} Animes geladen.`, 'success');
       
     } catch (error) {
       setMessage('Fehler beim Laden der Backup-Datei: ' + error.message, 'error');
@@ -1955,7 +1398,7 @@ async function loadAll() {
     const raw = localStorage.getItem('animes-app');
     if (!raw) return;
     const data = JSON.parse(raw);
-    ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting'].forEach(key => {
       // Sort animes alphabetically before adding them
       const sortedAnimes = (data[key] || []).sort((a, b) => 
         a.title.toLowerCase().localeCompare(b.title.toLowerCase())
@@ -1998,12 +1441,12 @@ async function loadFirebaseLiveStatus() {
 
 function loadFirebaseData(data) {
   // Clear current data
-  ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+  ['plan', 'watched', 'waiting'].forEach(key => {
     grids[key].innerHTML = '';
   });
   
   // Load Firebase data
-  ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+  ['plan', 'watched', 'waiting'].forEach(key => {
     if (data[key] && Array.isArray(data[key])) {
       data[key].forEach(item => {
         if (item.title) {
@@ -2022,22 +1465,11 @@ function loadFirebaseData(data) {
 // THEME
 function applyTheme(theme) {
   const root = document.documentElement;
-  
-  // Remove all theme classes
-  root.classList.remove('theme-light', 'theme-neon', 'theme-retro');
-  
-  // Apply the selected theme
   if (theme === 'light') {
     root.classList.add('theme-light');
     if (themeToggle) themeToggle.textContent = '☀️';
-  } else if (theme === 'neon') {
-    root.classList.add('theme-neon');
-    if (themeToggle) themeToggle.textContent = '⚡';
-  } else if (theme === 'retro') {
-    root.classList.add('theme-retro');
-    if (themeToggle) themeToggle.textContent = '🎨';
   } else {
-    // Default dark theme
+    root.classList.remove('theme-light');
     if (themeToggle) themeToggle.textContent = '🌙';
   }
 }
@@ -2046,33 +1478,24 @@ function updateStats() {
   const planItems = grids.plan.children.length;
   const watchedItems = grids.watched.children.length;
   const waitingItems = grids.waiting.children.length;
-  const fskItems = grids.fsk.children.length;
-  const totalItems = planItems + watchedItems + waitingItems + fskItems;
+  const totalItems = planItems + watchedItems + waitingItems;
   
   totalCount.textContent = totalItems;
   planCount.textContent = planItems;
   watchedCount.textContent = watchedItems;
   waitingCount.textContent = waitingItems;
-  fskCount.textContent = fskItems;
 }
 
 function getPreferredTheme() {
   const saved = localStorage.getItem('animes-theme');
-  if (saved === 'light' || saved === 'dark' || saved === 'neon' || saved === 'retro') return saved;
+  if (saved === 'light' || saved === 'dark') return saved;
   const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
   return prefersLight ? 'light' : 'dark';
 }
 
 function toggleTheme() {
-  const themes = ['dark', 'light', 'neon', 'retro'];
-  const current = document.documentElement.classList.contains('theme-light') ? 'light' : 
-                 document.documentElement.classList.contains('theme-neon') ? 'neon' :
-                 document.documentElement.classList.contains('theme-retro') ? 'retro' : 'dark';
-  
-  const currentIndex = themes.indexOf(current);
-  const nextIndex = (currentIndex + 1) % themes.length;
-  const next = themes[nextIndex];
-  
+  const current = document.documentElement.classList.contains('theme-light') ? 'light' : 'dark';
+  const next = current === 'light' ? 'dark' : 'light';
   localStorage.setItem('animes-theme', next);
   applyTheme(next);
 }
@@ -2150,7 +1573,6 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && editModal.style.display === 'flex') closeModal();
   if (e.key === 'Escape' && restoreModal.style.display === 'flex') closeRestoreModal();
   if (e.key === 'Escape' && terminModal.style.display === 'flex') closeTerminModal();
-  if (e.key === 'Escape' && animeDetailsModal.style.display === 'flex') closeAnimeDetailsModal();
 });
 modalTitleInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') { e.preventDefault(); saveTitle(); }
@@ -2198,52 +1620,6 @@ if (restoreClose) restoreClose.addEventListener('click', closeRestoreModal);
 if (restoreCancel) restoreCancel.addEventListener('click', closeRestoreModal);
 if (restoreConfirm) restoreConfirm.addEventListener('click', restoreFromBackup);
 
-// Rating handlers
-if (ratingClose) ratingClose.addEventListener('click', closeRatingModal);
-if (ratingCancel) ratingCancel.addEventListener('click', closeRatingModal);
-if (ratingSave) ratingSave.addEventListener('click', saveRating);
-if (ratingRemove) ratingRemove.addEventListener('click', removeRating);
-if (ratingModal) ratingModal.addEventListener('click', (e) => {
-  if (e.target === ratingModal) closeRatingModal();
-});
-
-// Rating stars interaction
-if (ratingStars) {
-  ratingStars.addEventListener('click', (e) => {
-    if (e.target.classList.contains('star')) {
-      const rating = parseInt(e.target.dataset.rating);
-      ratingStars.querySelectorAll('.star').forEach((star, index) => {
-        if (index < rating) {
-          star.classList.add('active');
-        } else {
-          star.classList.remove('active');
-        }
-      });
-      ratingText.textContent = `${rating}/10`;
-    }
-  });
-  
-  ratingStars.addEventListener('mouseover', (e) => {
-    if (e.target.classList.contains('star')) {
-      const rating = parseInt(e.target.dataset.rating);
-      ratingStars.querySelectorAll('.star').forEach((star, index) => {
-        if (index < rating) {
-          star.classList.add('hover');
-        } else {
-          star.classList.remove('hover');
-        }
-      });
-    }
-  });
-  
-  ratingStars.addEventListener('mouseout', () => {
-    ratingStars.querySelectorAll('.star').forEach(star => {
-      star.classList.remove('hover');
-    });
-  });
-}
-
-
 // Termin handlers
 if (terminClose) terminClose.addEventListener('click', closeTerminModal);
 if (terminCancel) terminCancel.addEventListener('click', closeTerminModal);
@@ -2252,12 +1628,6 @@ if (terminRemove) terminRemove.addEventListener('click', removeTermin);
 if (terminType) terminType.addEventListener('change', updateTerminFieldsVisibility);
 if (terminModal) terminModal.addEventListener('click', (e) => {
   if (e.target === terminModal) closeTerminModal();
-});
-
-// Anime Details Modal handlers
-if (animeDetailsClose) animeDetailsClose.addEventListener('click', closeAnimeDetailsModal);
-if (animeDetailsModal) animeDetailsModal.addEventListener('click', (e) => {
-  if (e.target === animeDetailsModal) closeAnimeDetailsModal();
 });
 
 // Init
