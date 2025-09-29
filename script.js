@@ -1,3 +1,4 @@
+
 (function () {
 const form = document.getElementById('anime-form');
 const input = document.getElementById('anime-input');
@@ -7,12 +8,14 @@ const tabs = Array.from(document.querySelectorAll('.tab'));
 const panels = {
   plan: document.getElementById('tab-plan'),
   watched: document.getElementById('tab-watched'),
-  waiting: document.getElementById('tab-waiting')
+  waiting: document.getElementById('tab-waiting'),
+  fsk: document.getElementById('tab-fsk')
 };
 const grids = {
   plan: document.getElementById('grid-plan'),
   watched: document.getElementById('grid-watched'),
-  waiting: document.getElementById('grid-waiting')
+  waiting: document.getElementById('grid-waiting'),
+  fsk: document.getElementById('grid-fsk')
 };
 const themeToggle = document.getElementById('theme-toggle');
 
@@ -21,6 +24,7 @@ const totalCount = document.getElementById('total-count');
 const watchedCount = document.getElementById('watched-count');
 const planCount = document.getElementById('plan-count');
 const waitingCount = document.getElementById('waiting-count');
+const fskCount = document.getElementById('fsk-count');
 
 // Live status elements
 const liveStatus = document.getElementById('live-status');
@@ -37,6 +41,11 @@ const modalLinkInput = document.getElementById('modal-link-input');
 const modalClose = document.querySelector('.modal-close');
 const modalCancel = document.getElementById('modal-cancel');
 const modalSave = document.getElementById('modal-save');
+
+// Help elements
+const helpBtn = document.getElementById('help-btn');
+const helpModal = document.getElementById('help-modal');
+const helpClose = document.querySelector('[data-close-help]');
 
 // Admin elements
 const adminToggle = document.getElementById('admin-toggle');
@@ -55,6 +64,17 @@ const backupFile = document.getElementById('backup-file');
 const restoreCancel = document.getElementById('restore-cancel');
 const restoreConfirm = document.getElementById('restore-confirm');
 
+// Rating elements
+const ratingModal = document.getElementById('rating-modal');
+const ratingClose = document.querySelector('[data-close-rating]');
+const ratingStars = document.getElementById('rating-stars');
+const ratingText = document.getElementById('rating-text');
+const ratingReview = document.getElementById('rating-review');
+const ratingCancel = document.getElementById('rating-cancel');
+const ratingSave = document.getElementById('rating-save');
+const ratingRemove = document.getElementById('rating-remove');
+
+
 // Termin elements
 const terminModal = document.getElementById('termin-modal');
 const terminClose = document.querySelector('[data-close-termin]');
@@ -67,6 +87,24 @@ const terminSave = document.getElementById('termin-save');
 const terminRemove = document.getElementById('termin-remove');
 const dateFields = document.getElementById('date-fields');
 const timeField = document.getElementById('time-field');
+
+// Anime Details Modal elements
+const animeDetailsModal = document.getElementById('anime-details-modal');
+const animeDetailsClose = document.querySelector('[data-close-details]');
+const animeDetailsTitle = document.getElementById('anime-details-title');
+const animeDetailsName = document.getElementById('anime-details-name');
+const animeDetailsImage = document.getElementById('anime-details-image');
+const animeDetailsGenresList = document.getElementById('anime-details-genres-list');
+const animeDetailsExternalLink = document.getElementById('anime-details-external-link');
+const animeDetailsTrailerBtn = document.getElementById('anime-details-trailer-btn');
+
+// Anime Trailer Modal elements
+const animeTrailerModal = document.getElementById('anime-trailer-modal');
+const trailerClose = document.querySelector('[data-close-trailer]');
+const trailerModalTitle = document.getElementById('trailer-modal-title');
+const trailerPlayer = document.getElementById('trailer-player');
+const trailerAnimeTitle = document.getElementById('trailer-anime-title');
+const trailerAnimeDescription = document.getElementById('trailer-anime-description');
 
 const API_BASE = 'https://api.jikan.moe/v4';
 const ANILIST_API = 'https://graphql.anilist.co';
@@ -268,8 +306,15 @@ async function switchTab(key) {
         card.style.animation = 'none';
         // Force reflow
         card.offsetHeight;
-        // Re-add animation with proper delay
-        card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
+        
+        // Choose animation type based on position for variety
+        const animationType = index % 3 === 0 ? 'cardBounceIn' : 
+                             index % 3 === 1 ? 'cardStaggerIn' : 'cardSlideIn';
+        const delay = index * 0.08; // Slightly faster stagger
+        const duration = index % 3 === 0 ? '0.8s' : '0.6s';
+        
+        // Re-add animation with proper delay and type
+        card.style.animation = `${animationType} ${duration} cubic-bezier(0.4, 0, 0.2, 1) ${delay}s both`;
       });
     }
   });
@@ -497,6 +542,135 @@ async function searchAniSearch(query) {
   }
 }
 
+// Anime tag mapping for better categorization
+const ANIME_TAG_MAPPING = {
+  'Isekai': 'isekai',
+  'Action': 'action',
+  'Romance': 'romance',
+  'Comedy': 'comedy',
+  'Drama': 'drama',
+  'Fantasy': 'fantasy',
+  'Sports': 'sports',
+  'Mystery': 'mystery',
+  'Horror': 'horror',
+  'Slice of Life': 'slice-of-life',
+  'Mecha': 'mecha',
+  'Supernatural': 'supernatural',
+  'Adventure': 'action',
+  'Sci-Fi': 'fantasy',
+  'Thriller': 'mystery',
+  'Psychological': 'drama',
+  'School': 'slice-of-life',
+  'Music': 'slice-of-life',
+  'Historical': 'drama',
+  'Military': 'action',
+  'Parody': 'comedy',
+  'Samurai': 'action',
+  'Demons': 'supernatural',
+  'Magic': 'fantasy',
+  'Vampire': 'supernatural',
+  'Martial Arts': 'action',
+  'Police': 'action',
+  'Space': 'fantasy',
+  'Game': 'fantasy',
+  'Cars': 'sports',
+  'Josei': 'drama',
+  'Seinen': 'drama',
+  'Shoujo': 'romance',
+  'Shounen': 'action'
+};
+
+async function fetchAnimeTags(animeId) {
+  try {
+    // Try AniList first for better tag data
+    const anilistQuery = `
+      query ($id: Int) {
+        Media(id: $id) {
+          genres
+          tags {
+            name
+            rank
+          }
+        }
+      }
+    `;
+    
+    const response = await fetch(ANILIST_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: anilistQuery,
+        variables: { id: animeId }
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.Media) {
+        const media = data.data.Media;
+        const tags = [];
+        
+        // Add genres as primary tags
+        if (media.genres && media.genres.length > 0) {
+          tags.push(...media.genres.slice(0, 3));
+        }
+        
+        // Add top-ranked tags
+        if (media.tags && media.tags.length > 0) {
+          const topTags = media.tags
+            .filter(tag => tag.rank > 50) // Only high-ranked tags
+            .sort((a, b) => b.rank - a.rank)
+            .slice(0, 2)
+            .map(tag => tag.name);
+          tags.push(...topTags);
+        }
+        
+        return [...new Set(tags)].slice(0, 4); // Remove duplicates and limit to 4 tags
+      }
+    }
+  } catch (error) {
+    console.warn('AniList tags fetch failed:', error);
+  }
+  
+  // Fallback to Jikan API
+  try {
+    const response = await fetch(`${API_BASE}/anime/${animeId}`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.genres) {
+        return data.data.genres
+          .filter(genre => genre.name)
+          .slice(0, 4)
+          .map(genre => genre.name);
+      }
+    }
+  } catch (error) {
+    console.warn('Jikan tags fetch failed:', error);
+  }
+  
+  return [];
+}
+
+function createAnimeTags(tags) {
+  if (!tags || tags.length === 0) return '';
+  
+  const tagElements = tags.map(tag => {
+    const normalizedTag = tag.toLowerCase();
+    const tagClass = ANIME_TAG_MAPPING[tag] || 
+                    Object.keys(ANIME_TAG_MAPPING).find(key => 
+                      key.toLowerCase() === normalizedTag
+                    )?.toLowerCase() || 
+                    'action'; // Default fallback
+    
+    return `<span class="anime-tag ${tagClass}">${tag}</span>`;
+  }).join('');
+  
+  return `<div class="anime-tags">${tagElements}</div>`;
+}
+
 async function fetchAnimeByTitle(title) {
   const originalTitle = title.trim();
   
@@ -565,11 +739,15 @@ async function fetchAnimeByTitle(title) {
         if (chosen) {
           const matchQuality = calculateMatchQuality(chosen, originalTitle);
           if (matchQuality > 0.2) {
+            // Fetch tags for the anime
+            const tags = await fetchAnimeTags(chosen.id);
+            
             return {
               id: chosen.id,
               title: chosen.title || chosen.title_english || originalTitle,
               image: getBestImageUrl(chosen),
-              url: chosen.url
+              url: chosen.url,
+              tags: tags
             };
           }
         }
@@ -591,11 +769,15 @@ async function fetchAnimeByTitle(title) {
         if (chosen) {
           const matchQuality = calculateMatchQuality(chosen, originalTitle);
           if (matchQuality > 0.2) {
+            // Fetch tags for the anime
+            const tags = await fetchAnimeTags(chosen.id);
+            
             return {
               id: chosen.id,
               title: chosen.title || chosen.title_english || originalTitle,
               image: getBestImageUrl(chosen),
-              url: chosen.url
+              url: chosen.url,
+              tags: tags
             };
           }
         }
@@ -629,11 +811,15 @@ async function fetchAnimeByTitle(title) {
             // Double-check: if the match is very poor, don't return it
             const matchQuality = calculateMatchQuality(chosen, originalTitle);
             if (matchQuality > 0.2) { // Lowered threshold for better results
+              // Fetch tags for the anime
+              const tags = await fetchAnimeTags(chosen.mal_id);
+              
               return {
                 id: chosen.mal_id,
                 title: chosen.title || chosen.title_english || originalTitle,
                 image: getBestImageUrl(chosen),
-                url: chosen.url
+                url: chosen.url,
+                tags: tags
               };
             }
           }
@@ -688,6 +874,7 @@ function createCard(anime, listKey) {
   card.className = 'card';
   card.dataset.id = String(anime.id || '0');
   card.dataset.list = listKey;
+  card.dataset.rating = anime.rating || '0';
 
   const coverWrap = document.createElement('div');
   coverWrap.className = 'cover-wrap';
@@ -737,6 +924,20 @@ function createCard(anime, listKey) {
     toggleLiveStatus(card);
   });
 
+  // Rating Button - für alle Nutzer sichtbar
+  const ratingBtn = document.createElement('button');
+  ratingBtn.type = 'button';
+  ratingBtn.className = 'cover-rating';
+  ratingBtn.title = 'Bewerten';
+  ratingBtn.textContent = '⭐';
+  ratingBtn.addEventListener('click', () => {
+    if (localStorage.getItem('animes-is-admin') !== 'true') {
+      setMessage('Nur Admins können bewerten.', 'error');
+      return;
+    }
+    openRatingModal(card);
+  });
+
   // Termin Button - nur für "waiting" Liste
   const terminBtn = document.createElement('button');
   terminBtn.type = 'button';
@@ -754,6 +955,7 @@ function createCard(anime, listKey) {
   coverWrap.appendChild(img);
   coverWrap.appendChild(editBtn);
   coverWrap.appendChild(liveBtn);
+  coverWrap.appendChild(ratingBtn);
   if (listKey === 'waiting') {
     coverWrap.appendChild(terminBtn);
   }
@@ -761,6 +963,14 @@ function createCard(anime, listKey) {
   const titleEl = document.createElement('h3');
   titleEl.className = 'title';
   titleEl.textContent = anime.title;
+  titleEl.title = anime.title; // Add tooltip for full title
+
+  // Add anime tags if available
+  if (anime.tags && anime.tags.length > 0) {
+    const tagsContainer = document.createElement('div');
+    tagsContainer.innerHTML = createAnimeTags(anime.tags);
+    card.appendChild(tagsContainer);
+  }
 
   // Termin Display - nur für "waiting" Liste
   if (listKey === 'waiting' && anime.termin) {
@@ -806,23 +1016,9 @@ function createCard(anime, listKey) {
     card.appendChild(terminDisplay);
   }
 
-  const actions = document.createElement('div');
-  actions.className = 'actions';
-
-  const link = document.createElement('a');
-  link.href = anime.url || '#';
-  link.target = '_blank';
-  link.rel = 'noreferrer';
-  link.className = 'btn link';
-  link.title = 'Details anzeigen';
-  
-  // Add text for non-admin users
-  const isAdmin = localStorage.getItem('animes-is-admin') === 'true';
-  if (isAdmin) {
-    link.textContent = '🔗';
-  } else {
-    link.innerHTML = '🔗 ZUM ANIME';
-  }
+  // Create admin actions container (only for admins)
+  const adminActions = document.createElement('div');
+  adminActions.className = 'actions';
 
   // Create dropdown container
   const moveContainer = document.createElement('div');
@@ -836,7 +1032,8 @@ function createCard(anime, listKey) {
   const listOptions = [
     { value: 'plan', text: '📋 Noch anschauen', icon: '📋' },
     { value: 'watched', text: '✅ Fertig geschaut', icon: '✅' },
-    { value: 'waiting', text: '⏳ Warten auf Fortsetzung', icon: '⏳' }
+    { value: 'waiting', text: '⏳ Warten auf Fortsetzung', icon: '⏳' },
+    { value: 'fsk', text: '🔞 FSK16/18+', icon: '🔞' }
   ];
   
   listOptions.forEach(option => {
@@ -878,13 +1075,46 @@ function createCard(anime, listKey) {
     await deleteCard(card);
   });
 
-  actions.appendChild(link);
-  actions.appendChild(moveContainer);
-  actions.appendChild(delBtn);
+  adminActions.appendChild(moveContainer);
+  adminActions.appendChild(delBtn);
+
+  // Create link button container (always at the bottom)
+  const linkContainer = document.createElement('div');
+  linkContainer.className = 'link-container';
+
+  const link = document.createElement('button');
+  link.type = 'button';
+  link.className = 'btn link';
+  link.title = 'Details anzeigen';
+  link.textContent = '📋 DETAILS';
+  
+  // Add click handler to open details modal
+  link.addEventListener('click', () => {
+    openAnimeDetailsModal(anime);
+  });
+
+  linkContainer.appendChild(link);
 
   card.appendChild(coverWrap);
   card.appendChild(titleEl);
-  card.appendChild(actions);
+  card.appendChild(adminActions);
+  card.appendChild(linkContainer);
+
+  // Add rating display if exists - für alle Nutzer sichtbar
+  if (anime.rating && anime.rating > 0) {
+    const ratingDisplay = document.createElement('div');
+    ratingDisplay.className = 'rating-display';
+    
+    const review = anime.review || '';
+    
+    ratingDisplay.innerHTML = `
+      <div class="rating-text">⭐ ${anime.rating}/10</div>
+      ${review ? `<div class="rating-review">"${review}"</div>` : ''}
+    `;
+    
+    // Insert before link container
+    card.insertBefore(ratingDisplay, linkContainer);
+  }
 
   return card;
 }
@@ -898,13 +1128,33 @@ function addAnimeToList(anime, listKey) {
     updateTerminDisplay(card, anime.termin);
   }
   
+  // Load rating data if it exists
+  if (anime.rating && anime.rating > 0) {
+    card.dataset.rating = anime.rating;
+    card.dataset.review = anime.review || '';
+    updateRatingDisplay(card, anime.rating);
+  }
+  
   // Insert card in alphabetical order
   insertCardAlphabetically(card, listKey);
   
-  // Re-animate all cards
+  // Re-animate all cards with enhanced staggered effect
   const allCards = grids[listKey].querySelectorAll('.card');
   allCards.forEach((card, index) => {
-    card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
+    // Remove existing animation
+    card.style.animation = 'none';
+    // Force reflow
+    card.offsetHeight;
+    
+    // Choose animation type for variety
+    const animationType = index % 4 === 0 ? 'cardBounceIn' : 
+                         index % 4 === 1 ? 'cardStaggerIn' : 
+                         index % 4 === 2 ? 'cardSlideIn' : 'cardBounceIn';
+    const delay = index * 0.06; // Faster stagger for new additions
+    const duration = index % 4 === 0 ? '0.9s' : '0.7s';
+    
+    // Apply enhanced animation
+    card.style.animation = `${animationType} ${duration} cubic-bezier(0.4, 0, 0.2, 1) ${delay}s both`;
   });
   
   updateStats();
@@ -962,7 +1212,8 @@ async function moveCard(card, targetList) {
   const listNames = {
     plan: 'Noch anschauen',
     watched: 'Schon angeschaut', 
-    waiting: 'Warten auf Fortsetzung'
+    waiting: 'Warten auf Fortsetzung',
+    fsk: 'FSK16/18+'
   };
   setMessage(`Verschoben nach "${listNames[targetList]}": ${title}`, 'success');
   updateStats();
@@ -981,7 +1232,8 @@ function updateCardDropdown(card, currentList) {
   const listOptions = [
     { value: 'plan', text: '📋 Noch anschauen' },
     { value: 'watched', text: '✅ Fertig geschaut' },
-    { value: 'waiting', text: '⏳ Warten auf Fortsetzung' }
+    { value: 'waiting', text: '⏳ Warten auf Fortsetzung' },
+    { value: 'fsk', text: '🔞 FSK16/18+' }
   ];
   
   listOptions.forEach(option => {
@@ -1168,9 +1420,14 @@ function updateTerminDisplay(card, termin) {
     }
   }
   
-  // Insert after title, before actions
+  // Insert after title, before admin actions
   const titleEl = card.querySelector('.title');
-  titleEl.parentNode.insertBefore(terminDisplay, titleEl.nextSibling);
+  const adminActions = card.querySelector('.actions');
+  if (adminActions) {
+    titleEl.parentNode.insertBefore(terminDisplay, adminActions);
+  } else {
+    titleEl.parentNode.appendChild(terminDisplay);
+  }
 }
 
 function updateTerminFieldsVisibility() {
@@ -1184,6 +1441,681 @@ function updateTerminFieldsVisibility() {
     timeField.classList.remove('hidden');
   }
 }
+
+// Anime Details Modal Functions
+async function openAnimeDetailsModal(anime) {
+  // Set basic info
+  animeDetailsName.textContent = anime.title;
+  animeDetailsImage.src = anime.image || '';
+  animeDetailsImage.alt = anime.title;
+  animeDetailsExternalLink.href = anime.url || '#';
+  
+  // Show loading state
+  animeDetailsGenresList.innerHTML = '<span class="loading">Lade...</span>';
+  
+  // Hide trailer button initially
+  animeDetailsTrailerBtn.style.display = 'none';
+  
+  // Show modal
+  animeDetailsModal.style.display = 'flex';
+  
+  // Fetch detailed anime data
+  try {
+    const detailedAnime = await fetchDetailedAnimeData(anime.id);
+    if (detailedAnime) {
+      populateAnimeDetails(detailedAnime);
+    } else {
+      // Fallback to basic info if detailed fetch fails
+      populateBasicAnimeDetails(anime);
+    }
+    
+    // Always show trailer button - let the modal handle "no trailer" case
+    animeDetailsTrailerBtn.style.display = 'inline-flex';
+    animeDetailsTrailerBtn.onclick = () => openAnimeTrailerModal(anime);
+  } catch (error) {
+    console.warn('Failed to fetch detailed anime data:', error);
+    populateBasicAnimeDetails(anime);
+  }
+}
+
+async function fetchDetailedAnimeData(animeId) {
+  if (!animeId || animeId === '0') return null;
+  
+  try {
+    // Try AniList first for better data
+    const anilistQuery = `
+      query ($id: Int) {
+        Media(id: $id) {
+          id
+          title {
+            romaji
+            english
+            native
+          }
+          description
+          episodes
+          status
+          format
+          startDate {
+            year
+            month
+            day
+          }
+          endDate {
+            year
+            month
+            day
+          }
+          averageScore
+          popularity
+          genres
+          coverImage {
+            large
+            extraLarge
+          }
+          siteUrl
+        }
+      }
+    `;
+    
+    const response = await fetch(ANILIST_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: anilistQuery,
+        variables: { id: parseInt(animeId) }
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.Media) {
+        return data.data.Media;
+      }
+    }
+  } catch (error) {
+    console.warn('AniList detailed fetch failed:', error);
+  }
+  
+  // Fallback to Jikan API
+  try {
+    const response = await fetch(`${API_BASE}/anime/${animeId}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.data;
+    }
+  } catch (error) {
+    console.warn('Jikan detailed fetch failed:', error);
+  }
+  
+  return null;
+}
+
+function populateAnimeDetails(anime) {
+  // Keep the name from the card (don't change it)
+  // animeDetailsName.textContent is already set from the card
+  
+  // Genres
+  if (anime.genres && anime.genres.length > 0) {
+    animeDetailsGenresList.innerHTML = anime.genres.map(genre => 
+      `<span class="genre-tag">${genre}</span>`
+    ).join('');
+  } else {
+    animeDetailsGenresList.innerHTML = '<span class="meta-value">Keine Genres verfügbar</span>';
+  }
+}
+
+function populateBasicAnimeDetails(anime) {
+  // Fallback to basic info if detailed fetch fails
+  animeDetailsName.textContent = anime.title || 'Unbekannt';
+  animeDetailsGenresList.innerHTML = '<span class="meta-value">Keine Genres verfügbar</span>';
+}
+
+function closeAnimeDetailsModal() {
+  animeDetailsModal.style.display = 'none';
+}
+
+// Anime Trailer Modal Functions
+async function openAnimeTrailerModal(anime) {
+  // Set basic info
+  trailerAnimeTitle.textContent = anime.title;
+  trailerModalTitle.textContent = `${anime.title} - Trailer`;
+  
+  // Show loading state
+  trailerPlayer.innerHTML = `
+    <div class="trailer-loading">
+      <div class="loading"></div>
+      <p>Lade Trailer...</p>
+    </div>
+  `;
+  
+  // Show modal
+  animeTrailerModal.style.display = 'flex';
+  
+  // Fetch trailer data
+  try {
+    const trailerData = await fetchAnimeTrailer(anime.id, anime.title);
+    if (trailerData && trailerData.trailerUrl) {
+      embedTrailer(trailerData.trailerUrl, trailerData.title);
+      if (trailerData.description) {
+        trailerAnimeDescription.textContent = trailerData.description;
+  } else {
+        trailerAnimeDescription.textContent = `Trailer für ${anime.title}`;
+      }
+    } else {
+      showNoTrailerMessage(anime.title);
+    }
+  } catch (error) {
+    console.warn('Failed to fetch trailer:', error);
+    showNoTrailerMessage(anime.title);
+  }
+}
+
+async function fetchAnimeTrailer(animeId, animeTitle) {
+  // Try with ID first if available
+  if (animeId && animeId !== '0') {
+    try {
+      const trailerData = await fetchTrailerById(animeId);
+      if (trailerData) return trailerData;
+    } catch (error) {
+      console.warn('Trailer fetch by ID failed:', error);
+    }
+  }
+  
+  // If no trailer found by ID, try with title variations
+  if (animeTitle) {
+    try {
+      return await searchTrailerByTitleVariations(animeTitle);
+    } catch (error) {
+      console.warn('Trailer search by title failed:', error);
+    }
+  }
+  
+  return null;
+}
+
+async function fetchTrailerById(animeId) {
+  try {
+    // Try AniList first for trailer data
+    const anilistQuery = `
+      query ($id: Int) {
+        Media(id: $id) {
+          id
+          title {
+            romaji
+            english
+            native
+          }
+          description
+          trailer {
+            id
+            site
+            thumbnail
+          }
+        }
+      }
+    `;
+    
+    const response = await fetch(ANILIST_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: anilistQuery,
+        variables: { id: parseInt(animeId) }
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.Media && data.data.Media.trailer) {
+        const trailer = data.data.Media.trailer;
+        const media = data.data.Media;
+        
+        // Generate YouTube embed URL with better parameters
+        if (trailer.site === 'youtube' && trailer.id) {
+          return {
+            trailerUrl: `https://www.youtube.com/embed/${trailer.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1`,
+            title: media.title.english || media.title.romaji || media.title.native,
+            description: media.description ? media.description.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : null
+          };
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('AniList trailer fetch failed:', error);
+  }
+  
+  // Fallback to Jikan API
+  try {
+    const response = await fetch(`${API_BASE}/anime/${animeId}`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.trailer && data.data.trailer.youtube_id) {
+        return {
+          trailerUrl: `https://www.youtube.com/embed/${data.data.trailer.youtube_id}?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1`,
+          title: data.data.title,
+          description: data.data.synopsis ? data.data.synopsis.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : null
+        };
+      }
+    }
+  } catch (error) {
+    console.warn('Jikan trailer fetch failed:', error);
+  }
+  
+  return null;
+}
+
+// Enhanced trailer search with title variations for popular animes
+async function searchTrailerByTitleVariations(animeTitle) {
+  if (!animeTitle) return null;
+  
+  // Create title variations for better matching
+  const titleVariations = createTitleVariations(animeTitle);
+  
+  for (const variation of titleVariations) {
+    try {
+      const trailerData = await searchTrailerByTitle(variation);
+      if (trailerData) return trailerData;
+    } catch (error) {
+      console.warn(`Trailer search failed for variation "${variation}":`, error);
+      continue;
+    }
+  }
+  
+  return null;
+}
+
+function createTitleVariations(originalTitle) {
+  const variations = [originalTitle];
+  
+  // Special cases for popular animes
+  const specialCases = {
+    'Boruto: Naruto Next Generations': [
+      'Boruto',
+      'Boruto Naruto Next Generations',
+      'Boruto: Naruto Next Generation',
+      'Boruto Naruto'
+    ],
+    'One Piece': [
+      'One Piece',
+      'One Piece Anime'
+    ],
+    'Attack on Titan': [
+      'Attack on Titan',
+      'Shingeki no Kyojin',
+      'AOT'
+    ],
+    'Demon Slayer': [
+      'Demon Slayer',
+      'Kimetsu no Yaiba',
+      'Demon Slayer: Kimetsu no Yaiba'
+    ],
+    'My Hero Academia': [
+      'My Hero Academia',
+      'Boku no Hero Academia',
+      'MHA'
+    ]
+  };
+  
+  // Check for special cases
+  for (const [key, variants] of Object.entries(specialCases)) {
+    if (originalTitle.toLowerCase().includes(key.toLowerCase()) || 
+        key.toLowerCase().includes(originalTitle.toLowerCase())) {
+      variations.push(...variants);
+    }
+  }
+  
+  // Add common variations
+  variations.push(
+    originalTitle.replace(/:/g, ''),
+    originalTitle.replace(/:/g, ' -'),
+    originalTitle.split(':')[0],
+    originalTitle.split(' -')[0]
+  );
+  
+  // Remove duplicates and empty strings
+  return [...new Set(variations)].filter(v => v && v.trim());
+}
+
+async function searchTrailerByTitle(searchTitle) {
+  if (!searchTitle) return null;
+  
+  try {
+    const searchQuery = `
+      query ($search: String) {
+        Page(page: 1, perPage: 10) {
+          media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
+            id
+            title {
+              romaji
+              english
+              native
+            }
+            description
+            trailer {
+              id
+              site
+              thumbnail
+            }
+          }
+        }
+      }
+    `;
+    
+    const response = await fetch(ANILIST_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: searchQuery,
+        variables: { search: searchTitle }
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.Page && data.data.Page.media) {
+        for (const media of data.data.Page.media) {
+          if (media.trailer && media.trailer.id && media.trailer.site === 'youtube') {
+            return {
+              trailerUrl: `https://www.youtube.com/embed/${media.trailer.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1`,
+              title: media.title.english || media.title.romaji || media.title.native,
+              description: media.description ? media.description.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : null
+            };
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Title-based trailer search failed:', error);
+  }
+  
+  return null;
+}
+
+function embedTrailer(trailerUrl, title) {
+  trailerPlayer.innerHTML = `
+    <iframe 
+      src="${trailerUrl}" 
+      title="${title} Trailer"
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen
+      onerror="handleTrailerError('${title}')"
+      onload="handleTrailerLoad()">
+    </iframe>
+  `;
+}
+
+function handleTrailerError(animeTitle) {
+  console.warn('YouTube trailer failed to load:', animeTitle);
+  showTrailerError('YouTube-Fehler beim Laden des Trailers');
+}
+
+function handleTrailerLoad() {
+  console.log('Trailer loaded successfully');
+}
+
+function showTrailerError(message) {
+  trailerPlayer.innerHTML = `
+    <div class="trailer-loading">
+      <div style="font-size: 48px; color: var(--muted); margin-bottom: 16px;">⚠️</div>
+      <h3 style="color: var(--text); font-weight: 600; margin-bottom: 12px;">Trailer-Fehler</h3>
+      <p style="color: var(--danger); font-size: 16px; line-height: 1.5; margin-bottom: 16px;">
+        ${message}
+      </p>
+      <div style="padding: 16px; background: var(--card); border-radius: 12px; border: 1px solid var(--border);">
+        <p style="color: var(--text); font-size: 14px; margin: 0;">
+          🔧 <strong>Mögliche Ursachen:</strong><br>
+          • YouTube hat die Einbettung blockiert<br>
+          • Trailer ist nicht mehr verfügbar<br>
+          • Netzwerk- oder Browser-Problem
+        </p>
+      </div>
+    </div>
+  `;
+  trailerAnimeDescription.textContent = 'Trailer konnte nicht geladen werden - bitte manuell suchen.';
+}
+
+function showNoTrailerMessage(animeTitle) {
+  trailerPlayer.innerHTML = `
+    <div class="trailer-loading">
+      <div style="font-size: 64px; color: var(--muted); margin-bottom: 20px;">😔</div>
+      <h3 style="color: var(--text); font-weight: 600; margin-bottom: 12px;">Wir finden keinen Trailer</h3>
+      <p style="color: var(--muted); font-size: 16px; line-height: 1.5;">
+        Für <strong>${animeTitle}</strong> konnten wir leider keinen offiziellen Trailer in unserer Datenbank finden.
+      </p>
+      <div style="margin-top: 20px; padding: 16px; background: var(--card); border-radius: 12px; border: 1px solid var(--border);">
+        <p style="color: var(--text); font-size: 14px; margin: 0;">
+          🔍 <strong>Sorry!</strong> Suche ihn selbst, falls es einen gibt! Versuche es auf YouTube oder anderen Plattformen.
+        </p>
+      </div>
+    </div>
+  `;
+  trailerAnimeDescription.textContent = `Kein Trailer für ${animeTitle} gefunden - bitte selbst suchen!`;
+}
+
+function closeAnimeTrailerModal() {
+  animeTrailerModal.style.display = 'none';
+  // Clear the iframe to stop video playback
+  trailerPlayer.innerHTML = '';
+}
+
+async function checkTrailerAvailability(animeId) {
+  if (!animeId || animeId === '0') return false;
+  
+  try {
+    // Quick check with AniList
+    const anilistQuery = `
+      query ($id: Int) {
+        Media(id: $id) {
+          trailer {
+            id
+            site
+          }
+        }
+      }
+    `;
+    
+    const response = await fetch(ANILIST_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: anilistQuery,
+        variables: { id: parseInt(animeId) }
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.Media && data.data.Media.trailer && data.data.Media.trailer.id) {
+        return true;
+      }
+    }
+  } catch (error) {
+    // Continue to Jikan check
+  }
+  
+  // Fallback to Jikan API
+  try {
+    const response = await fetch(`${API_BASE}/anime/${animeId}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.data && data.data.trailer && data.data.trailer.youtube_id;
+    }
+  } catch (error) {
+    // Ignore errors
+  }
+  
+  return false;
+}
+
+// Simplified trailer check - only check by ID to reduce API calls and errors
+async function checkTrailerAvailabilityWithFallback(animeId, animeTitle) {
+  // Only check if we have a valid ID to avoid excessive API calls
+  if (animeId && animeId !== '0') {
+    try {
+      return await checkTrailerAvailability(animeId);
+    } catch (error) {
+      console.warn('Trailer availability check failed:', error);
+      return false;
+    }
+  }
+  
+  // For animes without ID, don't check to avoid errors
+  return false;
+}
+
+// Removed searchTrailerByTitle function to reduce API calls and potential errors
+
+// Rating Functions
+function openRatingModal(card) {
+  const currentRating = card.dataset.rating || '0';
+  const currentReview = card.dataset.review || '';
+  
+  // Set current rating
+  ratingStars.querySelectorAll('.star').forEach((star, index) => {
+    if (index < parseInt(currentRating)) {
+      star.classList.add('active');
+    } else {
+      star.classList.remove('active');
+    }
+  });
+  
+  ratingReview.value = currentReview;
+  ratingText.textContent = currentRating > 0 ? `${currentRating}/10` : 'Bewertung auswählen';
+  ratingRemove.style.display = currentRating > 0 ? 'inline-block' : 'none';
+  
+  ratingModal.style.display = 'flex';
+  ratingModal.dataset.cardId = card.dataset.id;
+}
+
+function closeRatingModal() {
+  ratingModal.style.display = 'none';
+  ratingStars.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+  ratingReview.value = '';
+  ratingText.textContent = 'Bewertung auswählen';
+  ratingModal.dataset.cardId = '';
+  ratingRemove.style.display = 'none';
+}
+
+function saveRating() {
+  const cardId = ratingModal.dataset.cardId;
+  const rating = ratingStars.querySelectorAll('.star.active').length;
+  const review = ratingReview.value.trim();
+  
+  if (rating === 0) {
+    setMessage('Bitte wähle eine Bewertung aus.', 'error');
+    return;
+  }
+  
+  // Find the card and update it
+  const allCards = document.querySelectorAll('.card');
+  for (const card of allCards) {
+    if (card.dataset.id === cardId) {
+      card.dataset.rating = rating;
+      card.dataset.review = review;
+      
+      // Update or create rating display
+      updateRatingDisplay(card, rating);
+      
+      setMessage('Bewertung gespeichert!', 'success');
+      break;
+    }
+  }
+  
+  closeRatingModal();
+  saveAll();
+  updateStats();
+}
+
+function removeRating() {
+  const cardId = ratingModal.dataset.cardId;
+  
+  // Find the card and remove rating
+  const allCards = document.querySelectorAll('.card');
+  for (const card of allCards) {
+    if (card.dataset.id === cardId) {
+      delete card.dataset.rating;
+      delete card.dataset.review;
+      
+      // Remove rating display
+      const ratingDisplay = card.querySelector('.rating-display');
+      if (ratingDisplay) {
+        ratingDisplay.remove();
+      }
+      
+      setMessage('Bewertung entfernt!', 'success');
+      break;
+    }
+  }
+  
+  closeRatingModal();
+  saveAll();
+  updateStats();
+}
+
+function updateRatingDisplay(card, rating) {
+  // Remove existing rating display
+  const existingDisplay = card.querySelector('.rating-display');
+  if (existingDisplay) {
+    existingDisplay.remove();
+  }
+  
+  if (rating > 0) {
+    const ratingDisplay = document.createElement('div');
+    ratingDisplay.className = 'rating-display';
+    
+    const review = card.dataset.review || '';
+    const progress = (rating / 10) * 100;
+    
+    // Create star display
+    const stars = '⭐'.repeat(Math.min(rating, 5));
+    const starElements = stars.split('').map((star, index) => 
+      `<span class="rating-star" style="animation-delay: ${index * 0.1}s">${star}</span>`
+    ).join('');
+    
+    // Create 10 stars in 2 rows of 5 stars each
+    const filledStars = '⭐'.repeat(Math.min(rating, 10));
+    const emptyStars = '☆'.repeat(Math.max(0, 10 - rating));
+    const allStars = filledStars + emptyStars;
+    
+    // Split into two rows of 5 stars each
+    const firstRow = allStars.substring(0, 5);
+    const secondRow = allStars.substring(5, 10);
+    
+    ratingDisplay.innerHTML = `
+      <div class="rating-text">${rating}/10</div>
+      <div class="rating-stars-10">
+        <div class="star-row">${firstRow}</div>
+        <div class="star-row">${secondRow}</div>
+      </div>
+      ${review ? `<div class="rating-review">"${review}"</div>` : ''}
+    `;
+    
+    // Insert before link container
+    const linkContainer = card.querySelector('.link-container');
+    if (linkContainer) {
+      card.insertBefore(ratingDisplay, linkContainer);
+    } else {
+      card.appendChild(ratingDisplay);
+    }
+    
+    // No progress bar animation needed for 10-star system
+  }
+}
+
 
 async function deleteCard(card) {
   const title = card.querySelector('.title')?.textContent || '';
@@ -1226,7 +2158,9 @@ function serializeList(listKey) {
     const url = card.querySelector('a')?.href || '';
     const id = Number(card.dataset.id) || 0;
     const termin = card.dataset.termin ? JSON.parse(card.dataset.termin) : null;
-    return { id, title, image: cover, url, termin };
+    const rating = card.dataset.rating ? parseInt(card.dataset.rating) : null;
+    const review = card.dataset.review || null;
+    return { id, title, image: cover, url, termin, rating, review };
   });
 }
 
@@ -1235,6 +2169,7 @@ function saveAll() {
     plan: serializeList('plan'),
     watched: serializeList('watched'),
     waiting: serializeList('waiting'),
+    fsk: serializeList('fsk'),
     timestamp: new Date().toISOString(),
     version: '1.0'
   };
@@ -1308,6 +2243,7 @@ function createBackup() {
     plan: serializeList('plan'),
     watched: serializeList('watched'),
     waiting: serializeList('waiting'),
+    fsk: serializeList('fsk'),
     timestamp: new Date().toISOString(),
     version: '1.0'
   };
@@ -1354,12 +2290,12 @@ function restoreFromBackup() {
       }
       
       // Clear current data
-      ['plan', 'watched', 'waiting'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
         grids[key].innerHTML = '';
       });
       
       // Restore data
-      ['plan', 'watched', 'waiting'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
         if (data[key] && Array.isArray(data[key])) {
           data[key].forEach(item => {
             if (item.title) {
@@ -1372,7 +2308,8 @@ function restoreFromBackup() {
       saveAll();
       updateStats();
       closeRestoreModal();
-      setMessage(`Backup erfolgreich wiederhergestellt! ${data.plan.length + data.watched.length + data.waiting.length} Animes geladen.`, 'success');
+      const totalAnimes = (data.plan?.length || 0) + (data.watched?.length || 0) + (data.waiting?.length || 0) + (data.fsk?.length || 0);
+      setMessage(`Backup erfolgreich wiederhergestellt! ${totalAnimes} Animes geladen.`, 'success');
       
     } catch (error) {
       setMessage('Fehler beim Laden der Backup-Datei: ' + error.message, 'error');
@@ -1398,7 +2335,7 @@ async function loadAll() {
     const raw = localStorage.getItem('animes-app');
     if (!raw) return;
     const data = JSON.parse(raw);
-    ['plan', 'watched', 'waiting'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
       // Sort animes alphabetically before adding them
       const sortedAnimes = (data[key] || []).sort((a, b) => 
         a.title.toLowerCase().localeCompare(b.title.toLowerCase())
@@ -1441,12 +2378,12 @@ async function loadFirebaseLiveStatus() {
 
 function loadFirebaseData(data) {
   // Clear current data
-  ['plan', 'watched', 'waiting'].forEach(key => {
+  ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
     grids[key].innerHTML = '';
   });
   
   // Load Firebase data
-  ['plan', 'watched', 'waiting'].forEach(key => {
+  ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
     if (data[key] && Array.isArray(data[key])) {
       data[key].forEach(item => {
         if (item.title) {
@@ -1465,11 +2402,22 @@ function loadFirebaseData(data) {
 // THEME
 function applyTheme(theme) {
   const root = document.documentElement;
+  
+  // Remove all theme classes
+  root.classList.remove('theme-light', 'theme-neon', 'theme-retro');
+  
+  // Apply the selected theme
   if (theme === 'light') {
     root.classList.add('theme-light');
     if (themeToggle) themeToggle.textContent = '☀️';
+  } else if (theme === 'neon') {
+    root.classList.add('theme-neon');
+    if (themeToggle) themeToggle.textContent = '⚡';
+  } else if (theme === 'retro') {
+    root.classList.add('theme-retro');
+    if (themeToggle) themeToggle.textContent = '🎨';
   } else {
-    root.classList.remove('theme-light');
+    // Default dark theme
     if (themeToggle) themeToggle.textContent = '🌙';
   }
 }
@@ -1478,24 +2426,33 @@ function updateStats() {
   const planItems = grids.plan.children.length;
   const watchedItems = grids.watched.children.length;
   const waitingItems = grids.waiting.children.length;
-  const totalItems = planItems + watchedItems + waitingItems;
+  const fskItems = grids.fsk.children.length;
+  const totalItems = planItems + watchedItems + waitingItems + fskItems;
   
   totalCount.textContent = totalItems;
   planCount.textContent = planItems;
   watchedCount.textContent = watchedItems;
   waitingCount.textContent = waitingItems;
+  fskCount.textContent = fskItems;
 }
 
 function getPreferredTheme() {
   const saved = localStorage.getItem('animes-theme');
-  if (saved === 'light' || saved === 'dark') return saved;
+  if (saved === 'light' || saved === 'dark' || saved === 'neon' || saved === 'retro') return saved;
   const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
   return prefersLight ? 'light' : 'dark';
 }
 
 function toggleTheme() {
-  const current = document.documentElement.classList.contains('theme-light') ? 'light' : 'dark';
-  const next = current === 'light' ? 'dark' : 'light';
+  const themes = ['dark', 'light', 'neon', 'retro'];
+  const current = document.documentElement.classList.contains('theme-light') ? 'light' : 
+                 document.documentElement.classList.contains('theme-neon') ? 'neon' :
+                 document.documentElement.classList.contains('theme-retro') ? 'retro' : 'dark';
+  
+  const currentIndex = themes.indexOf(current);
+  const nextIndex = (currentIndex + 1) % themes.length;
+  const next = themes[nextIndex];
+  
   localStorage.setItem('animes-theme', next);
   applyTheme(next);
 }
@@ -1573,6 +2530,8 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && editModal.style.display === 'flex') closeModal();
   if (e.key === 'Escape' && restoreModal.style.display === 'flex') closeRestoreModal();
   if (e.key === 'Escape' && terminModal.style.display === 'flex') closeTerminModal();
+  if (e.key === 'Escape' && animeDetailsModal.style.display === 'flex') closeAnimeDetailsModal();
+  if (e.key === 'Escape' && animeTrailerModal.style.display === 'flex') closeAnimeTrailerModal();
 });
 modalTitleInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') { e.preventDefault(); saveTitle(); }
@@ -1601,6 +2560,13 @@ if (adminCancel) adminCancel.addEventListener('click', () => adminModal.style.di
 if (adminLogin) adminLogin.addEventListener('click', loginAdmin);
 if (adminPassword) adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginAdmin(); });
 
+// Help handlers
+if (helpBtn) helpBtn.addEventListener('click', () => helpModal.style.display = 'flex');
+if (helpClose) helpClose.addEventListener('click', () => helpModal.style.display = 'none');
+if (helpModal) helpModal.addEventListener('click', (e) => {
+  if (e.target === helpModal) helpModal.style.display = 'none';
+});
+
 // Backup handlers
 if (backupBtn) {
   console.log('Backup button found, adding event listener');
@@ -1620,6 +2586,52 @@ if (restoreClose) restoreClose.addEventListener('click', closeRestoreModal);
 if (restoreCancel) restoreCancel.addEventListener('click', closeRestoreModal);
 if (restoreConfirm) restoreConfirm.addEventListener('click', restoreFromBackup);
 
+// Rating handlers
+if (ratingClose) ratingClose.addEventListener('click', closeRatingModal);
+if (ratingCancel) ratingCancel.addEventListener('click', closeRatingModal);
+if (ratingSave) ratingSave.addEventListener('click', saveRating);
+if (ratingRemove) ratingRemove.addEventListener('click', removeRating);
+if (ratingModal) ratingModal.addEventListener('click', (e) => {
+  if (e.target === ratingModal) closeRatingModal();
+});
+
+// Rating stars interaction
+if (ratingStars) {
+  ratingStars.addEventListener('click', (e) => {
+    if (e.target.classList.contains('star')) {
+      const rating = parseInt(e.target.dataset.rating);
+      ratingStars.querySelectorAll('.star').forEach((star, index) => {
+        if (index < rating) {
+          star.classList.add('active');
+        } else {
+          star.classList.remove('active');
+        }
+      });
+      ratingText.textContent = `${rating}/10`;
+    }
+  });
+  
+  ratingStars.addEventListener('mouseover', (e) => {
+    if (e.target.classList.contains('star')) {
+      const rating = parseInt(e.target.dataset.rating);
+      ratingStars.querySelectorAll('.star').forEach((star, index) => {
+        if (index < rating) {
+          star.classList.add('hover');
+        } else {
+          star.classList.remove('hover');
+        }
+      });
+    }
+  });
+  
+  ratingStars.addEventListener('mouseout', () => {
+    ratingStars.querySelectorAll('.star').forEach(star => {
+      star.classList.remove('hover');
+    });
+  });
+}
+
+
 // Termin handlers
 if (terminClose) terminClose.addEventListener('click', closeTerminModal);
 if (terminCancel) terminCancel.addEventListener('click', closeTerminModal);
@@ -1628,6 +2640,18 @@ if (terminRemove) terminRemove.addEventListener('click', removeTermin);
 if (terminType) terminType.addEventListener('change', updateTerminFieldsVisibility);
 if (terminModal) terminModal.addEventListener('click', (e) => {
   if (e.target === terminModal) closeTerminModal();
+});
+
+// Anime Details Modal handlers
+if (animeDetailsClose) animeDetailsClose.addEventListener('click', closeAnimeDetailsModal);
+if (animeDetailsModal) animeDetailsModal.addEventListener('click', (e) => {
+  if (e.target === animeDetailsModal) closeAnimeDetailsModal();
+});
+
+// Anime Trailer Modal handlers
+if (trailerClose) trailerClose.addEventListener('click', closeAnimeTrailerModal);
+if (animeTrailerModal) animeTrailerModal.addEventListener('click', (e) => {
+  if (e.target === animeTrailerModal) closeAnimeTrailerModal();
 });
 
 // Init
