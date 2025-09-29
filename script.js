@@ -1,3 +1,4 @@
+
 (function () {
 const form = document.getElementById('anime-form');
 const input = document.getElementById('anime-input');
