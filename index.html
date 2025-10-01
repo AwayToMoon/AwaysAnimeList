@@ -85,7 +85,7 @@
       <button class="tab" role="tab" aria-selected="false" data-tab="watched">Fertig Geschaut</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="waiting">Warten auf Fortsetzung</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="plan-fsk">Gerade am schauen (FSK16/18+)</button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="fsk">Fertig Geschaut (FSK16/18+</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="fsk">Fertig Geschaut (FSK16/18+)</button>
       <button id="help-btn" class="help-btn" title="Hilfe & Support">❓</button>
     </nav>
 
@@ -102,7 +102,7 @@
       <section id="tab-plan-fsk" class="tab-panel" role="tabpanel" aria-label="Gerade am schauen (FSK16/18+)">
         <div id="grid-plan-fsk" class="grid"></div>
       </section>
-      <section id="tab-fsk" class="tab-panel" role="tabpanel" aria-label="Fertig Geschaut (FSK16/18+">
+      <section id="tab-fsk" class="tab-panel" role="tabpanel" aria-label="Fertig Geschaut (FSK16/18+)">
         <div id="grid-fsk" class="grid"></div>
       </section>
     </main>
@@ -347,6 +347,77 @@
     </div>
   </div>
 
+  <!-- Move Anime Modal -->
+  <div id="move-modal" class="modal" style="display: none;">
+    <div class="modal-content move-modal">
+      <div class="modal-header">
+        <h3>📋 Anime verschieben</h3>
+        <button class="modal-close" data-close-move aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="move-content">
+          <div class="move-anime-info">
+            <img id="move-anime-cover" src="" alt="" class="move-anime-image">
+            <div class="move-anime-details">
+              <h4 id="move-anime-title">Anime Titel</h4>
+              <p id="move-anime-current-list">Aktuell in: <span id="current-list-name"></span></p>
+            </div>
+          </div>
+          
+          <div class="move-selection">
+            <h4>Wohin verschieben?</h4>
+            <div class="move-options">
+              <label class="move-option">
+                <input type="radio" name="move-target" value="plan">
+                <span class="move-option-content">
+                  <span class="move-option-icon">📋</span>
+                  <span class="move-option-text">Gerade am schauen</span>
+                </span>
+              </label>
+              
+              <label class="move-option">
+                <input type="radio" name="move-target" value="watched">
+                <span class="move-option-content">
+                  <span class="move-option-icon">✅</span>
+                  <span class="move-option-text">Fertig Geschaut</span>
+                </span>
+              </label>
+              
+              <label class="move-option">
+                <input type="radio" name="move-target" value="waiting">
+                <span class="move-option-content">
+                  <span class="move-option-icon">⏳</span>
+                  <span class="move-option-text">Warten auf Fortsetzung</span>
+                </span>
+              </label>
+              
+              <label class="move-option">
+                <input type="radio" name="move-target" value="plan-fsk">
+                <span class="move-option-content">
+                  <span class="move-option-icon">🔞</span>
+                  <span class="move-option-text">Gerade am schauen (FSK16/18+)</span>
+                </span>
+              </label>
+              
+              <label class="move-option">
+                <input type="radio" name="move-target" value="fsk">
+                <span class="move-option-content">
+                  <span class="move-option-icon">🔞</span>
+                  <span class="move-option-text">Fertig Geschaut (FSK16/18+)</span>
+                </span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="move-actions">
+            <button type="button" class="btn secondary" id="move-cancel">Abbrechen</button>
+            <button type="button" class="btn primary" id="move-confirm">Verschieben</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Age Verification Modal -->
   <div id="age-verification-modal" class="modal" style="display: none;">
     <div class="modal-content age-verification-modal">
@@ -443,7 +514,6 @@
   <script src="script.js"></script>
 </body>
 </html>
-
 
 
 
