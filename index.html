@@ -53,6 +53,7 @@
         </div>
       </div>
       <div class="header-actions">
+        <button id="settings-btn" class="btn settings" aria-label="Einstellungen" title="Einstellungen">⚙️ Einstellungen</button>
         <button id="backup-btn" class="btn backup" aria-label="Backup erstellen" title="Backup erstellen">💾 Backup</button>
         <button id="restore-btn" class="btn restore" aria-label="Backup wiederherstellen" title="Backup wiederherstellen">📁 Wiederherstellen</button>
         <button id="theme-toggle" class="btn theme" aria-label="Theme wechseln" title="Theme wechseln">🌙</button>
@@ -69,6 +70,7 @@
             <option value="plan">Gerade am schauen</option>
             <option value="watched">Fertig Geschaut</option>
             <option value="waiting">Warten auf Fortsetzung</option>
+            <option value="plan-fsk">Gerade am schauen (FSK16/18+)</option>
             <option value="fsk">FSK16/18+</option>
           </select>
           <button type="submit" class="btn primary">Hinzufügen</button>
@@ -82,6 +84,7 @@
       <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Gerade am schauen</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="watched">Fertig Geschaut</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="waiting">Warten auf Fortsetzung</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="plan-fsk">Gerade am schauen (FSK16/18+)</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="fsk">FSK16/18+</button>
       <button id="help-btn" class="help-btn" title="Hilfe & Support">❓</button>
     </nav>
@@ -95,6 +98,9 @@
       </section>
       <section id="tab-waiting" class="tab-panel" role="tabpanel" aria-label="Warten auf Fortsetzung">
         <div id="grid-waiting" class="grid"></div>
+      </section>
+      <section id="tab-plan-fsk" class="tab-panel" role="tabpanel" aria-label="Gerade am schauen (FSK16/18+)">
+        <div id="grid-plan-fsk" class="grid"></div>
       </section>
       <section id="tab-fsk" class="tab-panel" role="tabpanel" aria-label="FSK16/18+">
         <div id="grid-fsk" class="grid"></div>
@@ -302,6 +308,73 @@
           <div class="trailer-info">
             <h4 id="trailer-anime-title"></h4>
             <p id="trailer-anime-description"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal" style="display: none;">
+    <div class="modal-content settings-modal">
+      <div class="modal-header">
+        <h3>⚙️ Einstellungen</h3>
+        <button class="modal-close" data-close-settings aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-content">
+          <div class="settings-section">
+            <h4>🔞 Altersbestätigung</h4>
+            <p>Verwalte deine Altersbestätigung für FSK16/18+ Inhalte.</p>
+            <div class="age-status">
+              <span id="age-status-text">Status wird geladen...</span>
+            </div>
+            <div class="settings-buttons">
+              <button type="button" class="btn secondary" id="reset-age-verification">Altersbestätigung zurücksetzen</button>
+            </div>
+          </div>
+          
+          
+          <div class="settings-section">
+            <h4>💾 Daten</h4>
+            <p>Verwalte deine lokalen Daten und Einstellungen.</p>
+            <div class="settings-buttons">
+              <button type="button" class="btn secondary" id="clear-all-data">Alle Daten löschen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Age Verification Modal -->
+  <div id="age-verification-modal" class="modal" style="display: none;">
+    <div class="modal-content age-verification-modal">
+      <div class="modal-header">
+        <h3>🔞 Altersbestätigung erforderlich</h3>
+        <button class="modal-close" data-close-age-verification aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="age-verification-content">
+            <div class="age-warning">
+              <div class="warning-icon">⚠️</div>
+              <h4>FSK16/18+ Inhalte</h4>
+              <p>Du versuchst auf Inhalte zuzugreifen, die nur für Personen ab 16 bzw. 18 Jahren geeignet sind.</p>
+              <div class="age-warning-highlight">
+                <span class="highlight-text">👁️ Ich sehe wie alt du bist, versuch nicht zu lügen!</span>
+              </div>
+            </div>
+          
+          <div class="age-confirmation">
+            <p><strong>Bist du mindestens 16 Jahre alt?</strong></p>
+            <div class="age-buttons">
+              <button type="button" class="btn secondary" id="age-no">Nein, ich bin unter 16</button>
+              <button type="button" class="btn primary" id="age-yes">Ja, ich bin 16+</button>
+            </div>
+          </div>
+          
+          <div class="age-note">
+            <small>Diese Bestätigung wird in deinem Browser gespeichert. Du kannst sie jederzeit in den Einstellungen zurücksetzen.</small>
           </div>
         </div>
       </div>
