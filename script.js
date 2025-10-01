@@ -9,12 +9,14 @@
     plan: document.getElementById('tab-plan'),
     watched: document.getElementById('tab-watched'),
     waiting: document.getElementById('tab-waiting'),
+    'plan-fsk': document.getElementById('tab-plan-fsk'),
     fsk: document.getElementById('tab-fsk')
   };
   const grids = {
     plan: document.getElementById('grid-plan'),
     watched: document.getElementById('grid-watched'),
     waiting: document.getElementById('grid-waiting'),
+    'plan-fsk': document.getElementById('grid-plan-fsk'),
     fsk: document.getElementById('grid-fsk')
   };
   const themeToggle = document.getElementById('theme-toggle');
@@ -46,6 +48,20 @@
   const helpBtn = document.getElementById('help-btn');
   const helpModal = document.getElementById('help-modal');
   const helpClose = document.querySelector('[data-close-help]');
+  
+  // Age verification elements
+  const ageVerificationModal = document.getElementById('age-verification-modal');
+  const ageVerificationClose = document.querySelector('[data-close-age-verification]');
+  const ageYes = document.getElementById('age-yes');
+  const ageNo = document.getElementById('age-no');
+  
+  // Settings elements
+  const settingsBtn = document.getElementById('settings-btn');
+  const settingsModal = document.getElementById('settings-modal');
+  const settingsClose = document.querySelector('[data-close-settings]');
+  const ageStatusText = document.getElementById('age-status-text');
+  const resetAgeVerification = document.getElementById('reset-age-verification');
+  const clearAllData = document.getElementById('clear-all-data');
   
   // Admin elements
   const adminToggle = document.getElementById('admin-toggle');
@@ -114,6 +130,73 @@
     message.textContent = text;
     message.className = type;
     if (!text) message.removeAttribute('class');
+  }
+  
+  // Age verification functions
+  function isAgeVerified() {
+    return localStorage.getItem('animes-age-verified') === 'true';
+  }
+  
+  function setAgeVerified(verified) {
+    if (verified) {
+      localStorage.setItem('animes-age-verified', 'true');
+    } else {
+      localStorage.removeItem('animes-age-verified');
+    }
+  }
+  
+  function openAgeVerificationModal() {
+    ageVerificationModal.style.display = 'flex';
+  }
+  
+  function closeAgeVerificationModal() {
+    ageVerificationModal.style.display = 'none';
+  }
+  
+  function confirmAge() {
+    setAgeVerified(true);
+    closeAgeVerificationModal();
+    // Switch to FSK tab after confirmation
+    switchTab('fsk');
+    setMessage('Altersbestätigung gespeichert. Du kannst jetzt auf FSK16/18+ Inhalte zugreifen.', 'success');
+  }
+  
+  function denyAge() {
+    closeAgeVerificationModal();
+    setMessage('Zugriff verweigert. Du musst mindestens 16 Jahre alt sein, um diese Inhalte zu sehen.', 'error');
+  }
+  
+  // Settings functions
+  function openSettingsModal() {
+    updateAgeStatus();
+    settingsModal.style.display = 'flex';
+  }
+  
+  function closeSettingsModal() {
+    settingsModal.style.display = 'none';
+  }
+  
+  function updateAgeStatus() {
+    const isVerified = isAgeVerified();
+    if (ageStatusText) {
+      ageStatusText.textContent = isVerified ? 
+        '✅ Altersbestätigung aktiv' : 
+        '❌ Keine Altersbestätigung';
+      ageStatusText.style.color = isVerified ? 'var(--success)' : 'var(--danger)';
+    }
+  }
+  
+  function resetAgeVerificationSetting() {
+    setAgeVerified(false);
+    updateAgeStatus();
+    setMessage('Altersbestätigung wurde zurückgesetzt. Du musst dich erneut bestätigen, um auf FSK16/18+ Inhalte zuzugreifen.', 'success');
+  }
+  
+  function clearAllUserData() {
+    if (confirm('⚠️ ACHTUNG: Dies wird ALLE deine Daten löschen!\n\n• Alle Anime-Listen\n• Altersbestätigung\n• Theme-Einstellungen\n• Admin-Login\n\nBist du sicher?')) {
+      localStorage.clear();
+      location.reload();
+    }
   }
   
   // Live status functions
@@ -289,6 +372,12 @@
   }
   
   async function switchTab(key) {
+    // Check age verification for FSK tabs
+    if ((key === 'fsk' || key === 'plan-fsk') && !isAgeVerified()) {
+      openAgeVerificationModal();
+      return;
+    }
+    
     tabs.forEach(btn => {
       const active = btn.dataset.tab === key;
       btn.classList.toggle('active', active);
@@ -1046,6 +1135,7 @@
       { value: 'plan', text: '📋 Noch anschauen', icon: '📋' },
       { value: 'watched', text: '✅ Fertig geschaut', icon: '✅' },
       { value: 'waiting', text: '⏳ Warten auf Fortsetzung', icon: '⏳' },
+      { value: 'plan-fsk', text: '🔞 Gerade am schauen (FSK16/18+)', icon: '🔞' },
       { value: 'fsk', text: '🔞 FSK16/18+', icon: '🔞' }
     ];
     
@@ -1237,6 +1327,7 @@
       plan: 'Noch anschauen',
       watched: 'Schon angeschaut', 
       waiting: 'Warten auf Fortsetzung',
+      'plan-fsk': 'Gerade am schauen (FSK16/18+)',
       fsk: 'FSK16/18+'
     };
     setMessage(`Verschoben nach "${listNames[targetList]}": ${title}`, 'success');
@@ -1257,6 +1348,7 @@
       { value: 'plan', text: '📋 Noch anschauen' },
       { value: 'watched', text: '✅ Fertig geschaut' },
       { value: 'waiting', text: '⏳ Warten auf Fortsetzung' },
+      { value: 'plan-fsk', text: '🔞 Gerade am schauen (FSK16/18+)' },
       { value: 'fsk', text: '🔞 FSK16/18+' }
     ];
     
@@ -2193,6 +2285,7 @@
       plan: serializeList('plan'),
       watched: serializeList('watched'),
       waiting: serializeList('waiting'),
+      'plan-fsk': serializeList('plan-fsk'),
       fsk: serializeList('fsk'),
       timestamp: new Date().toISOString(),
       version: '1.0'
@@ -2314,12 +2407,12 @@
         }
         
         // Clear current data
-        ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+        ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
           grids[key].innerHTML = '';
         });
         
         // Restore data
-        ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+        ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
           if (data[key] && Array.isArray(data[key])) {
             data[key].forEach(item => {
               if (item.title) {
@@ -2359,7 +2452,7 @@
       const raw = localStorage.getItem('animes-app');
       if (!raw) return;
       const data = JSON.parse(raw);
-      ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
         // Sort animes alphabetically before adding them
         const sortedAnimes = (data[key] || []).sort((a, b) => 
           a.title.toLowerCase().localeCompare(b.title.toLowerCase())
@@ -2402,12 +2495,12 @@
   
   function loadFirebaseData(data) {
     // Clear current data
-    ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
       grids[key].innerHTML = '';
     });
     
     // Load Firebase data
-    ['plan', 'watched', 'waiting', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
       if (data[key] && Array.isArray(data[key])) {
         data[key].forEach(item => {
           if (item.title) {
@@ -2450,8 +2543,9 @@
     const planItems = grids.plan.children.length;
     const watchedItems = grids.watched.children.length;
     const waitingItems = grids.waiting.children.length;
+    const planFskItems = grids['plan-fsk'].children.length;
     const fskItems = grids.fsk.children.length;
-    const totalItems = planItems + watchedItems + waitingItems + fskItems;
+    const totalItems = planItems + watchedItems + waitingItems + planFskItems + fskItems;
     
     totalCount.textContent = totalItems;
     planCount.textContent = planItems;
@@ -2556,6 +2650,8 @@
     if (e.key === 'Escape' && terminModal.style.display === 'flex') closeTerminModal();
     if (e.key === 'Escape' && animeDetailsModal.style.display === 'flex') closeAnimeDetailsModal();
     if (e.key === 'Escape' && animeTrailerModal.style.display === 'flex') closeAnimeTrailerModal();
+    if (e.key === 'Escape' && ageVerificationModal.style.display === 'flex') closeAgeVerificationModal();
+    if (e.key === 'Escape' && settingsModal.style.display === 'flex') closeSettingsModal();
   });
   modalTitleInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); saveTitle(); }
@@ -2589,6 +2685,23 @@
   if (helpClose) helpClose.addEventListener('click', () => helpModal.style.display = 'none');
   if (helpModal) helpModal.addEventListener('click', (e) => {
     if (e.target === helpModal) helpModal.style.display = 'none';
+  });
+  
+  // Age verification handlers
+  if (ageVerificationClose) ageVerificationClose.addEventListener('click', closeAgeVerificationModal);
+  if (ageYes) ageYes.addEventListener('click', confirmAge);
+  if (ageNo) ageNo.addEventListener('click', denyAge);
+  if (ageVerificationModal) ageVerificationModal.addEventListener('click', (e) => {
+    if (e.target === ageVerificationModal) closeAgeVerificationModal();
+  });
+  
+  // Settings handlers
+  if (settingsBtn) settingsBtn.addEventListener('click', openSettingsModal);
+  if (settingsClose) settingsClose.addEventListener('click', closeSettingsModal);
+  if (resetAgeVerification) resetAgeVerification.addEventListener('click', resetAgeVerificationSetting);
+  if (clearAllData) clearAllData.addEventListener('click', clearAllUserData);
+  if (settingsModal) settingsModal.addEventListener('click', (e) => {
+    if (e.target === settingsModal) closeSettingsModal();
   });
   
   // Backup handlers
