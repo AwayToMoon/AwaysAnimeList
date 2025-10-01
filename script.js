@@ -63,6 +63,15 @@
   const resetAgeVerification = document.getElementById('reset-age-verification');
   const clearAllData = document.getElementById('clear-all-data');
   
+  // Move modal elements
+  const moveModal = document.getElementById('move-modal');
+  const moveClose = document.querySelector('[data-close-move]');
+  const moveAnimeCover = document.getElementById('move-anime-cover');
+  const moveAnimeTitle = document.getElementById('move-anime-title');
+  const currentListName = document.getElementById('current-list-name');
+  const moveCancel = document.getElementById('move-cancel');
+  const moveConfirm = document.getElementById('move-confirm');
+  
   // Admin elements
   const adminToggle = document.getElementById('admin-toggle');
   const adminModal = document.getElementById('admin-modal');
@@ -196,6 +205,79 @@
     if (confirm('⚠️ ACHTUNG: Dies wird ALLE deine Daten löschen!\n\n• Alle Anime-Listen\n• Altersbestätigung\n• Theme-Einstellungen\n• Admin-Login\n\nBist du sicher?')) {
       localStorage.clear();
       location.reload();
+    }
+  }
+  
+  // Move modal functions
+  let currentMoveCard = null;
+  
+  function openMoveModal(card) {
+    currentMoveCard = card;
+    
+    // Get anime info
+    const title = card.querySelector('.title')?.textContent || '';
+    const cover = card.querySelector('img')?.src || '';
+    const currentList = card.dataset.list;
+    
+    // Set anime info in modal
+    moveAnimeTitle.textContent = title;
+    moveAnimeCover.src = cover;
+    moveAnimeCover.alt = title;
+    
+    // Set current list name
+    const listNames = {
+      plan: 'Gerade am schauen',
+      watched: 'Fertig Geschaut',
+      waiting: 'Warten auf Fortsetzung',
+      'plan-fsk': 'Gerade am schauen (FSK16/18+)',
+      fsk: 'Fertig Geschaut (FSK16/18+)'
+    };
+    currentListName.textContent = listNames[currentList] || currentList;
+    
+    // Clear previous selection
+    document.querySelectorAll('input[name="move-target"]').forEach(radio => {
+      radio.checked = false;
+    });
+    
+    // Hide current list option
+    const currentListRadio = document.querySelector(`input[name="move-target"][value="${currentList}"]`);
+    if (currentListRadio) {
+      currentListRadio.closest('.move-option').style.display = 'none';
+    }
+    
+    // Ensure all other options are visible and properly styled
+    document.querySelectorAll('.move-option').forEach(option => {
+      if (option.style.display !== 'none') {
+        option.style.display = 'flex';
+        option.style.gap = '8px';
+      }
+    });
+    
+    moveModal.style.display = 'flex';
+  }
+  
+  function closeMoveModal() {
+    moveModal.style.display = 'none';
+    currentMoveCard = null;
+    
+    // Show all options again and reset styles
+    document.querySelectorAll('.move-option').forEach(option => {
+      option.style.display = 'flex';
+      option.style.gap = '8px';
+    });
+  }
+  
+  async function confirmMove() {
+    const selectedTarget = document.querySelector('input[name="move-target"]:checked');
+    if (!selectedTarget) {
+      setMessage('Bitte wähle einen Ziel-Tab aus.', 'error');
+      return;
+    }
+    
+    const targetList = selectedTarget.value;
+    if (currentMoveCard && targetList) {
+      await moveCard(currentMoveCard, targetList);
+      closeMoveModal();
     }
   }
   
@@ -1128,48 +1210,19 @@
     const adminActions = document.createElement('div');
     adminActions.className = 'actions';
   
-    // Create dropdown container
-    const moveContainer = document.createElement('div');
-    moveContainer.className = 'move-dropdown-container';
-    
-    const moveSelect = document.createElement('select');
-    moveSelect.className = 'move-dropdown';
-    moveSelect.title = 'Anime in andere Liste verschieben';
-    
-    // Add options for all lists except current one
-    const listOptions = [
-      { value: 'plan', text: '📋 Noch anschauen', icon: '📋' },
-      { value: 'watched', text: '✅ Fertig geschaut', icon: '✅' },
-      { value: 'waiting', text: '⏳ Warten auf Fortsetzung', icon: '⏳' },
-      { value: 'plan-fsk', text: '🔞 Gerade am schauen (FSK16/18+)', icon: '🔞' },
-      { value: 'fsk', text: '🔞 FSK16/18+', icon: '🔞' }
-    ];
-    
-    listOptions.forEach(option => {
-      if (option.value !== listKey) {
-        const optionEl = document.createElement('option');
-        optionEl.value = option.value;
-        optionEl.textContent = option.text;
-        moveSelect.appendChild(optionEl);
-      }
-    });
-    
-    // Add change event listener
-    moveSelect.addEventListener('change', async (e) => {
+    // Create move button
+    const moveBtn = document.createElement('button');
+    moveBtn.type = 'button';
+    moveBtn.className = 'btn move';
+    moveBtn.textContent = '📋';
+    moveBtn.title = 'Anime verschieben';
+    moveBtn.addEventListener('click', () => {
       if (localStorage.getItem('animes-is-admin') !== 'true') {
         setMessage('Nur Admins können verschieben.', 'error');
-        moveSelect.value = ''; // Reset selection
         return;
       }
-      const targetList = e.target.value;
-      if (targetList && targetList !== listKey) {
-        await moveCard(card, targetList);
-        // Reset dropdown after move
-        moveSelect.value = '';
-      }
+      openMoveModal(card);
     });
-    
-    moveContainer.appendChild(moveSelect);
   
     const delBtn = document.createElement('button');
     delBtn.type = 'button';
@@ -1184,7 +1237,7 @@
       await deleteCard(card);
     });
   
-    adminActions.appendChild(moveContainer);
+    adminActions.appendChild(moveBtn);
     adminActions.appendChild(delBtn);
   
     // Create link button container (always at the bottom)
@@ -1330,11 +1383,11 @@
     });
     
     const listNames = {
-      plan: 'Noch anschauen',
-      watched: 'Schon angeschaut', 
+      plan: 'Gerade am schauen',
+      watched: 'Fertig Geschaut', 
       waiting: 'Warten auf Fortsetzung',
       'plan-fsk': 'Gerade am schauen (FSK16/18+)',
-      fsk: 'FSK16/18+'
+      fsk: 'Fertig Geschaut (FSK16/18+)'
     };
     setMessage(`Verschoben nach "${listNames[targetList]}": ${title}`, 'success');
     updateStats();
@@ -2658,6 +2711,7 @@
     if (e.key === 'Escape' && animeTrailerModal.style.display === 'flex') closeAnimeTrailerModal();
     if (e.key === 'Escape' && ageVerificationModal.style.display === 'flex') closeAgeVerificationModal();
     if (e.key === 'Escape' && settingsModal.style.display === 'flex') closeSettingsModal();
+    if (e.key === 'Escape' && moveModal.style.display === 'flex') closeMoveModal();
   });
   modalTitleInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); saveTitle(); }
@@ -2708,6 +2762,14 @@
   if (clearAllData) clearAllData.addEventListener('click', clearAllUserData);
   if (settingsModal) settingsModal.addEventListener('click', (e) => {
     if (e.target === settingsModal) closeSettingsModal();
+  });
+  
+  // Move modal handlers
+  if (moveClose) moveClose.addEventListener('click', closeMoveModal);
+  if (moveCancel) moveCancel.addEventListener('click', closeMoveModal);
+  if (moveConfirm) moveConfirm.addEventListener('click', confirmMove);
+  if (moveModal) moveModal.addEventListener('click', (e) => {
+    if (e.target === moveModal) closeMoveModal();
   });
   
   // Backup handlers
