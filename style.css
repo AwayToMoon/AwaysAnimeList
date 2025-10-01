@@ -2125,6 +2125,209 @@ body.is-admin .actions .btn.link {
   font-weight: 600;
 }
 
+/* Settings Modal */
+.settings-modal {
+  max-width: 600px;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.settings-section {
+  padding: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.settings-section:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.settings-section h4 {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-section p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.age-status {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.age-status span {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.settings-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.settings-buttons .btn {
+  min-width: 120px;
+}
+
+.btn.settings {
+  background: var(--card-strong);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.btn.settings:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(122, 162, 255, 0.3);
+}
+
+/* Age Verification Modal */
+.age-verification-modal {
+  max-width: 500px;
+}
+
+.age-verification-content {
+  text-align: center;
+}
+
+.age-warning {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
+}
+
+.warning-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  animation: warningPulse 2s ease-in-out infinite;
+}
+
+@keyframes warningPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.age-warning h4 {
+  color: var(--danger);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.age-warning p {
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.age-warning-highlight {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border: 2px solid #b91c1c;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  animation: warningPulse 1.5s ease-in-out infinite;
+}
+
+.highlight-text {
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  display: block;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.age-confirmation {
+  margin-bottom: 20px;
+}
+
+.age-confirmation p {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 16px 0;
+}
+
+.age-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.age-buttons .btn {
+  min-width: 140px;
+  padding: 12px 20px;
+  font-weight: 600;
+}
+
+.age-buttons .btn.secondary {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: white;
+}
+
+.age-buttons .btn.secondary:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.age-buttons .btn.primary {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.age-buttons .btn.primary:hover {
+  background: #059669;
+  border-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.age-note {
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.age-note small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 /* Responsive Help Modal */
 @media (max-width: 768px) {
   .help-modal {
@@ -2145,4 +2348,81 @@ body.is-admin .actions .btn.link {
   .contact-item strong {
     min-width: auto;
   }
+  
+  .age-verification-modal {
+    max-width: 90vw;
+    margin: 20px;
+  }
+  
+  .age-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .age-buttons .btn {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .warning-icon {
+    font-size: 36px;
+  }
+  
+  .age-warning h4 {
+    font-size: 18px;
+  }
+  
+  .age-warning p {
+    font-size: 14px;
+  }
+  
+  .settings-modal {
+    max-width: 95vw;
+    margin: 20px;
+  }
+  
+  .settings-section {
+    padding: 16px;
+  }
+  
+  .settings-buttons {
+    flex-direction: column;
+  }
+  
+  .settings-buttons .btn {
+    width: 100%;
+  }
+}
+
+/* Plan-FSK Tab Styling */
+.tab[data-tab="plan-fsk"] {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-color: #d97706;
+  color: white;
+  font-weight: 600;
+}
+
+.tab[data-tab="plan-fsk"]:hover:not(.active) {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+
+.tab[data-tab="plan-fsk"].active {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+}
+
+#grid-plan-fsk .card {
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(217, 119, 6, 0.05));
+}
+
+#grid-plan-fsk .card:hover {
+  border-color: rgba(217, 119, 6, 0.6);
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+}
+
+#grid-plan-fsk .card::before {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
 }
