@@ -2426,3 +2426,8 @@ body.is-admin .actions .btn.link {
 #grid-plan-fsk .card::before {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
 }
+
+/* Admin-only settings section */
+body:not(.is-admin) .settings-section.admin-only {
+  display: none !important;
+}
