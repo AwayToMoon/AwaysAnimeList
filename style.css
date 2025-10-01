@@ -2265,6 +2265,22 @@ body.is-admin .actions .btn.link {
   letter-spacing: 0.5px;
 }
 
+.age-warning-disclaimer {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+}
+
+.age-warning-disclaimer p {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
 .age-confirmation {
   margin-bottom: 20px;
 }
