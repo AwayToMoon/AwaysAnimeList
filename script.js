@@ -308,6 +308,12 @@
         link.innerHTML = '🔗 ZUM ANIME';
       }
     });
+    
+    // Show/hide admin-only settings sections
+    const adminOnlySections = document.querySelectorAll('.admin-only');
+    adminOnlySections.forEach(section => {
+      section.style.display = isAdmin ? 'block' : 'none';
+    });
   }
   
   function openAdminModal() {
