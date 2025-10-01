@@ -2431,3 +2431,155 @@ body.is-admin .actions .btn.link {
 body:not(.is-admin) .settings-section.admin-only {
   display: none !important;
 }
+
+/* Move Modal */
+.move-modal {
+  max-width: 600px;
+}
+
+.move-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.move-anime-info {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.move-anime-image {
+  width: 80px;
+  height: 106px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.move-anime-details h4 {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.move-anime-details p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.move-selection h4 {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.move-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.move-option {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  gap: 8px;
+}
+
+.move-option:hover {
+  border-color: var(--primary);
+  background: var(--bg-elev);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.move-option input[type="radio"] {
+  margin: 0 8px 0 0;
+  transform: scale(1.2);
+}
+
+.move-option input[type="radio"]:checked + .move-option-content {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.move-option-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.move-option-icon {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.move-option-text {
+  font-size: 16px;
+  color: var(--text);
+}
+
+.move-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.move-actions .btn {
+  min-width: 120px;
+}
+
+.btn.move {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.btn.move:hover {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+@media (max-width: 768px) {
+  .move-modal {
+    max-width: 95vw;
+    margin: 20px;
+  }
+  
+  .move-anime-info {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .move-anime-image {
+    width: 100px;
+    height: 133px;
+  }
+  
+  .move-actions {
+    flex-direction: column;
+  }
+  
+  .move-actions .btn {
+    width: 100%;
+  }
+}
