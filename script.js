@@ -720,15 +720,84 @@
   }
   
   // Generate Aniworld URL for anime
+  // Helper function to get the best display title for an anime
+  function getBestDisplayTitle(anime, originalTitle) {
+    const title = anime.title || anime.title_english || originalTitle;
+    
+    // Special handling for Danmachi - prefer shorter title
+    if (title.toLowerCase().includes('dungeon') || 
+        title.toLowerCase().includes('pick up girls') ||
+        title.toLowerCase().includes('wrong to try') ||
+        title.toLowerCase().includes('danmachi')) {
+      return 'Danmachi';
+    }
+    
+    return title;
+  }
+
+
   function generateAniworldUrl(title) {
     if (!title) return '#';
+    
+    // Special mappings for known problematic titles
+    const specialMappings = {
+      'Danmachi: Is It Wrong to Try to Pick Up Girls in a Dungeon?': 'danmachi',
+      'Is It Wrong to Try to Pick Up Girls in a Dungeon?': 'danmachi',
+      'Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka': 'danmachi',
+      'Danmachi': 'danmachi',
+      'Attack on Titan': 'shingeki-no-kyojin',
+      'Shingeki no Kyojin': 'shingeki-no-kyojin',
+      'One Piece': 'one-piece',
+      'Naruto': 'naruto',
+      'Dragon Ball': 'dragon-ball',
+      'Demon Slayer': 'demon-slayer',
+      'Kimetsu no Yaiba': 'demon-slayer',
+      'My Hero Academia': 'my-hero-academia',
+      'Boku no Hero Academia': 'my-hero-academia'
+    };
+    
+    // Check for exact matches first
+    const normalizedTitle = title.toLowerCase().trim();
+    for (const [key, value] of Object.entries(specialMappings)) {
+      if (normalizedTitle === key.toLowerCase()) {
+        return `https://aniworld.to/anime/stream/${value}`;
+      }
+    }
+    
+    // Check for partial matches (contains)
+    for (const [key, value] of Object.entries(specialMappings)) {
+      if (normalizedTitle.includes(key.toLowerCase()) || key.toLowerCase().includes(normalizedTitle)) {
+        return `https://aniworld.to/anime/stream/${value}`;
+      }
+    }
+    
+    // For Danmachi specifically, check if title contains "dungeon" or "danmachi"
+    if (normalizedTitle.includes('dungeon') || normalizedTitle.includes('danmachi') || 
+        normalizedTitle.includes('pick up girls') || normalizedTitle.includes('wrong to try')) {
+      return `https://aniworld.to/anime/stream/danmachi`;
+    }
+    
     // Convert title to URL-friendly format
-    const urlTitle = title
+    let urlTitle = title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
       .replace(/\s+/g, '-') // Replace spaces with hyphens
       .replace(/-+/g, '-') // Replace multiple hyphens with single
       .trim();
+    
+    // If the URL is too long, try to shorten it intelligently
+    if (urlTitle.length > 50) {
+      const words = urlTitle.split('-');
+      if (words.length > 3) {
+        // Try to keep the most important words (longer words first)
+        const importantWords = words
+          .filter(w => w.length > 3)
+          .sort((a, b) => b.length - a.length)
+          .slice(0, 3);
+        urlTitle = importantWords.join('-');
+      }
+    }
+    
     return `https://aniworld.to/anime/stream/${urlTitle}`;
   }
 
@@ -899,6 +968,16 @@
       shortVersions.push('Ore wa Subete wo Parry Suru');
     }
     
+    // Special handling for Danmachi
+    if (originalTitle.toLowerCase().includes('danmachi') || 
+        originalTitle.toLowerCase().includes('dungeon') ||
+        originalTitle.toLowerCase().includes('pick up girls') ||
+        originalTitle.toLowerCase().includes('wrong to try')) {
+      shortVersions.push('Danmachi');
+      shortVersions.push('Is It Wrong to Try to Pick Up Girls in a Dungeon?');
+      shortVersions.push('Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka');
+    }
+    
     // Try multiple search strategies
     const searchQueries = [
       originalTitle,
@@ -932,13 +1011,14 @@
               // Fetch tags for the anime
               const tags = await fetchAnimeTags(chosen.id);
               
-              return {
-                id: chosen.id,
-                title: chosen.title || chosen.title_english || originalTitle,
-                image: getBestImageUrl(chosen),
-                url: generateAniworldUrl(chosen.title || chosen.title_english || originalTitle),
-                tags: tags
-              };
+                const finalTitle = getBestDisplayTitle(chosen, originalTitle);
+                return {
+                  id: chosen.id,
+                  title: finalTitle,
+                  image: getBestImageUrl(chosen),
+                  url: generateAniworldUrl(finalTitle),
+                  tags: tags
+                };
             }
           }
         }
@@ -962,13 +1042,14 @@
               // Fetch tags for the anime
               const tags = await fetchAnimeTags(chosen.id);
               
-              return {
-                id: chosen.id,
-                title: chosen.title || chosen.title_english || originalTitle,
-                image: getBestImageUrl(chosen),
-                url: generateAniworldUrl(chosen.title || chosen.title_english || originalTitle),
-                tags: tags
-              };
+                const finalTitle = getBestDisplayTitle(chosen, originalTitle);
+                return {
+                  id: chosen.id,
+                  title: finalTitle,
+                  image: getBestImageUrl(chosen),
+                  url: generateAniworldUrl(finalTitle),
+                  tags: tags
+                };
             }
           }
         }
@@ -1004,11 +1085,12 @@
                 // Fetch tags for the anime
                 const tags = await fetchAnimeTags(chosen.mal_id);
                 
+                const finalTitle = getBestDisplayTitle(chosen, originalTitle);
                 return {
                   id: chosen.mal_id,
-                  title: chosen.title || chosen.title_english || originalTitle,
+                  title: finalTitle,
                   image: getBestImageUrl(chosen),
-                  url: generateAniworldUrl(chosen.title || chosen.title_english || originalTitle),
+                  url: generateAniworldUrl(finalTitle),
                   tags: tags
                 };
               }
