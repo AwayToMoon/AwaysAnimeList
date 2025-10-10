@@ -407,10 +407,7 @@
         germanSyncBtn.title = 'Warten auf deutsche Synchro';
       }
       // Remove German sync label
-      const existingLabel = card.querySelector('.german-sync-label');
-      if (existingLabel) {
-        existingLabel.remove();
-      }
+      updateGermanSyncLabel(card, false);
       setMessage('Deutsche Synchro-Status entfernt', 'success');
     } else {
       // Set German sync status
@@ -422,6 +419,21 @@
         germanSyncBtn.title = 'Deutsche Synchro-Status entfernen';
       }
       // Add German sync label
+      updateGermanSyncLabel(card, true);
+      setMessage('Warten auf deutsche Synchro markiert', 'success');
+    }
+    
+    // Save the updated data
+    saveAll();
+  }
+
+  function updateGermanSyncLabel(card, show) {
+    // Remove all existing German sync labels first
+    const existingLabels = card.querySelectorAll('.german-sync-label');
+    existingLabels.forEach(label => label.remove());
+    
+    if (show) {
+      // Add new label
       const germanSyncLabel = document.createElement('div');
       germanSyncLabel.className = 'german-sync-label';
       germanSyncLabel.innerHTML = '🇩🇪 Warten auf deutsche Synchro';
@@ -430,11 +442,7 @@
       if (titleEl) {
         titleEl.insertAdjacentElement('afterend', germanSyncLabel);
       }
-      setMessage('Warten auf deutsche Synchro markiert', 'success');
     }
-    
-    // Save the updated data
-    saveAll();
   }
   
   function setAdminUI(isAdmin) {
@@ -1322,7 +1330,8 @@
       const germanSyncLabel = document.createElement('div');
       germanSyncLabel.className = 'german-sync-label';
       germanSyncLabel.innerHTML = '🇩🇪 Warten auf deutsche Synchro';
-      card.appendChild(germanSyncLabel);
+      // Insert after title but before tags
+      titleEl.insertAdjacentElement('afterend', germanSyncLabel);
     }
   
     // Add anime tags if available
@@ -1488,14 +1497,18 @@
         germanSyncBtn.title = 'Deutsche Synchro-Status entfernen';
       }
       // Add German sync label
-      const germanSyncLabel = document.createElement('div');
-      germanSyncLabel.className = 'german-sync-label';
-      germanSyncLabel.innerHTML = '🇩🇪 Warten auf deutsche Synchro';
-      // Insert after title but before tags
-      const titleEl = card.querySelector('.title');
-      if (titleEl) {
-        titleEl.insertAdjacentElement('afterend', germanSyncLabel);
+      updateGermanSyncLabel(card, true);
+    } else {
+      // Ensure German sync status is false
+      card.dataset.germanSync = 'false';
+      card.classList.remove('german-sync-card');
+      const germanSyncBtn = card.querySelector('.cover-german-sync');
+      if (germanSyncBtn) {
+        germanSyncBtn.textContent = '🇩🇪';
+        germanSyncBtn.title = 'Warten auf deutsche Synchro';
       }
+      // Remove German sync label
+      updateGermanSyncLabel(card, false);
     }
     
     // Insert card in alphabetical order
