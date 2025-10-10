@@ -27,6 +27,7 @@
   const planCount = document.getElementById('plan-count');
   const waitingCount = document.getElementById('waiting-count');
   const fskCount = document.getElementById('fsk-count');
+  const planFskCount = document.getElementById('plan-fsk-count');
   
   // Live status elements
   const liveStatus = document.getElementById('live-status');
@@ -61,6 +62,7 @@
   const settingsClose = document.querySelector('[data-close-settings]');
   const ageStatusText = document.getElementById('age-status-text');
   const resetAgeVerification = document.getElementById('reset-age-verification');
+  const verifyAge = document.getElementById('verify-age');
   const clearAllData = document.getElementById('clear-all-data');
   
   // Move modal elements
@@ -149,8 +151,10 @@
   function setAgeVerified(verified) {
     if (verified) {
       localStorage.setItem('animes-age-verified', 'true');
+      document.body.classList.add('age-verified');
     } else {
       localStorage.removeItem('animes-age-verified');
+      document.body.classList.remove('age-verified');
     }
   }
   
@@ -193,12 +197,25 @@
         '❌ Keine Altersbestätigung';
       ageStatusText.style.color = isVerified ? 'var(--success)' : 'var(--danger)';
     }
+    
+    // Show/hide verify button based on verification status
+    if (verifyAge) {
+      verifyAge.style.display = isVerified ? 'none' : 'inline-block';
+    }
+    if (resetAgeVerification) {
+      resetAgeVerification.style.display = isVerified ? 'inline-block' : 'none';
+    }
   }
   
   function resetAgeVerificationSetting() {
     setAgeVerified(false);
     updateAgeStatus();
     setMessage('Altersbestätigung wurde zurückgesetzt. Du musst dich erneut bestätigen, um auf FSK16/18+ Inhalte zuzugreifen.', 'success');
+  }
+  
+  function startAgeVerification() {
+    closeSettingsModal();
+    openAgeVerificationModal();
   }
   
   function clearAllUserData() {
@@ -2578,6 +2595,11 @@
   
   async function loadAll() {
     try {
+      // Check age verification status and set CSS class
+      if (isAgeVerified()) {
+        document.body.classList.add('age-verified');
+      }
+      
       // Try to load from Firebase first
       if (window.db) {
         const firebaseData = await loadFromFirebase();
@@ -2686,13 +2708,17 @@
     const waitingItems = grids.waiting.children.length;
     const planFskItems = grids['plan-fsk'].children.length;
     const fskItems = grids.fsk.children.length;
-    const totalItems = planItems + watchedItems + waitingItems + planFskItems + fskItems;
+    
+    // Always show real FSK counts
+    const realFskItems = planFskItems + fskItems;
+    const totalItems = planItems + watchedItems + waitingItems + realFskItems;
     
     totalCount.textContent = totalItems;
     planCount.textContent = planItems;
     watchedCount.textContent = watchedItems;
     waitingCount.textContent = waitingItems;
-    fskCount.textContent = fskItems;
+    fskCount.textContent = fskItems; // FSK watched count
+    planFskCount.textContent = planFskItems; // FSK planned count
   }
   
   function getPreferredTheme() {
@@ -2840,6 +2866,7 @@
   // Settings handlers
   if (settingsBtn) settingsBtn.addEventListener('click', openSettingsModal);
   if (settingsClose) settingsClose.addEventListener('click', closeSettingsModal);
+  if (verifyAge) verifyAge.addEventListener('click', startAgeVerification);
   if (resetAgeVerification) resetAgeVerification.addEventListener('click', resetAgeVerificationSetting);
   if (clearAllData) clearAllData.addEventListener('click', clearAllUserData);
   if (settingsModal) settingsModal.addEventListener('click', (e) => {
