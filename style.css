@@ -253,14 +253,112 @@ body::before {
 }
 
 .header h1{
-  margin:8px 0 0 0;
-  font-weight:700;
-  letter-spacing:0.3px;
-  background: linear-gradient(135deg, var(--primary), var(--success));
+  margin: 20px auto 30px auto;
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-align: center;
+  display: block;
+  width: fit-content;
+  max-width: 90%;
+  background: linear-gradient(45deg, #7c3aed, #3b82f6, #10b981, #f59e0b, #ef4444);
+  background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: glow 2s ease-in-out infinite alternate;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  filter: none;
+  animation: 
+    rainbowShift 4s ease-in-out infinite,
+    titleFloat 3s ease-in-out infinite alternate;
+  text-shadow: 
+    0 0 20px rgba(124, 58, 237, 0.4),
+    0 0 40px rgba(59, 130, 246, 0.3),
+    0 0 60px rgba(16, 185, 129, 0.2);
+}
+
+.header h1:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+/* Schwebende Partikel um den Titel */
+.header h1::before {
+  content: '✨';
+  position: absolute;
+  top: -20px;
+  left: -30px;
+  font-size: 1.5rem;
+  animation: particleFloat 4s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+.header h1::after {
+  content: '⭐';
+  position: absolute;
+  top: -15px;
+  right: -30px;
+  font-size: 1.2rem;
+  animation: particleFloat 3s ease-in-out infinite reverse;
+  opacity: 0.7;
+}
+
+@keyframes particleFloat {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+    opacity: 0.6;
+  }
+  50% { 
+    transform: translateY(-10px) rotate(180deg); 
+    opacity: 1;
+  }
+}
+
+@keyframes rainbowShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes titleFloat {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-5px); }
+}
+
+/* Dekorative Linien unter dem Titel */
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 4px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    #7c3aed, 
+    #3b82f6, 
+    #10b981, 
+    #f59e0b, 
+    #ef4444, 
+    transparent);
+  border-radius: 2px;
+  animation: titleLine 3s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+}
+
+@keyframes titleLine {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: translateX(-50%) scaleX(0.3); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translateX(-50%) scaleX(1); 
+  }
 }
 
 @keyframes glow {
@@ -1714,6 +1812,7 @@ body:not(.is-admin) .cover-termin {
   color: #ffffff;
   border: 1px solid rgba(220, 38, 38, 0.3);
   box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+  display: none; /* Standardmäßig versteckt */
 }
 
 .tab[data-tab="fsk"]:hover:not(.active) {
@@ -1937,6 +2036,30 @@ body.is-admin .actions .btn.link {
 }
 
 @media (max-width:560px){
+  .header h1 {
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+    margin: 15px auto 20px auto;
+    max-width: 95%;
+  }
+  
+  .header h1::before {
+    font-size: 1rem;
+    top: -15px;
+    left: -20px;
+  }
+  
+  .header h1::after {
+    font-size: 0.8rem;
+    top: -10px;
+    right: -20px;
+  }
+  
+  .header::after {
+    width: 200px;
+    height: 3px;
+  }
+  
   .field-group{flex-direction:column;align-items:stretch}
   .actions{flex-direction:column}
   .modal-body{flex-direction:column;align-items:center;text-align:center}
@@ -2416,6 +2539,7 @@ body.is-admin .actions .btn.link {
   border-color: #d97706;
   color: white;
   font-weight: 600;
+  display: none; /* Standardmäßig versteckt */
 }
 
 .tab[data-tab="plan-fsk"]:hover:not(.active) {
@@ -2446,6 +2570,44 @@ body.is-admin .actions .btn.link {
 /* Admin-only settings section */
 body:not(.is-admin) .settings-section.admin-only {
   display: none !important;
+}
+
+/* FSK Tabs nur anzeigen wenn Altersbestätigung aktiviert */
+.tab[data-tab="fsk"],
+.tab[data-tab="plan-fsk"] {
+  display: none;
+}
+
+body.age-verified .tab[data-tab="fsk"],
+body.age-verified .tab[data-tab="plan-fsk"] {
+  display: flex;
+}
+
+/* FSK Statistik immer anzeigen */
+.fsk-stat {
+  display: flex;
+}
+
+/* FSK Statistik visuell anders wenn Altersbestätigung nicht aktiv */
+body:not(.age-verified) .fsk-stat {
+  opacity: 0.7;
+  filter: grayscale(30%);
+  position: relative;
+}
+
+body:not(.age-verified) .fsk-stat::after {
+  content: '🔒';
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 10px;
+  background: rgba(0,0,0,0.8);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Move Modal */
