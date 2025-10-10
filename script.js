@@ -393,6 +393,49 @@
     
     updateLiveStatus();
   }
+
+  function toggleGermanSyncStatus(card) {
+    const isGermanSync = card.dataset.germanSync === 'true';
+    
+    if (isGermanSync) {
+      // Remove German sync status
+      card.dataset.germanSync = 'false';
+      card.classList.remove('german-sync-card');
+      const germanSyncBtn = card.querySelector('.cover-german-sync');
+      if (germanSyncBtn) {
+        germanSyncBtn.textContent = '🇩🇪';
+        germanSyncBtn.title = 'Warten auf deutsche Synchro';
+      }
+      // Remove German sync label
+      const existingLabel = card.querySelector('.german-sync-label');
+      if (existingLabel) {
+        existingLabel.remove();
+      }
+      setMessage('Deutsche Synchro-Status entfernt', 'success');
+    } else {
+      // Set German sync status
+      card.dataset.germanSync = 'true';
+      card.classList.add('german-sync-card');
+      const germanSyncBtn = card.querySelector('.cover-german-sync');
+      if (germanSyncBtn) {
+        germanSyncBtn.textContent = '✅';
+        germanSyncBtn.title = 'Deutsche Synchro-Status entfernen';
+      }
+      // Add German sync label
+      const germanSyncLabel = document.createElement('div');
+      germanSyncLabel.className = 'german-sync-label';
+      germanSyncLabel.innerHTML = '🇩🇪 Warten auf deutsche Synchro';
+      // Insert after title but before tags
+      const titleEl = card.querySelector('.title');
+      if (titleEl) {
+        titleEl.insertAdjacentElement('afterend', germanSyncLabel);
+      }
+      setMessage('Warten auf deutsche Synchro markiert', 'success');
+    }
+    
+    // Save the updated data
+    saveAll();
+  }
   
   function setAdminUI(isAdmin) {
     document.body.classList.toggle('is-admin', isAdmin);
@@ -1243,6 +1286,20 @@
       }
       openTerminModal(card);
     });
+
+    // Deutsche Synchro Button - nur für "plan" Liste
+    const germanSyncBtn = document.createElement('button');
+    germanSyncBtn.type = 'button';
+    germanSyncBtn.className = 'cover-german-sync';
+    germanSyncBtn.title = 'Warten auf deutsche Synchro';
+    germanSyncBtn.textContent = '🇩🇪';
+    germanSyncBtn.addEventListener('click', () => {
+      if (localStorage.getItem('animes-is-admin') !== 'true') {
+        setMessage('Nur Admins können deutschen Synchro-Status ändern.', 'error');
+        return;
+      }
+      toggleGermanSyncStatus(card);
+    });
   
     coverWrap.appendChild(img);
     coverWrap.appendChild(editBtn);
@@ -1251,11 +1308,22 @@
     if (listKey === 'waiting') {
       coverWrap.appendChild(terminBtn);
     }
+    if (listKey === 'plan') {
+      coverWrap.appendChild(germanSyncBtn);
+    }
   
     const titleEl = document.createElement('h3');
     titleEl.className = 'title';
     titleEl.textContent = anime.title;
     titleEl.title = anime.title; // Add tooltip for full title
+
+    // Add German sync label if status is active
+    if (anime.germanSync) {
+      const germanSyncLabel = document.createElement('div');
+      germanSyncLabel.className = 'german-sync-label';
+      germanSyncLabel.innerHTML = '🇩🇪 Warten auf deutsche Synchro';
+      card.appendChild(germanSyncLabel);
+    }
   
     // Add anime tags if available
     if (anime.tags && anime.tags.length > 0) {
@@ -1410,6 +1478,26 @@
       updateRatingDisplay(card, anime.rating);
     }
     
+    // Load German sync status if it exists
+    if (anime.germanSync) {
+      card.dataset.germanSync = 'true';
+      card.classList.add('german-sync-card');
+      const germanSyncBtn = card.querySelector('.cover-german-sync');
+      if (germanSyncBtn) {
+        germanSyncBtn.textContent = '✅';
+        germanSyncBtn.title = 'Deutsche Synchro-Status entfernen';
+      }
+      // Add German sync label
+      const germanSyncLabel = document.createElement('div');
+      germanSyncLabel.className = 'german-sync-label';
+      germanSyncLabel.innerHTML = '🇩🇪 Warten auf deutsche Synchro';
+      // Insert after title but before tags
+      const titleEl = card.querySelector('.title');
+      if (titleEl) {
+        titleEl.insertAdjacentElement('afterend', germanSyncLabel);
+      }
+    }
+    
     // Insert card in alphabetical order
     insertCardAlphabetically(card, listKey);
     
@@ -1464,7 +1552,11 @@
     const title = card.querySelector('.title')?.textContent || '';
     const cover = card.querySelector('img')?.src || '';
     const url = card.querySelector('a')?.href || '';
-    const anime = { id: Number(card.dataset.id) || 0, title, image: cover, url };
+    const termin = card.dataset.termin ? JSON.parse(card.dataset.termin) : null;
+    const rating = card.dataset.rating ? parseInt(card.dataset.rating) : null;
+    const review = card.dataset.review || null;
+    const germanSync = card.dataset.germanSync === 'true';
+    const anime = { id: Number(card.dataset.id) || 0, title, image: cover, url, termin, rating, review, germanSync };
     
     // Remove from current list
     card.remove();
@@ -1521,6 +1613,16 @@
         dropdown.appendChild(optionEl);
       }
     });
+    
+    // Manage German sync button visibility
+    const germanSyncBtn = card.querySelector('.cover-german-sync');
+    if (germanSyncBtn) {
+      if (currentList === 'plan') {
+        germanSyncBtn.style.display = 'block';
+      } else {
+        germanSyncBtn.style.display = 'none';
+      }
+    }
   }
   
   // Termin Functions
@@ -2437,7 +2539,8 @@
       const termin = card.dataset.termin ? JSON.parse(card.dataset.termin) : null;
       const rating = card.dataset.rating ? parseInt(card.dataset.rating) : null;
       const review = card.dataset.review || null;
-      return { id, title, image: cover, url, termin, rating, review };
+      const germanSync = card.dataset.germanSync === 'true';
+      return { id, title, image: cover, url, termin, rating, review, germanSync };
     });
   }
   
