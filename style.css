@@ -2681,31 +2681,14 @@ body.age-verified .tab[data-tab="plan-fsk"] {
   display: flex;
 }
 
-/* FSK Statistik immer anzeigen */
+/* FSK Statistik nur anzeigen wenn Alter bestätigt */
 .fsk-stat {
-  display: flex;
+  display: none;
 }
 
-/* FSK Statistik visuell anders wenn Altersbestätigung nicht aktiv */
-body:not(.age-verified) .fsk-stat {
-  opacity: 0.7;
-  filter: grayscale(30%);
-  position: relative;
-}
-
-body:not(.age-verified) .fsk-stat::after {
-  content: '🔒';
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  font-size: 10px;
-  background: rgba(0,0,0,0.8);
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
+/* FSK Statistik sichtbar wenn Altersbestätigung aktiv */
+body.age-verified .fsk-stat {
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* Move Modal */
