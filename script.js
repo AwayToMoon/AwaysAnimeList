@@ -770,7 +770,10 @@
       'Demon Slayer': 'demon-slayer',
       'Kimetsu no Yaiba': 'demon-slayer',
       'My Hero Academia': 'my-hero-academia',
-      'Boku no Hero Academia': 'my-hero-academia'
+      'Boku no Hero Academia': 'my-hero-academia',
+      'I Got a Cheat Skill in Another World and Became Unrivaled in The Real World, Too': 'i-got-a-cheat-skill-in-another-world-and-became-unrivaled-in-the-real-world-too',
+      'I Got a Cheat Skill in Another World and Became Unrivaled in The Real World Too': 'i-got-a-cheat-skill-in-another-world-and-became-unrivaled-in-the-real-world-too',
+      'Cheat Skill in Another World': 'i-got-a-cheat-skill-in-another-world-and-became-unrivaled-in-the-real-world-too'
     };
     
     // Check for exact matches first
