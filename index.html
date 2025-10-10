@@ -47,9 +47,13 @@
           <span class="stat-number" id="waiting-count">0</span>
           <span class="stat-label">Warten</span>
         </div>
-        <div class="stat-item">
+        <div class="stat-item fsk-stat">
           <span class="stat-number" id="fsk-count">0</span>
-          <span class="stat-label">FSK16/18+</span>
+          <span class="stat-label">FSK 16/18+ ANGESCHAUT</span>
+        </div>
+        <div class="stat-item fsk-stat">
+          <span class="stat-number" id="plan-fsk-count">0</span>
+          <span class="stat-label">FSK 16/18+ GEPLANT</span>
         </div>
       </div>
       <div class="header-actions">
@@ -330,6 +334,7 @@
               <span id="age-status-text">Status wird geladen...</span>
             </div>
             <div class="settings-buttons">
+              <button type="button" class="btn primary" id="verify-age" style="display: none;">Alter bestätigen</button>
               <button type="button" class="btn secondary" id="reset-age-verification">Altersbestätigung zurücksetzen</button>
             </div>
           </div>
