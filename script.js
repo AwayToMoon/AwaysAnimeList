@@ -29,10 +29,6 @@
   const fskCount = document.getElementById('fsk-count');
   const planFskCount = document.getElementById('plan-fsk-count');
   
-  // Live status elements
-  const liveStatus = document.getElementById('live-status');
-  const liveCover = document.getElementById('live-cover');
-  const liveTitle = document.getElementById('live-title');
   
   // Admin password is now stored securely in Firebase (hashed)
   
@@ -298,101 +294,6 @@
     }
   }
   
-  // Live status functions
-  function setLiveAnime(anime) {
-    if (!anime) {
-      liveStatus.style.display = 'none';
-      return;
-    }
-    
-    liveCover.src = anime.image || '';
-    liveCover.alt = anime.title || '';
-    liveTitle.textContent = anime.title || '';
-    liveStatus.style.display = 'flex';
-    
-    // Show live status for all users
-    console.log('Live anime set:', anime.title);
-  }
-  
-  async function getCurrentLiveAnime() {
-    // First try to get from Firebase
-    const firebaseLive = await getFirebaseLiveStatus();
-    if (firebaseLive) {
-      return firebaseLive;
-    }
-    
-    // Fallback: Look for anime with data-live="true" attribute in any list
-    const allCards = document.querySelectorAll('.card[data-live="true"]');
-    
-    if (allCards.length > 0) {
-      const card = allCards[0];
-      return {
-        title: card.querySelector('.title')?.textContent || '',
-        image: card.querySelector('img')?.src || '',
-        url: card.querySelector('a')?.href || ''
-      };
-    }
-    
-    return null;
-  }
-  
-  async function updateLiveStatus() {
-    const liveAnime = await getCurrentLiveAnime();
-    setLiveAnime(liveAnime);
-    
-    // Ensure live status is visible for all users
-    if (liveAnime) {
-      console.log('Live status updated for all users:', liveAnime.title);
-    }
-  }
-  
-  async function toggleLiveStatus(card) {
-    const isLive = card.dataset.live === 'true';
-    
-    if (isLive) {
-      // Remove live status
-      await setFirebaseLiveStatus(null);
-      card.dataset.live = 'false';
-      card.classList.remove('live-card');
-      const liveBtn = card.querySelector('.cover-live');
-      if (liveBtn) {
-        liveBtn.textContent = '▶️';
-        liveBtn.title = 'Als Live markieren';
-      }
-      setMessage('Live-Status entfernt', 'success');
-    } else {
-      // Remove live status from all other cards first
-      document.querySelectorAll('.card[data-live="true"]').forEach(otherCard => {
-        otherCard.dataset.live = 'false';
-        otherCard.classList.remove('live-card');
-        const otherLiveBtn = otherCard.querySelector('.cover-live');
-        if (otherLiveBtn) {
-          otherLiveBtn.textContent = '▶️';
-          otherLiveBtn.title = 'Als Live markieren';
-        }
-      });
-      
-      // Set this card as live
-      const liveAnime = {
-        id: Number(card.dataset.id) || 0,
-        title: card.querySelector('.title')?.textContent || '',
-        image: card.querySelector('img')?.src || '',
-        url: card.querySelector('a')?.href || ''
-      };
-      
-      await setFirebaseLiveStatus(liveAnime);
-      card.dataset.live = 'true';
-      card.classList.add('live-card');
-      const liveBtn = card.querySelector('.cover-live');
-      if (liveBtn) {
-        liveBtn.textContent = '⏸️';
-        liveBtn.title = 'Live-Status entfernen';
-      }
-      setMessage('Als Live markiert', 'success');
-    }
-    
-    updateLiveStatus();
-  }
 
   function toggleGermanSyncStatus(card) {
     const isGermanSync = card.dataset.germanSync === 'true';
@@ -1254,18 +1155,6 @@
       editModal.dataset.cardId = card.dataset.id;
     });
   
-    const liveBtn = document.createElement('button');
-    liveBtn.type = 'button';
-    liveBtn.className = 'cover-live';
-    liveBtn.title = 'Als Live markieren';
-    liveBtn.textContent = '▶️';
-    liveBtn.addEventListener('click', () => {
-      if (localStorage.getItem('animes-is-admin') !== 'true') {
-        setMessage('Nur Admins können Live-Status ändern.', 'error');
-        return;
-      }
-      toggleLiveStatus(card);
-    });
   
     // Rating Button - für alle Nutzer sichtbar
     const ratingBtn = document.createElement('button');
@@ -1311,7 +1200,6 @@
   
     coverWrap.appendChild(img);
     coverWrap.appendChild(editBtn);
-    coverWrap.appendChild(liveBtn);
     coverWrap.appendChild(ratingBtn);
     if (listKey === 'waiting') {
       coverWrap.appendChild(terminBtn);
@@ -2588,35 +2476,6 @@
     }
   }
   
-  // Firebase Live Status functions
-  async function setFirebaseLiveStatus(liveAnime) {
-    try {
-      if (window.db) {
-        await window.db.collection('liveStatus').doc('current').set({
-          liveAnime: liveAnime,
-          timestamp: new Date().toISOString()
-        });
-        console.log('Live status saved to Firebase:', liveAnime?.title || 'null');
-      }
-    } catch (error) {
-      console.error('Firebase live status save failed:', error);
-    }
-  }
-  
-  async function getFirebaseLiveStatus() {
-    try {
-      if (window.db) {
-        const doc = await window.db.collection('liveStatus').doc('current').get();
-        if (doc.exists) {
-          const data = doc.data();
-          return data.liveAnime || null;
-        }
-      }
-    } catch (error) {
-      console.error('Firebase live status load failed:', error);
-    }
-    return null;
-  }
   
   async function loadFromFirebase() {
     try {
@@ -2724,8 +2583,6 @@
         const firebaseData = await loadFromFirebase();
         if (firebaseData) {
           loadFirebaseData(firebaseData);
-          // Load live status from Firebase
-          await loadFirebaseLiveStatus();
           return;
         }
       }
@@ -2742,38 +2599,11 @@
         sortedAnimes.forEach(item => addAnimeToList(item, key));
       });
       
-      // Load live status from Firebase even if using local storage
-      await loadFirebaseLiveStatus();
     } catch (_) {
       // ignore
     }
   }
   
-  async function loadFirebaseLiveStatus() {
-    try {
-      const liveAnime = await getFirebaseLiveStatus();
-      if (liveAnime) {
-        // Find the corresponding card and mark it as live
-        const allCards = document.querySelectorAll('.card');
-        for (const card of allCards) {
-          const cardTitle = card.querySelector('.title')?.textContent || '';
-          if (cardTitle === liveAnime.title) {
-            card.dataset.live = 'true';
-            card.classList.add('live-card');
-            const liveBtn = card.querySelector('.cover-live');
-            if (liveBtn) {
-              liveBtn.textContent = '⏸️';
-              liveBtn.title = 'Live-Status entfernen';
-            }
-            break;
-          }
-        }
-        setLiveAnime(liveAnime);
-      }
-    } catch (error) {
-      console.error('Error loading Firebase live status:', error);
-    }
-  }
   
   function loadFirebaseData(data) {
     // Clear current data
