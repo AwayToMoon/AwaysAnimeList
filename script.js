@@ -2399,8 +2399,32 @@
   
   async function deleteCard(card) {
     const title = card.querySelector('.title')?.textContent || '';
-    card.remove();
-    setMessage(`Gelöscht: ${title}`, 'success');
+    const cardId = card.dataset.id;
+    const listKey = card.dataset.list;
+    
+    // Remove all duplicates with the same title (case-insensitive)
+    const allCards = document.querySelectorAll('.card');
+    let deletedCount = 0;
+    
+    allCards.forEach(otherCard => {
+      const otherTitle = otherCard.querySelector('.title')?.textContent || '';
+      const otherId = otherCard.dataset.id;
+      const otherList = otherCard.dataset.list;
+      
+      // Remove if same title (normalized) or same ID
+      const titleMatch = title.toLowerCase().trim() === otherTitle.toLowerCase().trim();
+      const idMatch = cardId && otherId && cardId === otherId && cardId !== '0';
+      
+      if (titleMatch || idMatch) {
+        otherCard.remove();
+        deletedCount++;
+      }
+    });
+    
+    const message = deletedCount > 1 
+      ? `Gelöscht: ${title} (${deletedCount} Duplikate entfernt)` 
+      : `Gelöscht: ${title}`;
+    setMessage(message, 'success');
     updateStats();
     await updateLiveStatus();
     saveAll();
@@ -2432,7 +2456,11 @@
   });
   
   function serializeList(listKey) {
-    return Array.from(grids[listKey].children).map(card => {
+    const seenTitles = new Set();
+    const seenIds = new Set();
+    const uniqueItems = [];
+    
+    Array.from(grids[listKey].children).forEach(card => {
       const title = card.querySelector('.title')?.textContent || '';
       const cover = card.querySelector('img')?.src || '';
       const url = card.querySelector('a')?.href || '';
@@ -2441,8 +2469,22 @@
       const rating = card.dataset.rating ? parseInt(card.dataset.rating) : null;
       const review = card.dataset.review || null;
       const germanSync = card.dataset.germanSync === 'true';
-      return { id, title, image: cover, url, termin, rating, review, germanSync };
+      
+      // Normalize title for comparison
+      const normalizedTitle = title.toLowerCase().trim();
+      
+      // Skip duplicates: same normalized title or same non-zero ID
+      const isDuplicate = seenTitles.has(normalizedTitle) || 
+                         (id !== 0 && seenIds.has(id));
+      
+      if (!isDuplicate) {
+        seenTitles.add(normalizedTitle);
+        if (id !== 0) seenIds.add(id);
+        uniqueItems.push({ id, title, image: cover, url, termin, rating, review, germanSync });
+      }
     });
+    
+    return uniqueItems;
   }
   
   function saveAll() {
@@ -2571,6 +2613,40 @@
     reader.readAsText(file);
   }
   
+  function removeDuplicatesFromList(listKey) {
+    const cards = Array.from(grids[listKey].children);
+    const seenTitles = new Map(); // Map of normalized title -> first card
+    const seenIds = new Map(); // Map of id -> first card (only for non-zero IDs)
+    
+    cards.forEach(card => {
+      const title = card.querySelector('.title')?.textContent || '';
+      const normalizedTitle = title.toLowerCase().trim();
+      const id = Number(card.dataset.id) || 0;
+      
+      let shouldRemove = false;
+      
+      // Check for duplicate title
+      if (seenTitles.has(normalizedTitle)) {
+        shouldRemove = true;
+      } else {
+        seenTitles.set(normalizedTitle, card);
+      }
+      
+      // Check for duplicate ID (only for non-zero IDs)
+      if (id !== 0) {
+        if (seenIds.has(id)) {
+          shouldRemove = true;
+        } else {
+          seenIds.set(id, card);
+        }
+      }
+      
+      if (shouldRemove) {
+        card.remove();
+      }
+    });
+  }
+  
   async function loadAll() {
     try {
       // Check age verification status and set CSS class
@@ -2583,6 +2659,11 @@
         const firebaseData = await loadFromFirebase();
         if (firebaseData) {
           loadFirebaseData(firebaseData);
+          // Remove duplicates after loading
+          ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+            removeDuplicatesFromList(key);
+          });
+          saveAll(); // Save cleaned data
           return;
         }
       }
@@ -2591,6 +2672,29 @@
       const raw = localStorage.getItem('animes-app');
       if (!raw) return;
       const data = JSON.parse(raw);
+      
+      // Remove duplicates from data before loading
+      ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+        if (data[key] && Array.isArray(data[key])) {
+          const seenTitles = new Set();
+          const seenIds = new Set();
+          data[key] = data[key].filter(item => {
+            const normalizedTitle = (item.title || '').toLowerCase().trim();
+            const id = item.id || 0;
+            
+            const isDuplicate = seenTitles.has(normalizedTitle) || 
+                               (id !== 0 && seenIds.has(id));
+            
+            if (!isDuplicate) {
+              seenTitles.add(normalizedTitle);
+              if (id !== 0) seenIds.add(id);
+              return true;
+            }
+            return false;
+          });
+        }
+      });
+      
       ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
         // Sort animes alphabetically before adding them
         const sortedAnimes = (data[key] || []).sort((a, b) => 
@@ -2598,6 +2702,12 @@
         );
         sortedAnimes.forEach(item => addAnimeToList(item, key));
       });
+      
+      // Remove any remaining duplicates after loading
+      ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+        removeDuplicatesFromList(key);
+      });
+      saveAll(); // Save cleaned data
       
     } catch (_) {
       // ignore
@@ -2611,6 +2721,28 @@
       grids[key].innerHTML = '';
     });
     
+    // Remove duplicates from data before loading
+    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+      if (data[key] && Array.isArray(data[key])) {
+        const seenTitles = new Set();
+        const seenIds = new Set();
+        data[key] = data[key].filter(item => {
+          const normalizedTitle = (item.title || '').toLowerCase().trim();
+          const id = item.id || 0;
+          
+          const isDuplicate = seenTitles.has(normalizedTitle) || 
+                             (id !== 0 && seenIds.has(id));
+          
+          if (!isDuplicate) {
+            seenTitles.add(normalizedTitle);
+            if (id !== 0) seenIds.add(id);
+            return true;
+          }
+          return false;
+        });
+      }
+    });
+    
     // Load Firebase data
     ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
       if (data[key] && Array.isArray(data[key])) {
@@ -2622,8 +2754,22 @@
       }
     });
     
-    // Update local storage
-    localStorage.setItem('animes-app', JSON.stringify(data));
+    // Remove any remaining duplicates after loading
+    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+      removeDuplicatesFromList(key);
+    });
+    
+    // Update local storage with cleaned data
+    const cleanedData = {
+      plan: serializeList('plan'),
+      watched: serializeList('watched'),
+      waiting: serializeList('waiting'),
+      'plan-fsk': serializeList('plan-fsk'),
+      fsk: serializeList('fsk'),
+      timestamp: new Date().toISOString(),
+      version: '1.0'
+    };
+    localStorage.setItem('animes-app', JSON.stringify(cleanedData));
     updateStats();
     setMessage('Daten aus der Cloud geladen!', 'success');
   }
