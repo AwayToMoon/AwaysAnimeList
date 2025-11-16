@@ -1486,8 +1486,7 @@
     };
     setMessage(`Verschoben nach "${listNames[targetList]}": ${title}`, 'success');
     updateStats();
-    await updateLiveStatus();
-    saveAll();
+    await saveAll();
   }
   
   function updateCardDropdown(card, currentList) {
@@ -2426,8 +2425,15 @@
       : `Gelöscht: ${title}`;
     setMessage(message, 'success');
     updateStats();
-    await updateLiveStatus();
-    saveAll();
+    
+    // Save immediately and wait for it to complete
+    try {
+      await saveAll();
+      console.log('Data saved successfully after deletion');
+    } catch (error) {
+      console.error('Error saving after deletion:', error);
+      setMessage('Fehler beim Speichern. Bitte Seite neu laden.', 'error');
+    }
   }
   
   form.addEventListener('submit', async (e) => {
@@ -2449,7 +2455,7 @@
       addAnimeToList(anime, listKey);
       setMessage(`Hinzugefügt: ${anime.title}`, 'success');
       input.value = '';
-      saveAll();
+      await saveAll();
     } catch (err) {
       setMessage('Fehler bei der Suche. Versuch es später erneut.', 'error');
     }
@@ -2487,7 +2493,7 @@
     return uniqueItems;
   }
   
-  function saveAll() {
+  async function saveAll() {
     const data = {
       plan: serializeList('plan'),
       watched: serializeList('watched'),
@@ -2498,13 +2504,21 @@
       version: '1.0'
     };
     try {
+      // Always save to localStorage first (immediate)
       localStorage.setItem('animes-app', JSON.stringify(data));
-      // Sync to Firebase if available
+      
+      // Sync to Firebase if available (async, but don't block)
       if (window.db) {
-        syncToFirebase(data);
+        try {
+          await syncToFirebase(data);
+        } catch (error) {
+          console.error('Firebase sync error (non-blocking):', error);
+          // Don't throw - localStorage save was successful
+        }
       }
-    } catch (_) {
-      // ignore
+    } catch (error) {
+      console.error('Error saving data:', error);
+      throw error; // Re-throw if localStorage save fails
     }
   }
   
@@ -2654,24 +2668,61 @@
         document.body.classList.add('age-verified');
       }
       
-      // Try to load from Firebase first
-      if (window.db) {
-        const firebaseData = await loadFromFirebase();
-        if (firebaseData) {
-          loadFirebaseData(firebaseData);
-          // Remove duplicates after loading
-          ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
-            removeDuplicatesFromList(key);
-          });
-          saveAll(); // Save cleaned data
-          return;
+      // Check localStorage first (most recent data)
+      const raw = localStorage.getItem('animes-app');
+      let localData = null;
+      let localTimestamp = null;
+      
+      if (raw) {
+        try {
+          localData = JSON.parse(raw);
+          localTimestamp = localData.timestamp ? new Date(localData.timestamp).getTime() : 0;
+        } catch (e) {
+          console.error('Error parsing localStorage data:', e);
         }
       }
       
-      // Fallback to local storage
-      const raw = localStorage.getItem('animes-app');
-      if (!raw) return;
-      const data = JSON.parse(raw);
+      // Try to load from Firebase
+      let firebaseData = null;
+      let firebaseTimestamp = null;
+      
+      if (window.db) {
+        try {
+          firebaseData = await loadFromFirebase();
+          if (firebaseData && firebaseData.timestamp) {
+            firebaseTimestamp = new Date(firebaseData.timestamp).getTime();
+          }
+        } catch (error) {
+          console.error('Error loading from Firebase:', error);
+        }
+      }
+      
+      // Use the most recent data source
+      let dataToLoad = null;
+      
+      if (localData && firebaseData) {
+        // Both exist - use the one with the newer timestamp
+        if (localTimestamp >= firebaseTimestamp) {
+          dataToLoad = localData;
+          console.log('Using localStorage data (newer)');
+        } else {
+          dataToLoad = firebaseData;
+          console.log('Using Firebase data (newer)');
+        }
+      } else if (localData) {
+        // Only localStorage exists
+        dataToLoad = localData;
+        console.log('Using localStorage data (only source)');
+      } else if (firebaseData) {
+        // Only Firebase exists
+        dataToLoad = firebaseData;
+        console.log('Using Firebase data (only source)');
+      } else {
+        // No data available
+        return;
+      }
+      
+      const data = dataToLoad;
       
       // Remove duplicates from data before loading
       ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
@@ -2707,10 +2758,16 @@
       ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
         removeDuplicatesFromList(key);
       });
-      saveAll(); // Save cleaned data
       
-    } catch (_) {
-      // ignore
+      // Save cleaned data (both localStorage and Firebase)
+      try {
+        await saveAll();
+      } catch (error) {
+        console.error('Error saving cleaned data:', error);
+      }
+      
+    } catch (error) {
+      console.error('Error in loadAll:', error);
     }
   }
   
@@ -2849,7 +2906,7 @@
     editModal.dataset.cardId = '';
   }
   
-  function saveTitle() {
+  async function saveTitle() {
     const cardId = editModal.dataset.cardId;
     const newTitle = modalTitleInput.value.trim();
     const newLink = modalLinkInput.value.trim();
@@ -2892,8 +2949,13 @@
           });
         }
         
-        saveAll();
-        setMessage('Anime bearbeitet.', 'success');
+        try {
+          await saveAll();
+          setMessage('Anime bearbeitet.', 'success');
+        } catch (error) {
+          console.error('Error saving after edit:', error);
+          setMessage('Fehler beim Speichern.', 'error');
+        }
         break;
       }
     }
