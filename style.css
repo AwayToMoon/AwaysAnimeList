@@ -2062,32 +2062,31 @@ body.is-admin .actions .btn.link {
 }
 
 /* Help Button */
-.btn.help,
 .help-btn {
   background: linear-gradient(135deg, var(--primary), var(--primary-600));
   border: none;
   color: white;
-  padding: 11px 16px;
+  padding: 10px 14px;
   border-radius: 999px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 12px rgba(122, 162, 255, 0.3);
-  display: inline-flex;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  margin-left: auto;
 }
 
-.btn.help:hover,
 .help-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(122, 162, 255, 0.4);
   background: linear-gradient(135deg, var(--primary-600), var(--primary));
 }
 
-.btn.help:active,
 .help-btn:active {
   transform: translateY(0);
 }
@@ -2476,40 +2475,6 @@ body.is-admin .actions .btn.link {
   }
 }
 
-/* Maybe Tab Styling */
-.tab[data-tab="maybe"] {
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  border-color: #7c3aed;
-  color: white;
-  font-weight: 600;
-}
-
-.tab[data-tab="maybe"]:hover:not(.active) {
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-}
-
-.tab[data-tab="maybe"].active {
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
-  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
-  transform: scale(1.05);
-}
-
-#grid-maybe .card {
-  border: 1px solid rgba(124, 58, 237, 0.3);
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(124, 58, 237, 0.05));
-}
-
-#grid-maybe .card:hover {
-  border-color: rgba(124, 58, 237, 0.6);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
-}
-
-#grid-maybe .card::before {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1));
-}
-
 /* Plan-FSK Tab Styling */
 .tab[data-tab="plan-fsk"] {
   background: linear-gradient(135deg, #f59e0b, #d97706);
@@ -2575,27 +2540,20 @@ body.age-verified .fsk-stat {
   max-width: 600px;
 }
 
-.move-modal .modal-body {
-  padding: 20px;
-  display: block;
-}
-
 .move-content {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  width: 100%;
+  gap: 24px;
 }
 
 .move-anime-info {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
-  padding: 12px;
+  padding: 16px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;
-  width: 100%;
 }
 
 .move-anime-image {
@@ -2606,18 +2564,11 @@ body.age-verified .fsk-stat {
   border: 1px solid var(--border);
 }
 
-.move-anime-details {
-  flex: 1;
-  min-width: 0;
-}
-
 .move-anime-details h4 {
   color: var(--text);
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 8px 0;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .move-anime-details p {
@@ -2626,21 +2577,17 @@ body.age-verified .fsk-stat {
   margin: 0;
 }
 
-.move-selection {
-  width: 100%;
-}
-
 .move-selection h4 {
   color: var(--text);
   font-size: 16px;
   font-weight: 600;
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
 }
 
 .move-options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .move-option {
@@ -2653,7 +2600,6 @@ body.age-verified .fsk-stat {
   cursor: pointer;
   transition: all 0.3s ease;
   gap: 8px;
-  width: 100%;
 }
 
 .move-option:hover {
@@ -2664,17 +2610,8 @@ body.age-verified .fsk-stat {
 }
 
 .move-option input[type="radio"] {
-  margin: 0;
-  margin-right: 12px;
+  margin: 0 8px 0 0;
   transform: scale(1.2);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.move-option:has(input[type="radio"]:checked) {
-  border-color: var(--primary);
-  background: var(--bg-elev);
-  box-shadow: 0 0 0 3px var(--ring);
 }
 
 .move-option input[type="radio"]:checked + .move-option-content {
@@ -2704,8 +2641,7 @@ body.age-verified .fsk-stat {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  padding-top: 12px;
-  margin-top: 4px;
+  padding-top: 16px;
   border-top: 1px solid var(--border);
 }
 
