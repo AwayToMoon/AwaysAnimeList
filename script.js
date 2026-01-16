@@ -9,6 +9,7 @@
     plan: document.getElementById('tab-plan'),
     watched: document.getElementById('tab-watched'),
     waiting: document.getElementById('tab-waiting'),
+    maybe: document.getElementById('tab-maybe'),
     'plan-fsk': document.getElementById('tab-plan-fsk'),
     fsk: document.getElementById('tab-fsk')
   };
