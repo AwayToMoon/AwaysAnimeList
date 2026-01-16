@@ -16,6 +16,7 @@
     plan: document.getElementById('grid-plan'),
     watched: document.getElementById('grid-watched'),
     waiting: document.getElementById('grid-waiting'),
+    maybe: document.getElementById('grid-maybe'),
     'plan-fsk': document.getElementById('grid-plan-fsk'),
     fsk: document.getElementById('grid-fsk')
   };
@@ -26,6 +27,7 @@
   const watchedCount = document.getElementById('watched-count');
   const planCount = document.getElementById('plan-count');
   const waitingCount = document.getElementById('waiting-count');
+  const maybeCount = document.getElementById('maybe-count');
   const fskCount = document.getElementById('fsk-count');
   const planFskCount = document.getElementById('plan-fsk-count');
   
@@ -242,6 +244,7 @@
       plan: 'Gerade am schauen',
       watched: 'Fertig Geschaut',
       waiting: 'Warten auf Fortsetzung',
+      maybe: 'Vllt',
       'plan-fsk': 'Gerade am schauen (FSK16/18+)',
       fsk: 'Fertig Geschaut (FSK16/18+)'
     };
@@ -465,8 +468,10 @@
       }
     });
     
-    // Update live status when switching tabs
-    await updateLiveStatus();
+    // Update live status when switching tabs (if function exists)
+    if (typeof updateLiveStatus === 'function') {
+      await updateLiveStatus();
+    }
   }
   
   tabs.forEach(btn => {
@@ -1481,6 +1486,7 @@
       plan: 'Gerade am schauen',
       watched: 'Fertig Geschaut', 
       waiting: 'Warten auf Fortsetzung',
+      maybe: 'Vllt',
       'plan-fsk': 'Gerade am schauen (FSK16/18+)',
       fsk: 'Fertig Geschaut (FSK16/18+)'
     };
@@ -1501,6 +1507,7 @@
       { value: 'plan', text: '📋 Noch anschauen' },
       { value: 'watched', text: '✅ Fertig geschaut' },
       { value: 'waiting', text: '⏳ Warten auf Fortsetzung' },
+      { value: 'maybe', text: '🤔 Vllt' },
       { value: 'plan-fsk', text: '🔞 Gerade am schauen (FSK16/18+)' },
       { value: 'fsk', text: '🔞 FSK16/18+' }
     ];
@@ -2593,18 +2600,29 @@
       try {
         const data = JSON.parse(e.target.result);
         
-        // Validate backup data
-        if (!data.plan || !data.watched || !data.waiting) {
+        // Validate backup data - make it more lenient
+        if (!data.plan && !data.watched && !data.waiting && !data.maybe && !data.fsk && !data['plan-fsk']) {
           throw new Error('Ungültige Backup-Datei');
         }
         
+        // Ensure all required arrays exist
+        if (!data.plan) data.plan = [];
+        if (!data.watched) data.watched = [];
+        if (!data.waiting) data.waiting = [];
+        if (!data.maybe) data.maybe = [];
+        if (!data['plan-fsk']) data['plan-fsk'] = [];
+        if (!data.fsk) data.fsk = [];
+        
         // Clear current data
-        ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+        ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
           grids[key].innerHTML = '';
         });
         
+        // Ensure maybe array exists
+        if (!data.maybe) data.maybe = [];
+        
         // Restore data
-        ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+        ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
           if (data[key] && Array.isArray(data[key])) {
             data[key].forEach(item => {
               if (item.title) {
@@ -2724,8 +2742,13 @@
       
       const data = dataToLoad;
       
+      // Ensure maybe array exists in old data
+      if (!data.maybe) {
+        data.maybe = [];
+      }
+      
       // Remove duplicates from data before loading
-      ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
         if (data[key] && Array.isArray(data[key])) {
           const seenTitles = new Set();
           const seenIds = new Set();
@@ -2743,10 +2766,13 @@
             }
             return false;
           });
+        } else if (!data[key]) {
+          // Initialize empty array if key doesn't exist
+          data[key] = [];
         }
       });
       
-      ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
         // Sort animes alphabetically before adding them
         const sortedAnimes = (data[key] || []).sort((a, b) => 
           a.title.toLowerCase().localeCompare(b.title.toLowerCase())
@@ -2755,7 +2781,7 @@
       });
       
       // Remove any remaining duplicates after loading
-      ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
         removeDuplicatesFromList(key);
       });
       
@@ -2774,12 +2800,12 @@
   
   function loadFirebaseData(data) {
     // Clear current data
-    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
       grids[key].innerHTML = '';
     });
     
     // Remove duplicates from data before loading
-    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
       if (data[key] && Array.isArray(data[key])) {
         const seenTitles = new Set();
         const seenIds = new Set();
@@ -2801,7 +2827,7 @@
     });
     
     // Load Firebase data
-    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
       if (data[key] && Array.isArray(data[key])) {
         data[key].forEach(item => {
           if (item.title) {
@@ -2812,7 +2838,7 @@
     });
     
     // Remove any remaining duplicates after loading
-    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
       removeDuplicatesFromList(key);
     });
     
@@ -2821,6 +2847,7 @@
       plan: serializeList('plan'),
       watched: serializeList('watched'),
       waiting: serializeList('waiting'),
+      maybe: serializeList('maybe'),
       'plan-fsk': serializeList('plan-fsk'),
       fsk: serializeList('fsk'),
       timestamp: new Date().toISOString(),
@@ -2855,22 +2882,24 @@
   }
   
   function updateStats() {
-    const planItems = grids.plan.children.length;
-    const watchedItems = grids.watched.children.length;
-    const waitingItems = grids.waiting.children.length;
-    const planFskItems = grids['plan-fsk'].children.length;
-    const fskItems = grids.fsk.children.length;
+    const planItems = grids.plan?.children.length || 0;
+    const watchedItems = grids.watched?.children.length || 0;
+    const waitingItems = grids.waiting?.children.length || 0;
+    const maybeItems = grids.maybe?.children.length || 0;
+    const planFskItems = grids['plan-fsk']?.children.length || 0;
+    const fskItems = grids.fsk?.children.length || 0;
     
     // Always show real FSK counts
     const realFskItems = planFskItems + fskItems;
-    const totalItems = planItems + watchedItems + waitingItems + realFskItems;
+    const totalItems = planItems + watchedItems + waitingItems + maybeItems + realFskItems;
     
-    totalCount.textContent = totalItems;
-    planCount.textContent = planItems;
-    watchedCount.textContent = watchedItems;
-    waitingCount.textContent = waitingItems;
-    fskCount.textContent = fskItems; // FSK watched count
-    planFskCount.textContent = planFskItems; // FSK planned count
+    if (totalCount) totalCount.textContent = totalItems;
+    if (planCount) planCount.textContent = planItems;
+    if (watchedCount) watchedCount.textContent = watchedItems;
+    if (waitingCount) waitingCount.textContent = waitingItems;
+    if (maybeCount) maybeCount.textContent = maybeItems;
+    if (fskCount) fskCount.textContent = fskItems; // FSK watched count
+    if (planFskCount) planFskCount.textContent = planFskItems; // FSK planned count
   }
   
   function getPreferredTheme() {
@@ -3128,7 +3157,10 @@
   // Init
   loadAll().then(async () => {
     updateStats();
-    await updateLiveStatus(); // Always update live status for all users
+    // Update live status if function exists
+    if (typeof updateLiveStatus === 'function') {
+      await updateLiveStatus();
+    }
     await switchTab('plan');
   });
   applyTheme(getPreferredTheme());
