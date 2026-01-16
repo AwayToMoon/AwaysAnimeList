@@ -2506,6 +2506,7 @@
       plan: serializeList('plan'),
       watched: serializeList('watched'),
       waiting: serializeList('waiting'),
+      maybe: serializeList('maybe'),
       'plan-fsk': serializeList('plan-fsk'),
       fsk: serializeList('fsk'),
       timestamp: new Date().toISOString(),
