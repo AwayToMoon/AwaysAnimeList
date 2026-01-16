@@ -33,6 +33,10 @@
           <span class="stat-number" id="waiting-count">0</span>
           <span class="stat-label">Warten</span>
         </div>
+        <div class="stat-item">
+          <span class="stat-number" id="maybe-count">0</span>
+          <span class="stat-label">Vllt</span>
+        </div>
         <div class="stat-item fsk-stat">
           <span class="stat-number" id="fsk-count">0</span>
           <span class="stat-label">FSK 16/18+ ANGESCHAUT</span>
@@ -43,6 +47,7 @@
         </div>
       </div>
       <div class="header-actions">
+        <button id="help-btn" class="btn help" aria-label="Hilfe & Support" title="Hilfe & Support">❓ Hilfe</button>
         <button id="settings-btn" class="btn settings" aria-label="Einstellungen" title="Einstellungen">⚙️ Einstellungen</button>
         <button id="backup-btn" class="btn backup" aria-label="Backup erstellen" title="Backup erstellen">💾 Backup</button>
         <button id="restore-btn" class="btn restore" aria-label="Backup wiederherstellen" title="Backup wiederherstellen">📁 Wiederherstellen</button>
@@ -60,6 +65,7 @@
             <option value="plan">Gerade am schauen</option>
             <option value="watched">Fertig Geschaut</option>
             <option value="waiting">Warten auf Fortsetzung</option>
+            <option value="maybe">Vllt</option>
             <option value="plan-fsk">Gerade am schauen (FSK16/18+)</option>
             <option value="fsk">Fertig Geschaut (FSK16/18+)</option>
           </select>
@@ -74,9 +80,9 @@
       <button class="tab active" role="tab" aria-selected="true" data-tab="plan">Gerade am schauen</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="watched">Fertig Geschaut</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="waiting">Warten auf Fortsetzung</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="maybe">Vllt</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="plan-fsk">Gerade am schauen (FSK16/18+)</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="fsk">Fertig Geschaut (FSK16/18+)</button>
-      <button id="help-btn" class="help-btn" title="Hilfe & Support">❓</button>
     </nav>
 
     <main class="content">
@@ -88,6 +94,9 @@
       </section>
       <section id="tab-waiting" class="tab-panel" role="tabpanel" aria-label="Warten auf Fortsetzung">
         <div id="grid-waiting" class="grid"></div>
+      </section>
+      <section id="tab-maybe" class="tab-panel" role="tabpanel" aria-label="Vllt">
+        <div id="grid-maybe" class="grid"></div>
       </section>
       <section id="tab-plan-fsk" class="tab-panel" role="tabpanel" aria-label="Gerade am schauen (FSK16/18+)">
         <div id="grid-plan-fsk" class="grid"></div>
@@ -379,6 +388,14 @@
                 <span class="move-option-content">
                   <span class="move-option-icon">⏳</span>
                   <span class="move-option-text">Warten auf Fortsetzung</span>
+                </span>
+              </label>
+              
+              <label class="move-option">
+                <input type="radio" name="move-target" value="maybe">
+                <span class="move-option-content">
+                  <span class="move-option-icon">🤔</span>
+                  <span class="move-option-text">Vllt</span>
                 </span>
               </label>
               

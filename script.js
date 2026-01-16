@@ -242,6 +242,7 @@
       plan: 'Gerade am schauen',
       watched: 'Fertig Geschaut',
       waiting: 'Warten auf Fortsetzung',
+      maybe: 'Vllt',
       'plan-fsk': 'Gerade am schauen (FSK16/18+)',
       fsk: 'Fertig Geschaut (FSK16/18+)'
     };
@@ -1481,6 +1482,7 @@
       plan: 'Gerade am schauen',
       watched: 'Fertig Geschaut', 
       waiting: 'Warten auf Fortsetzung',
+      maybe: 'Vllt',
       'plan-fsk': 'Gerade am schauen (FSK16/18+)',
       fsk: 'Fertig Geschaut (FSK16/18+)'
     };
@@ -1501,6 +1503,7 @@
       { value: 'plan', text: '📋 Noch anschauen' },
       { value: 'watched', text: '✅ Fertig geschaut' },
       { value: 'waiting', text: '⏳ Warten auf Fortsetzung' },
+      { value: 'maybe', text: '🤔 Vllt' },
       { value: 'plan-fsk', text: '🔞 Gerade am schauen (FSK16/18+)' },
       { value: 'fsk', text: '🔞 FSK16/18+' }
     ];
@@ -2725,7 +2728,7 @@
       const data = dataToLoad;
       
       // Remove duplicates from data before loading
-      ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
         if (data[key] && Array.isArray(data[key])) {
           const seenTitles = new Set();
           const seenIds = new Set();
@@ -2746,7 +2749,7 @@
         }
       });
       
-      ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
         // Sort animes alphabetically before adding them
         const sortedAnimes = (data[key] || []).sort((a, b) => 
           a.title.toLowerCase().localeCompare(b.title.toLowerCase())
@@ -2755,7 +2758,7 @@
       });
       
       // Remove any remaining duplicates after loading
-      ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+      ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
         removeDuplicatesFromList(key);
       });
       
@@ -2774,12 +2777,12 @@
   
   function loadFirebaseData(data) {
     // Clear current data
-    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
       grids[key].innerHTML = '';
     });
     
     // Remove duplicates from data before loading
-    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
       if (data[key] && Array.isArray(data[key])) {
         const seenTitles = new Set();
         const seenIds = new Set();
@@ -2801,7 +2804,7 @@
     });
     
     // Load Firebase data
-    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
       if (data[key] && Array.isArray(data[key])) {
         data[key].forEach(item => {
           if (item.title) {
@@ -2812,7 +2815,7 @@
     });
     
     // Remove any remaining duplicates after loading
-    ['plan', 'watched', 'waiting', 'plan-fsk', 'fsk'].forEach(key => {
+    ['plan', 'watched', 'waiting', 'maybe', 'plan-fsk', 'fsk'].forEach(key => {
       removeDuplicatesFromList(key);
     });
     
@@ -2821,6 +2824,7 @@
       plan: serializeList('plan'),
       watched: serializeList('watched'),
       waiting: serializeList('waiting'),
+      maybe: serializeList('maybe'),
       'plan-fsk': serializeList('plan-fsk'),
       fsk: serializeList('fsk'),
       timestamp: new Date().toISOString(),
@@ -2858,17 +2862,19 @@
     const planItems = grids.plan.children.length;
     const watchedItems = grids.watched.children.length;
     const waitingItems = grids.waiting.children.length;
+    const maybeItems = grids.maybe.children.length;
     const planFskItems = grids['plan-fsk'].children.length;
     const fskItems = grids.fsk.children.length;
     
     // Always show real FSK counts
     const realFskItems = planFskItems + fskItems;
-    const totalItems = planItems + watchedItems + waitingItems + realFskItems;
+    const totalItems = planItems + watchedItems + waitingItems + maybeItems + realFskItems;
     
     totalCount.textContent = totalItems;
     planCount.textContent = planItems;
     watchedCount.textContent = watchedItems;
     waitingCount.textContent = waitingItems;
+    maybeCount.textContent = maybeItems;
     fskCount.textContent = fskItems; // FSK watched count
     planFskCount.textContent = planFskItems; // FSK planned count
   }
